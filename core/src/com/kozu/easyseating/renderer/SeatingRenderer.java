@@ -11,19 +11,20 @@ import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Rob on 8/2/2017.
  */
 
 public class SeatingRenderer {
-    private Table table;
+    public List<Table> tables = new ArrayList<Table>();
 
     private TiledDrawable tableTile;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
-    public SeatingRenderer(Table table) {
-        this.table = table;
-
+    public SeatingRenderer() {
         Texture tableTexture = new Texture(Gdx.files.internal("lightpaperfibers.png"));
         TextureRegion tr = new TextureRegion(tableTexture);
         tableTile = new TiledDrawable(tr);
@@ -34,30 +35,32 @@ public class SeatingRenderer {
     }
 
     public void renderTables() {
-        Gdx.gl.glDepthFunc(GL20.GL_LESS);
-        Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-        Gdx.gl.glDepthMask(true);
-        Gdx.gl.glColorMask(false, false, false, false);
+        for(Table table : tables) {
+            Gdx.gl.glDepthFunc(GL20.GL_LESS);
+            Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+            Gdx.gl.glDepthMask(true);
+            Gdx.gl.glColorMask(false, false, false, false);
 
-        shapeRenderer.setProjectionMatrix(EasySeatingGame.batch.getProjectionMatrix());
-        shapeRenderer.setTransformMatrix(EasySeatingGame.batch.getTransformMatrix());
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.circle(table.bounds.x, table.bounds.x, table.bounds.radius);
-        shapeRenderer.end();
+            shapeRenderer.setProjectionMatrix(EasySeatingGame.batch.getProjectionMatrix());
+            shapeRenderer.setTransformMatrix(EasySeatingGame.batch.getTransformMatrix());
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.circle(table.bounds.x, table.bounds.y, table.bounds.radius);
+            shapeRenderer.end();
 
-        EasySeatingGame.batch.begin();
+            EasySeatingGame.batch.begin();
 
-        Gdx.gl.glColorMask(true, true, true, true);
-        Gdx.gl.glDepthFunc(GL20.GL_EQUAL);
+            Gdx.gl.glColorMask(true, true, true, true);
+            Gdx.gl.glDepthFunc(GL20.GL_EQUAL);
 
-        tableTile.draw(EasySeatingGame.batch,  table.bounds.x - table.bounds.radius, table.bounds.y - table.bounds.radius, 1000, 1000);
+            tableTile.draw(EasySeatingGame.batch, table.bounds.x - table.bounds.radius, table.bounds.y - table.bounds.radius, 1000, 1000);
 
-        EasySeatingGame.batch.end();
+            EasySeatingGame.batch.end();
 
-        //Disable depth testing so people are not clipped
-        Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+            //Disable depth testing so people are not clipped
+            Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 
-        renderAssignedSeats(table);
+            renderAssignedSeats(table);
+        }
     }
 
     public void renderAssignedSeats(Table table) {

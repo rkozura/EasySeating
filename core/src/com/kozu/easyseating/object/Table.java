@@ -15,9 +15,9 @@ public class Table {
     public Circle bounds;
     public List<Person> assignedSeats;
 
-    public Table() {
+    public Table(float x, float y) {
         bounds = new Circle();
-        bounds.set(100, 100, TABLE_RADIUS);
+        bounds.set(x, y, TABLE_RADIUS);
 
         assignedSeats = new ArrayList<Person>();
         assignedSeats.add(new Person());

@@ -1,19 +1,22 @@
 package com.kozu.easyseating.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kozu.easyseating.EasySeatingGame;
-import com.kozu.easyseating.object.Table;
+import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.renderer.SeatingRenderer;
 
 public class SeatingScreen extends ScreenAdapter {
     OrthographicCamera camera;
     private  SeatingRenderer renderer;
     private Viewport viewport;
+    private GestureDetector gestureDetector;
 
     public SeatingScreen() {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
@@ -23,7 +26,15 @@ public class SeatingScreen extends ScreenAdapter {
         viewport.apply();
         camera.position.set(camera.viewportWidth/2, camera.viewportHeight/2, 0);
 
-        renderer = new SeatingRenderer(new Table());
+        renderer = new SeatingRenderer();
+        gestureDetector = new GestureDetector(new SeatingLogic(camera, renderer));
+    }
+
+    @Override
+    public void show() {
+        InputMultiplexer multi = new InputMultiplexer();
+        multi.addProcessor(gestureDetector);
+        Gdx.input.setInputProcessor(multi);
     }
 
     @Override
