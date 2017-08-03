@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.kozu.easyseating.EasySeatingGame;
@@ -20,7 +20,7 @@ public class Table {
     private static String fragmentShader;
     private static ShaderProgram shaderProgram;
 
-    private Vector2 position;
+    private Circle bounds;
     private TiledDrawable tableTile;
 
     static {
@@ -33,7 +33,8 @@ public class Table {
     }
 
     public Table() {
-        position = new Vector2(0,0);
+        bounds = new Circle();
+        bounds.set(100, 100, TABLE_RADIUS);
 
         Texture tableTexture = new Texture(Gdx.files.internal("lightpaperfibers.png"));
         TextureRegion tr = new TextureRegion(tableTexture);
@@ -44,10 +45,10 @@ public class Table {
         //TODO Shaders probably arent being used correctly...fix
         shaderProgram.begin();
         int a = shaderProgram.getUniformLocation("center");
-        shaderProgram.setUniformf(a, position.x + (100 / 2), position.y + (100 / 2));
+        shaderProgram.setUniformf(a, bounds.x, bounds.y);
 
         int b = shaderProgram.getUniformLocation("radius");
-        shaderProgram.setUniformf(b, 1000 / 2);
+        shaderProgram.setUniformf(b, bounds.radius);
         shaderProgram.end();
 
         EasySeatingGame.batch.setShader(shaderProgram);
@@ -55,7 +56,7 @@ public class Table {
         //TODO remove this hardcoded value!
         //tableTile.draw(batch, 0, 0, 3181.5f, 2250);
         EasySeatingGame.batch.begin();
-        tableTile.draw(EasySeatingGame.batch, position.x, position.y, 1000, 1000);
+        tableTile.draw(EasySeatingGame.batch,  bounds.x - bounds.radius, bounds.y - bounds.radius, 1000, 1000);
         EasySeatingGame.batch.end();
 
         EasySeatingGame.batch.setShader(null);
