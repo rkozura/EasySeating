@@ -5,10 +5,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
@@ -21,19 +19,7 @@ public class SeatingRenderer {
     private Table table;
 
     private TiledDrawable tableTile;
-    private static String vertexShader;
-    private static String fragmentShader;
-    private static ShaderProgram shaderProgram;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
-
-    static {
-        vertexShader = Gdx.files.internal("vertex.glsl").readString();
-        fragmentShader = Gdx.files.internal("fragment.glsl").readString();
-
-        shaderProgram = new ShaderProgram(vertexShader,fragmentShader);
-
-        if (!shaderProgram.isCompiled()) throw new GdxRuntimeException("Couldn't compile shader: " + shaderProgram.getLog());
-    }
 
     public SeatingRenderer(Table table) {
         this.table = table;
@@ -48,24 +34,30 @@ public class SeatingRenderer {
     }
 
     public void renderTables() {
-        //TODO Shaders probably arent being used correctly...fix
-        //Assign variables in the shader program
-        shaderProgram.begin();
-        int a = shaderProgram.getUniformLocation("center");
-        shaderProgram.setUniformf(a, table.bounds.x, table.bounds.y);
+        Gdx.gl.glDepthFunc(GL20.GL_LESS);
+        Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+        Gdx.gl.glDepthMask(true);
+        Gdx.gl.glColorMask(false, false, false, false);
 
-        int b = shaderProgram.getUniformLocation("radius");
-        shaderProgram.setUniformf(b, table.bounds.radius);
-        shaderProgram.end();
+        shapeRenderer.setProjectionMatrix(EasySeatingGame.batch.getProjectionMatrix());
+        shapeRenderer.setTransformMatrix(EasySeatingGame.batch.getTransformMatrix());
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.circle(table.bounds.x, table.bounds.x, table.bounds.radius);
+        shapeRenderer.end();
 
-        EasySeatingGame.batch.setShader(shaderProgram);
         EasySeatingGame.batch.begin();
+
+        Gdx.gl.glColorMask(true, true, true, true);
+        Gdx.gl.glDepthFunc(GL20.GL_EQUAL);
+
         tableTile.draw(EasySeatingGame.batch,  table.bounds.x - table.bounds.radius, table.bounds.y - table.bounds.radius, 1000, 1000);
+
         EasySeatingGame.batch.end();
-        EasySeatingGame.batch.setShader(null);
+
+        //Disable depth testing so people are not clipped
+        Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 
         renderAssignedSeats(table);
-
     }
 
     public void renderAssignedSeats(Table table) {

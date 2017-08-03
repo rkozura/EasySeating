@@ -30,7 +30,7 @@ public class SeatingScreen extends ScreenAdapter {
     public void render(float delta) {
         camera.update();
 
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         EasySeatingGame.batch.setProjectionMatrix(camera.combined);
 
         renderer.render();
