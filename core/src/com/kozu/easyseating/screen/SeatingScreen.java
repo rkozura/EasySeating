@@ -7,11 +7,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kozu.easyseating.EasySeatingGame;
-import com.kozu.easyseating.entity.Table;
+import com.kozu.easyseating.object.Table;
+import com.kozu.easyseating.renderer.SeatingRenderer;
 
 public class SeatingScreen extends ScreenAdapter {
     OrthographicCamera camera;
-    private Table table;
+    private  SeatingRenderer renderer;
     private Viewport viewport;
 
     public SeatingScreen() {
@@ -22,7 +23,7 @@ public class SeatingScreen extends ScreenAdapter {
         viewport.apply();
         camera.position.set(camera.viewportWidth/2, camera.viewportHeight/2, 0);
 
-        table = new Table();
+        renderer = new SeatingRenderer(new Table());
     }
 
     @Override
@@ -32,7 +33,7 @@ public class SeatingScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         EasySeatingGame.batch.setProjectionMatrix(camera.combined);
 
-        table.render();
+        renderer.render();
     }
 
     @Override
