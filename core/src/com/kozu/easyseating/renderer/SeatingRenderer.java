@@ -40,7 +40,7 @@ public class SeatingRenderer {
     }
 
     public void renderTables() {
-        for(Table table : seatingLogic.getConference().getTables()) {
+        for(Table table : seatingLogic.conference.getTables()) {
             Gdx.gl.glDepthFunc(GL20.GL_LESS);
             Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
             Gdx.gl.glDepthMask(true);

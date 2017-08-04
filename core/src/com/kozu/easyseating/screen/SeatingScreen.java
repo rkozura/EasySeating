@@ -6,10 +6,10 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kozu.easyseating.EasySeatingGame;
+import com.kozu.easyseating.controller.SeatingController;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.renderer.SeatingRenderer;
 
@@ -23,39 +23,20 @@ public class SeatingScreen extends ScreenAdapter {
     public SeatingScreen() {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 
+        //Create the camera and apply a viewport
         camera = new OrthographicCamera();
         viewport = new ScreenViewport(camera);
         viewport.apply();
         camera.position.set(camera.viewportWidth/2, camera.viewportHeight/2, 0);
 
+        //Create the logic class...has methods to modify objects and return them
         seatingLogic = new SeatingLogic();
+
+        //Create the renderer.  Renderer needs to see the logic to know what to render
         renderer = new SeatingRenderer(seatingLogic);
 
-        //Setup the gestures
-        gestureDetector = new GestureDetector(new GestureDetector.GestureAdapter(){
-            @Override
-            public boolean tap(float x, float y, int count, int button) {
-                seatingLogic.handleTap(convertScreenCoordsToWorldCoords(x, y));
-                return true;
-            }
-
-            @Override
-            public boolean pan(float x, float y, float deltaX, float deltaY) {
-                camera.update();
-                camera.position.add(
-                        camera.unproject(new Vector3(0, 0, 0))
-                                .add(camera.unproject(new Vector3(deltaX, deltaY, 0)).scl(-1f))
-                );
-
-                return true;
-            }
-
-            @Override
-            public boolean longPress(float x, float y) {
-                seatingLogic.handleLongPress(convertScreenCoordsToWorldCoords(x, y));
-                return true;
-            }
-        });
+        //Setup the controller, which listens for gestures
+        gestureDetector = new GestureDetector(new SeatingController(camera, seatingLogic));
     }
 
     @Override
@@ -68,7 +49,6 @@ public class SeatingScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         camera.update();
-        seatingLogic.update(delta);
 
         //Clear the color and depth buffer so screen repaints.  Depth buffer is responsible for
         //removing table texture outside table circle
@@ -82,12 +62,5 @@ public class SeatingScreen extends ScreenAdapter {
     public void resize(int width, int height) {
         viewport.update(width,height);
         camera.position.set(camera.viewportWidth/2, camera.viewportHeight/2, 0);
-    }
-
-    private Vector3 convertScreenCoordsToWorldCoords(float x, float y) {
-        Vector3 touchPos = new Vector3(x, y, 0);
-        camera.unproject(touchPos);
-
-        return touchPos;
     }
 }
