@@ -1,33 +1,92 @@
 package com.kozu.easyseating.logic;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector3;
+import com.kozu.easyseating.object.Conference;
+import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
-import com.kozu.easyseating.renderer.SeatingRenderer;
 
 /**
  * Created by Rob on 8/2/2017.
  */
 
-public class SeatingLogic extends GestureDetector.GestureAdapter {
-    Camera camera;
-    SeatingRenderer renderer;
+public class SeatingLogic {
+    private Conference conference;
+    private Table selectedTable;
 
-    public SeatingLogic(Camera camera, SeatingRenderer seatingRenderer) {
-        this.camera = camera;
-        this.renderer = seatingRenderer;
+    public SeatingLogic() {
+        conference = new Conference();
     }
 
+    /**
+     * Handles a tap at the given x,y coord
+     * @param pos
+     */
+    public void handleTap(Vector3 pos) {
+        if(selectedTable != null) {
+            selectedTable.bounds.setPosition(pos.x, pos.y);
 
-    @Override
-    public boolean tap(float x, float y, int count, int button) {
-        Vector3 touchPos = new Vector3();
-        touchPos.set(x, y, 0);
-        camera.unproject(touchPos);
+            //Re-position the people
+            double nextSeatAngle = 0;
+            for(Person person : selectedTable.assignedSeats) {
+                double nextSeatRadians = Math.toRadians(nextSeatAngle);
+                float x = (float) (selectedTable.bounds.radius * Math.cos(nextSeatRadians)) + selectedTable.bounds.x;
+                float y = (float) (selectedTable.bounds.radius * Math.sin(nextSeatRadians)) + selectedTable.bounds.y;
 
-        Table table = new Table(touchPos.x, touchPos.y);
-        renderer.tables.add(table);
-        return true;
+                person.position.set(x, y);
+
+                nextSeatAngle += 30;
+            }
+        } else {
+            boolean touchedTable = false;
+            for (Table table : conference.getTables()) {
+                //If a table was tapped, add a person to it
+                if (table.bounds.contains(pos.x, pos.y)) {
+
+                    //Find the next seat position for this table
+                    double nextSeatAngle = 0;
+                    for (Person person : table.assignedSeats) {
+                        nextSeatAngle += 30;
+                    }
+
+                    double nextSeatRadians = Math.toRadians(nextSeatAngle);
+                    float x = (float) (table.bounds.radius * Math.cos(nextSeatRadians)) + table.bounds.x;
+                    float y = (float) (table.bounds.radius * Math.sin(nextSeatRadians)) + table.bounds.y;
+
+                    Person newPerson = new Person();
+                    newPerson.position.set(x, y);
+                    table.assignedSeats.add(newPerson);
+
+                    touchedTable = true;
+                }
+            }
+
+            if (!touchedTable) {
+                Table table = new Table(pos.x, pos.y);
+                conference.getTables().add(table);
+            }
+        }
+    }
+
+    public void handleLongPress(Vector3 pos) {
+        for(Table table : conference.getTables()) {
+            //If a table was long pressed, capture it for dragging/moving
+            if(table.bounds.contains(pos.x, pos.y)) {
+                selectedTable = table;
+            } else {
+                selectedTable = null;
+            }
+        }
+    }
+
+    public void update(float delta) {
+
+    }
+
+    public Conference getConference() {
+        return conference;
+    }
+
+    public void setConference(Conference conference) {
+        this.conference = conference;
     }
 }

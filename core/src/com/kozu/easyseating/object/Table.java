@@ -20,7 +20,5 @@ public class Table {
         bounds.set(x, y, TABLE_RADIUS);
 
         assignedSeats = new ArrayList<Person>();
-        assignedSeats.add(new Person());
-        assignedSeats.add(new Person());
     }
 }

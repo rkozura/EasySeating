@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.kozu.easyseating.EasySeatingGame;
+import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
 
@@ -24,10 +25,14 @@ public class SeatingRenderer {
     private TiledDrawable tableTile;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
-    public SeatingRenderer() {
+    SeatingLogic seatingLogic;
+
+    public SeatingRenderer(SeatingLogic seatingLogic) {
         Texture tableTexture = new Texture(Gdx.files.internal("lightpaperfibers.png"));
         TextureRegion tr = new TextureRegion(tableTexture);
         tableTile = new TiledDrawable(tr);
+
+        this.seatingLogic = seatingLogic;
     }
 
     public void render() {
@@ -35,7 +40,7 @@ public class SeatingRenderer {
     }
 
     public void renderTables() {
-        for(Table table : tables) {
+        for(Table table : seatingLogic.getConference().getTables()) {
             Gdx.gl.glDepthFunc(GL20.GL_LESS);
             Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
             Gdx.gl.glDepthMask(true);
@@ -52,7 +57,12 @@ public class SeatingRenderer {
             Gdx.gl.glColorMask(true, true, true, true);
             Gdx.gl.glDepthFunc(GL20.GL_EQUAL);
 
-            tableTile.draw(EasySeatingGame.batch, table.bounds.x - table.bounds.radius, table.bounds.y - table.bounds.radius, 1000, 1000);
+            //Draw the table texture just enough to cover the table
+            //TODO move the width/height computations to table class so it does not happen
+            //every render
+            tableTile.draw(EasySeatingGame.batch, table.bounds.x - table.bounds.radius,
+                    table.bounds.y - table.bounds.radius, table.bounds.radius*2,
+                    table.bounds.radius*2);
 
             EasySeatingGame.batch.end();
 
@@ -67,24 +77,16 @@ public class SeatingRenderer {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
-        //TODO this probably needs to be in some sort of logic class
-        double nextSeatAngle = 0;
         for(Person person : table.assignedSeats) {
-            double nextSeatRadians = Math.toRadians(nextSeatAngle);
-            float x = (float) (table.bounds.radius * Math.cos(nextSeatRadians)) + table.bounds.radius;
-            float y = (float) (table.bounds.radius * Math.sin(nextSeatRadians)) + table.bounds.radius;
-
             //If projection matrices are not set, objects will not be drawn relative to the tables
             shapeRenderer.setProjectionMatrix(EasySeatingGame.batch.getProjectionMatrix());
             shapeRenderer.setTransformMatrix(EasySeatingGame.batch.getTransformMatrix());
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(Color.CYAN);
-            shapeRenderer.circle(x, y, 30);
+            shapeRenderer.circle(person.position.x, person.position.y, 30);
             shapeRenderer.end();
-
-
-            nextSeatAngle += 30;
         }
+
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 }
