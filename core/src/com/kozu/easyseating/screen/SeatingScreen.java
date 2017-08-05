@@ -12,6 +12,7 @@ import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.controller.SeatingController;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.renderer.SeatingRenderer;
+import com.kozu.easyseating.tweenutil.TweenUtil;
 
 public class SeatingScreen extends ScreenAdapter {
     OrthographicCamera camera;
@@ -49,6 +50,7 @@ public class SeatingScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         camera.update();
+        TweenUtil.getTweenManager().update(delta);
 
         //Clear the color and depth buffer so screen repaints.  Depth buffer is responsible for
         //removing table texture outside table circle
