@@ -38,7 +38,7 @@ public class SeatingLogic {
 
     public void addPersonToTable(Table table) {
         //Find the next seat position for this table
-        //TODO we can change this to use size of assigned seats instead
+        //TODO we can change this to use size of assignedseats instead of looping through assignedseats
         double nextSeatAngle = 0;
         for (Person person : table.assignedSeats) {
             nextSeatAngle += 30;
@@ -61,7 +61,6 @@ public class SeatingLogic {
 
     public void moveTableToPosition(Table table, Vector3 pos) {
         Tween.to(table, EntityAccessor.POSITION_XY, .2f).target(pos.x,pos.y)
-                //.ease(Elastic.IN)
                 .start(TweenUtil.getTweenManager());
 
         //Re-position the people as well
