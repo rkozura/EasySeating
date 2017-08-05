@@ -1,19 +1,19 @@
 package com.kozu.easyseating.tweenutil;
 
-import com.kozu.easyseating.object.Entity;
+import com.kozu.easyseating.object.Model;
 
 import aurelienribon.tweenengine.TweenAccessor;
 
 /**
  * Created by Robert on 8/4/2017.
  */
-public class EntityAccessor implements TweenAccessor<Entity> {
+public class EntityAccessor implements TweenAccessor<Model> {
     public static final int POSITION_X = 1;
     public static final int POSITION_Y = 2;
     public static final int POSITION_XY = 3;
 
     @Override
-    public int getValues(Entity target, int tweenType, float[] returnValues) {
+    public int getValues(Model target, int tweenType, float[] returnValues) {
         switch (tweenType) {
             case POSITION_X: returnValues[0] = target.getX(); return 1;
             case POSITION_Y: returnValues[1] = target.getY(); return 1;
@@ -26,7 +26,7 @@ public class EntityAccessor implements TweenAccessor<Entity> {
     }
 
     @Override
-    public void setValues(Entity target, int tweenType, float[] newValues) {
+    public void setValues(Model target, int tweenType, float[] newValues) {
         switch (tweenType) {
             case POSITION_X: target.setX(newValues[0]); break;
             case POSITION_Y: target.setY(newValues[1]); break;

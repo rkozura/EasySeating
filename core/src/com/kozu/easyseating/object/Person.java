@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
  * Created by Rob on 8/2/2017.
  */
 
-public class Person implements Entity {
+public class Person implements Model {
     private String name;
     public Vector2 position = new Vector2();
 

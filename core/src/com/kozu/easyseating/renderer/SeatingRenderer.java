@@ -68,15 +68,14 @@ public class SeatingRenderer {
 
             //Disable depth testing so people are not clipped
             Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+        }
 
+        for(Table table : seatingLogic.conference.getTables()) {
             renderAssignedSeats(table);
         }
     }
 
     public void renderAssignedSeats(Table table) {
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
         for(Person person : table.assignedSeats) {
             //If projection matrices are not set, objects will not be drawn relative to the tables
             shapeRenderer.setProjectionMatrix(EasySeatingGame.batch.getProjectionMatrix());
@@ -86,7 +85,5 @@ public class SeatingRenderer {
             shapeRenderer.circle(person.position.x, person.position.y, 30);
             shapeRenderer.end();
         }
-
-        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 }

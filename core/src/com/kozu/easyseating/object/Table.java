@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Rob on 8/1/2017.
  */
 
-public class Table implements Entity {
+public class Table implements Model {
     private int TABLE_RADIUS = 75;
 
     public Circle bounds;

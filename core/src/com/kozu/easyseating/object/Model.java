@@ -4,7 +4,7 @@ package com.kozu.easyseating.object;
  * Created by Rob on 8/4/2017.
  */
 
-public interface Entity {
+public interface Model {
     float getX();
     float getY();
     void setX(float x);
