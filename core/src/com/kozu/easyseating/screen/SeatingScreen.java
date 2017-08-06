@@ -13,6 +13,7 @@ import com.kozu.easyseating.controller.SeatingController;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.renderer.SeatingRenderer;
 import com.kozu.easyseating.tweenutil.TweenUtil;
+import com.kozu.easyseating.ui.UILogic;
 
 public class SeatingScreen extends ScreenAdapter {
     OrthographicCamera camera;
@@ -43,6 +44,7 @@ public class SeatingScreen extends ScreenAdapter {
     @Override
     public void show() {
         InputMultiplexer multi = new InputMultiplexer();
+        multi.addProcessor(UILogic.stage);
         multi.addProcessor(gestureDetector);
         Gdx.input.setInputProcessor(multi);
     }
@@ -58,6 +60,10 @@ public class SeatingScreen extends ScreenAdapter {
         EasySeatingGame.batch.setProjectionMatrix(camera.combined);
 
         renderer.render();
+
+        //Update (act) and draw the UI after everything else
+        UILogic.stage.act();
+        UILogic.stage.draw();
     }
 
     @Override

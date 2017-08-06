@@ -18,6 +18,7 @@ import aurelienribon.tweenengine.Tween;
 public class SeatingLogic {
     public Conference conference;
     public Table selectedTable;
+    public Table tappedTable;
 
     public SeatingLogic() {
         conference = new Conference();
@@ -26,7 +27,7 @@ public class SeatingLogic {
     public Table getTableAtPosition(Vector3 pos) {
         Table returnTable = null;
 
-        for(Table table : conference.getTables()) {
+        for(Table table : conference.tables) {
             if(table.bounds.contains(pos.x, pos.y)) {
                 returnTable = table;
                 break;
@@ -56,7 +57,7 @@ public class SeatingLogic {
 
     public void addTableAtPosition(Vector3 pos) {
         Table table = new Table(pos.x, pos.y);
-        conference.getTables().add(table);
+        conference.tables.add(table);
     }
 
     public void moveTableToPosition(Table table, Vector3 pos) {

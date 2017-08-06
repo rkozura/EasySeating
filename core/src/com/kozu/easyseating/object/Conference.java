@@ -11,17 +11,11 @@ import java.util.List;
  * A conference is where tables are setup at
  */
 public class Conference {
-    List<Table> tables;
+    public List<Table> tables;   //The tables
+    public List<Person> persons; //The people
 
     public Conference() {
         tables = new ArrayList<Table>();
-    }
-
-    public List<Table> getTables() {
-        return tables;
-    }
-
-    public void setTables(List<Table> tables) {
-        this.tables = tables;
+        persons = new ArrayList<Person>();
     }
 }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Table;
+import com.kozu.easyseating.ui.UILogic;
 
 /**
  * Created by Rob on 8/4/2017.
@@ -28,9 +29,9 @@ public class SeatingController implements GestureDetector.GestureListener {
 
     /**
      * A tap will either:
-     * Add a new table
-     * Move a selected table
-     * Add a person to a table
+     * -Add a new table
+     * -Move a selected table
+     * -Add a person to a table
      *
      * @param x
      * @param y
@@ -47,8 +48,11 @@ public class SeatingController implements GestureDetector.GestureListener {
         } else {
             Table table = seatingLogic.getTableAtPosition(pos);
             if(table != null) {
-                seatingLogic.addPersonToTable(table);
+                seatingLogic.tappedTable = table;
+                UILogic.showUI(seatingLogic);
             } else {
+                seatingLogic.tappedTable = null;
+                UILogic.hideUI();
                 seatingLogic.addTableAtPosition(pos);
             }
         }
