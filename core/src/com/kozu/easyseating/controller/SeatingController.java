@@ -46,14 +46,17 @@ public class SeatingController implements GestureDetector.GestureListener {
         if(seatingLogic.selectedTable != null) {
             seatingLogic.moveTableToPosition(seatingLogic.selectedTable, pos);
         } else {
-            Table table = seatingLogic.getTableAtPosition(pos);
-            if(table != null) {
-                seatingLogic.tappedTable = table;
-                UILogic.showUI(seatingLogic);
-            } else {
+            if(seatingLogic.tappedTable != null) {
                 seatingLogic.tappedTable = null;
                 UILogic.hideUI();
-                seatingLogic.addTableAtPosition(pos);
+            } else {
+                Table table = seatingLogic.getTableAtPosition(pos);
+                if(table != null) {
+                    seatingLogic.tappedTable = table;
+                    UILogic.showUI(seatingLogic);
+                } else {
+                    seatingLogic.addTableAtPosition(pos);
+                }
             }
         }
 

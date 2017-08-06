@@ -54,7 +54,6 @@ public class SeatingLogic {
         table.assignedSeats.add(newPerson);
     }
 
-
     public void addTableAtPosition(Vector3 pos) {
         Table table = new Table(pos.x, pos.y);
         conference.tables.add(table);
@@ -75,6 +74,7 @@ public class SeatingLogic {
             float x = (float) (table.bounds.radius * Math.cos(nextSeatRadians)) + pos.x;
             float y = (float) (table.bounds.radius * Math.sin(nextSeatRadians)) + pos.y;
 
+            //Delay the movement of people for effect
             Tween.to(person, EntityAccessor.POSITION_XY, .2f).target(x,y)
                     .delay(new Random().nextFloat() * (.3f - .05f) + .05f)
                     .start(TweenUtil.getTweenManager());

@@ -23,6 +23,8 @@ public class UILogic {
     private static Table parentTable;
     private static Button createPerson;
 
+    private static ChangeListener changeListener;
+
     static {
         stage = new Stage();
 
@@ -44,17 +46,19 @@ public class UILogic {
     }
 
     public static void showUI(final SeatingLogic seatingLogic) {
-        createPerson.addListener(new ChangeListener() {
+        createPerson.addListener(changeListener = new ChangeListener() {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
                 seatingLogic.addPersonToTable(seatingLogic.tappedTable);
-                createPerson.removeListener(this);
             }
         });
         parentTable.setVisible(true);
     }
 
     public static void hideUI() {
+        if(changeListener != null) {
+            createPerson.removeListener(changeListener);
+        }
         parentTable.setVisible(false);
     }
 }
