@@ -91,6 +91,8 @@ public class UILogic {
             }
             personCheckBox.setProgrammaticChangeEvents(true);
         }
+        scrollPeople.getChildren().sort(new PersonCheckBoxComparator());
+        scrollPeople.invalidate();
 
         createPersonButton.addListener(changeListener = new ChangeListener() {
             @Override
