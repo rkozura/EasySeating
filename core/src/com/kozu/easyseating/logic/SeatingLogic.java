@@ -17,6 +17,7 @@ import aurelienribon.tweenengine.Tween;
 
 public class SeatingLogic {
     public Conference conference;
+
     public Table selectedTable;
     public Table tappedTable;
 
@@ -37,11 +38,30 @@ public class SeatingLogic {
         return returnTable;
     }
 
-    public void addPersonToTable(Table table) {
+    public Person createPerson(String name) {
+        Person person = new Person(name);
+        conference.persons.add(person);
+
+        return person;
+    }
+
+    public void removePerson(Person person) {
+        conference.persons.remove(person);
+    }
+
+    public void addPersonToTable(Table table, Person person) {
+        //Find the person in an existing table and remove
+        for(Table allTable : conference.tables) {
+            if(allTable.assignedSeats.contains(person)) {
+                removePersonFromTable(allTable, person);
+                break;
+            }
+        }
+
         //Find the next seat position for this table
         //TODO we can change this to use size of assignedseats instead of looping through assignedseats
         double nextSeatAngle = 0;
-        for (Person person : table.assignedSeats) {
+        for (Person personTemp : table.assignedSeats) {
             nextSeatAngle += 30;
         }
 
@@ -49,9 +69,16 @@ public class SeatingLogic {
         float x = (float) (table.bounds.radius * Math.cos(nextSeatRadians)) + table.bounds.x;
         float y = (float) (table.bounds.radius * Math.sin(nextSeatRadians)) + table.bounds.y;
 
-        Person newPerson = new Person();
-        newPerson.position.set(x, y);
-        table.assignedSeats.add(newPerson);
+        person.position.set(x, y);
+        table.assignedSeats.add(person);
+    }
+
+    public void removePersonFromTable(Table table, Person person) {
+        if(!table.assignedSeats.isEmpty()) {
+            table.assignedSeats.remove(person);
+        }
+
+        setPersonPositions(table, new Vector3(table.bounds.x, table.bounds.y, 0));
     }
 
     public void addTableAtPosition(Vector3 pos) {

@@ -10,6 +10,10 @@ public class Person implements Model {
     private String name;
     public Vector2 position = new Vector2();
 
+    public Person(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
@@ -36,5 +40,14 @@ public class Person implements Model {
     @Override
     public void setY(float y) {
         position.y = y;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o != null && o instanceof Person && name.equals(((Person)o).getName())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
