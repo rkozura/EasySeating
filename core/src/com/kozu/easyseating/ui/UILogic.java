@@ -47,17 +47,17 @@ public class UILogic {
 
         //Add an empty frame on the left
         Container leftContainer = new Container();
-        leftContainer.setBackground(drawable, false); //TODO drawable is not rendering correctly..
-        parentTable.add(leftContainer).expand();
+        leftContainer.setBackground(drawable, false);
+        parentTable.add(leftContainer).prefSize(999);;
 
         Table rightColumnTable = new Table();
         rightColumnTable.setBackground(drawable);
-        parentTable.add(rightColumnTable).top().expandY();
+        parentTable.add(rightColumnTable);
         //Add new person button
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = new BitmapFont();
         createPersonButton = new TextButton("Create person", textButtonStyle);
-        rightColumnTable.add(createPersonButton);
+        rightColumnTable.add(createPersonButton).fill();
 
         rightColumnTable.row();
 
@@ -66,11 +66,11 @@ public class UILogic {
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
         scrollPaneStyle.background = drawable;
         ScrollPane scrollBarPeople = new ScrollPane(scrollPeople, scrollPaneStyle);
-        rightColumnTable.add(scrollBarPeople).prefHeight(999);
+        rightColumnTable.add(scrollBarPeople).prefSize(999);
 
         Container rightContainer = new Container();
-        rightContainer.setBackground(drawable, false); //TODO drawable is not rendering correctly..
-        parentTable.add(rightContainer).expand();
+        rightContainer.setBackground(drawable, false);
+        parentTable.add(rightContainer).prefSize(999);
 
         hideUI();
 
