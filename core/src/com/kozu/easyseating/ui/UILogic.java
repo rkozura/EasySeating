@@ -1,6 +1,7 @@
 package com.kozu.easyseating.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -24,6 +26,9 @@ import java.util.Random;
  * Created by Rob on 8/5/2017.
  */
 
+/**
+ * Displays the UI used to add people to the conference
+ */
 public class UILogic {
     private static final float BUTTON_WIDTH = Math.round(.5* Gdx.graphics.getPpiX());
     private static final float BUTTON_HEIGHT = Math.round(.5* Gdx.graphics.getPpiY());
@@ -46,36 +51,40 @@ public class UILogic {
         parentTable.setFillParent(true);
 
         //Add an empty frame on the left
-        Container leftContainer = new Container();
-        leftContainer.setBackground(drawable, false);
-        parentTable.add(leftContainer).prefSize(999);;
+        addEmptyContainer(drawable);
 
-        Table rightColumnTable = new Table();
-        rightColumnTable.setBackground(drawable);
-        parentTable.add(rightColumnTable);
+        //Add a middle table that holds data
+        Table middleColumnTable = new Table();
+        middleColumnTable.setBackground(drawable);
+        parentTable.add(middleColumnTable);
         //Add new person button
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = new BitmapFont();
         createPersonButton = new TextButton("Create person", textButtonStyle);
-        rightColumnTable.add(createPersonButton).fill();
+        middleColumnTable.add(createPersonButton).fill();
 
-        rightColumnTable.row();
+        middleColumnTable.row();
 
         //Select person scroll list
         scrollPeople = new VerticalGroup();
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
         scrollPaneStyle.background = drawable;
         ScrollPane scrollBarPeople = new ScrollPane(scrollPeople, scrollPaneStyle);
-        rightColumnTable.add(scrollBarPeople).prefSize(999);
+        middleColumnTable.add(scrollBarPeople).prefSize(999);
 
-        Container rightContainer = new Container();
-        rightContainer.setBackground(drawable, false);
-        parentTable.add(rightContainer).prefSize(999);
+        //Add an empty table on the right
+        addEmptyContainer(drawable);
 
         hideUI();
 
         stage.addActor(parentTable);
         parentTable.debug(); //TODO remove me in production!
+    }
+
+    private static void addEmptyContainer(TextureRegionDrawable drawable) {
+        Container container = new Container();
+        container.setBackground(drawable, false);
+        parentTable.add(container).prefSize(999);;
     }
 
     public static void showUI(final SeatingLogic seatingLogic) {
@@ -97,26 +106,53 @@ public class UILogic {
         createPersonButton.addListener(changeListener = new ChangeListener() {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
-                final Person person = seatingLogic.createPerson(getSaltString());
+                System.out.println("clicked create person");
+                createPersonButton.setDisabled(true);
 
-                CheckBox.CheckBoxStyle checkBoxStyle = new CheckBox.CheckBoxStyle();
-                checkBoxStyle.font = new BitmapFont();
-                checkBoxStyle.checkboxOn = new TextureRegionDrawable(new TextureRegion(new Texture("checkmark.jpg")));
-                final PersonCheckBox personCheckBox = new PersonCheckBox(person.getName(), checkBoxStyle);
-                personCheckBox.person = person;
+                final Table confirmPersonTable = new Table();
+                TextButton.TextButtonStyle confirmNewPersonButtonStyle = new TextButton.TextButtonStyle();
+                confirmNewPersonButtonStyle.font = new BitmapFont();
+                final TextButton confirmNewPersonButton = new TextButton("OK", confirmNewPersonButtonStyle);
 
-                personCheckBox.addListener(new ChangeListener() {
+                TextField.TextFieldStyle textFieldStyle = new TextField.TextFieldStyle();
+                textFieldStyle.font = new BitmapFont();
+                textFieldStyle.fontColor = Color.WHITE;
+                final TextField newPersonName = new TextField("asd", textFieldStyle);
+
+                confirmPersonTable.add(confirmNewPersonButton);
+                confirmPersonTable.add(newPersonName);
+                scrollPeople.addActorAt(0, confirmPersonTable);
+
+                confirmNewPersonButton.addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        if(personCheckBox.isChecked()) {
-                            seatingLogic.addPersonToTable(seatingLogic.tappedTable, person);
-                        } else {
-                            seatingLogic.removePersonFromTable(seatingLogic.tappedTable, person);
+                        scrollPeople.removeActor(confirmPersonTable);
+                        createPersonButton.setDisabled(false);
+
+                        if (!newPersonName.getText().equals("")) {
+                            final Person person = seatingLogic.createPerson(newPersonName.getText().toUpperCase());
+
+                            CheckBox.CheckBoxStyle checkBoxStyle = new CheckBox.CheckBoxStyle();
+                            checkBoxStyle.font = new BitmapFont();
+                            checkBoxStyle.checkboxOn = new TextureRegionDrawable(new TextureRegion(new Texture("checkmark.jpg")));
+                            final PersonCheckBox personCheckBox = new PersonCheckBox(person.getName(), checkBoxStyle);
+                            personCheckBox.person = person;
+
+                            personCheckBox.addListener(new ChangeListener() {
+                                @Override
+                                public void changed(ChangeEvent event, Actor actor) {
+                                    if(personCheckBox.isChecked()) {
+                                        seatingLogic.addPersonToTable(seatingLogic.tappedTable, person);
+                                    } else {
+                                        seatingLogic.removePersonFromTable(seatingLogic.tappedTable, person);
+                                    }
+                                }
+                            });
+
+                            scrollPeople.addActorAt(0, personCheckBox);
                         }
                     }
                 });
-
-                scrollPeople.addActor(personCheckBox);
             }
         });
 
