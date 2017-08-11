@@ -68,6 +68,7 @@ public class SeatingScreen extends ScreenAdapter {
 
     @Override
     public void resize(int width, int height) {
+        UILogic.stage.getViewport().update(width, height);
         viewport.update(width,height);
         camera.position.set(camera.viewportWidth/2, camera.viewportHeight/2, 0);
     }
