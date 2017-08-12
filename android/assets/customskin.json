@@ -19,9 +19,9 @@
   }
 },
   com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
-  dialog: { titleFont: normaltext, background: blue_panel, titleFontColor: white, stageBackground: dialogDim }
+  dialog: { titleFont: normaltext, background: blue_button13, titleFontColor: white, stageBackground: dialogDim }
 },
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
-  default: { font: normaltext, fontColor: black, background: blue_button13 }
+  default: { font: normaltext, fontColor: black, background: blue_panel }
 }
 }

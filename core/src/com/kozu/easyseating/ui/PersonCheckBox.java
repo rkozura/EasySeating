@@ -1,6 +1,7 @@
 package com.kozu.easyseating.ui;
 
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.kozu.easyseating.object.Person;
 
 /**
@@ -10,7 +11,7 @@ import com.kozu.easyseating.object.Person;
 public class PersonCheckBox extends CheckBox {
     public Person person;
 
-    public PersonCheckBox(String name, CheckBox.CheckBoxStyle checkBoxStyle) {
-        super(name, checkBoxStyle);
+    public PersonCheckBox(String name, Skin skin) {
+        super(name, skin);
     }
 }

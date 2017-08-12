@@ -51,7 +51,7 @@ public class SplashScreen extends ScreenAdapter {
 
         FreetypeFontLoader.FreeTypeFontLoaderParameter mySmallFont = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         mySmallFont.fontFileName = "font.ttf";
-        mySmallFont.fontParameters.size = 10;
+        mySmallFont.fontParameters.size = 24;
         manager.load("font.ttf", BitmapFont.class, mySmallFont);
 
 

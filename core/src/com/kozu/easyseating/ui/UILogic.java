@@ -1,14 +1,11 @@
 package com.kozu.easyseating.ui;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -18,7 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Person;
@@ -152,10 +148,7 @@ public class UILogic {
                         if (!newPersonName.getText().equals("")) {
                             final Person person = seatingLogic.createPerson(newPersonName.getText().toUpperCase());
 
-                            CheckBox.CheckBoxStyle checkBoxStyle = new CheckBox.CheckBoxStyle();
-                            checkBoxStyle.font = new BitmapFont();
-                            checkBoxStyle.checkboxOn = new TextureRegionDrawable(new TextureRegion(new Texture("checkmark.jpg")));
-                            final PersonCheckBox personCheckBox = new PersonCheckBox(person.getName(), checkBoxStyle);
+                            final PersonCheckBox personCheckBox = new PersonCheckBox(person.getName(), skin);
                             personCheckBox.person = person;
 
                             personCheckBox.addListener(new ChangeListener() {
