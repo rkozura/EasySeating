@@ -12,16 +12,24 @@
   default: {
     up: blue_button12,
     down: blue_button00,
-    checked: blue_button00,
-    disabled: blue_button00,
+    checked: blue_button12,
+    disabled: blue_button12,
     font: normaltext,
     fontColor: white
-  }
+  },
+  small: {
+      up: blue_button12,
+      down: blue_button00,
+      checked: blue_button12,
+      disabled: blue_button12,
+      font: smalltext,
+      fontColor: white
+    }
 },
   com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
-  dialog: { titleFont: normaltext, background: blue_button13, titleFontColor: white, stageBackground: dialogDim }
+  dialog: { titleFont: normaltext, background: blue_button06, titleFontColor: white, stageBackground: dialogDim }
 },
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
-  default: { font: normaltext, fontColor: black, background: blue_panel }
+  default: { font: normaltext, fontColor: black, background: blue_button12 }
 }
 }

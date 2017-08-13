@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Person;
@@ -32,35 +33,23 @@ public class UILogic {
 
     public static Stage stage;
 
-    private static TextButton createPersonButton;
-    private static TextButton backButton;
+    private static TextButton createPersonButton = new TextButton("New", uiSkin, "small");
     private static VerticalGroup scrollPeople;
 
     private static ChangeListener changeCreatePersonButtonListener;
-    private static ChangeListener changeBackButtonListener;
 
     static Dialog dialogSize;
 
     static {
         stage = new Stage(new ScreenViewport());
         scrollPeople = new VerticalGroup();
-        createPersonButton = new TextButton("New", skin);
-
-        backButton = new TextButton("<--", skin);
-        changeBackButtonListener = new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                dialogSize.hide();
-            }
-        };
-        backButton.addListener(changeBackButtonListener);
 
         dialogSize = new DialogSize(200f, 400f, uiSkin, "dialog");
+        System.out.println(dialogSize.getMinWidth());
 
         //Set the title table
         Table titleTable = dialogSize.getTitleTable();
         titleTable.clear();
-        titleTable.add(backButton).width(25).height(20).left().padTop(70).padLeft(10);
         titleTable.add(new Label("   Table 1   ", uiSkin)).height(30).padTop(70);
 
         //Set the content table
@@ -70,9 +59,10 @@ public class UILogic {
         contentTable.add(new ScrollPane(scrollPeople, skin)).fill().expand().colspan(2).padBottom(0).padTop(70);
         contentTable.row();
         Table newSortTable = new Table();
-        newSortTable.add(createPersonButton).center();
-        newSortTable.add(new TextButton("Sort", skin));
-        contentTable.add(newSortTable).fill().colspan(2);
+        newSortTable.defaults().pad(10);
+        newSortTable.add(createPersonButton).width(75);
+        newSortTable.add(new TextButton("Sort", uiSkin, "small")).width(75);
+        contentTable.add(newSortTable);
     }
 
     public static void showUI(final SeatingLogic seatingLogic) {
@@ -119,9 +109,19 @@ public class UILogic {
         contentTable.clear();
         contentTable.add(new Label("Name:", uiSkin));
         final TextField newPersonName = new TextField("", skin);
+        newPersonName.addListener(new FocusListener() {
+            @Override
+            public void keyboardFocusChanged(FocusEvent event, Actor actor, boolean focused) {
+                super.keyboardFocusChanged(event, actor, focused);
+                if (!focused)
+                    Gdx.input.setOnscreenKeyboardVisible(false);
+                else
+                    Gdx.input.setOnscreenKeyboardVisible(true);
+            }
+        });
         contentTable.add(newPersonName);
         contentTable.row();
-        final TextButton createNewPersonButton = new TextButton("Create", skin);
+        final TextButton createNewPersonButton = new TextButton("Create", uiSkin);
         createNewPersonButton.addListener(new ChangeListener() {
               @Override
               public void changed(ChangeEvent event, Actor actor) {
@@ -151,7 +151,7 @@ public class UILogic {
         );
 
         contentTable.add(createNewPersonButton);
-        final TextButton cancelButton = new TextButton("Cancel", skin);
+        final TextButton cancelButton = new TextButton("Cancel", uiSkin);
         cancelButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -165,7 +165,6 @@ public class UILogic {
         dialog.setY(stage.getHeight());
 
         stage.setKeyboardFocus(newPersonName);
-        newPersonName.getOnscreenKeyboard().show(true);
     }
 }
 
