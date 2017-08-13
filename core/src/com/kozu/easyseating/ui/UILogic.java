@@ -1,9 +1,7 @@
 package com.kozu.easyseating.ui;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -13,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
-import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.kozu.easyseating.logic.SeatingLogic;
@@ -42,7 +39,7 @@ public class UILogic {
     private static ChangeListener changeCreatePersonButtonListener;
     private static ChangeListener changeBackButtonListener;
 
-    static Dialog dialog;
+    static Dialog dialogSize;
 
     static {
         stage = new Stage(new ScreenViewport());
@@ -53,47 +50,21 @@ public class UILogic {
         changeBackButtonListener = new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                hideUI();
+                dialogSize.hide();
             }
         };
         backButton.addListener(changeBackButtonListener);
-        dialog = new Dialog("", uiSkin, "dialog"){
-            @Override
-            public float getPrefWidth() {
-                // force dialog width
-                return 200f;
-            }
 
-            @Override
-            public float getPrefHeight() {
-                // force dialog height
-                return 400f;
-            }
-        };
-
-        dialog.setModal(true);
-        dialog.setResizable(false);
-        dialog.setMovable(false);
-
-        //dialog.debugAll();
-
-        dialog.addListener(new ActorGestureListener() {
-            @Override
-            public void tap(InputEvent event, float x, float y, int count, int button) {
-                if (x < 0 || x > dialog.getWidth() || y < 0 || y > dialog.getHeight()) {
-                    hideUI();
-                }
-            }
-        });
+        dialogSize = new DialogSize(200f, 400f, uiSkin, "dialog");
 
         //Set the title table
-        Table titleTable = dialog.getTitleTable();
+        Table titleTable = dialogSize.getTitleTable();
         titleTable.clear();
         titleTable.add(backButton).width(25).height(20).left().padTop(70).padLeft(10);
         titleTable.add(new Label("   Table 1   ", uiSkin)).height(30).padTop(70);
 
         //Set the content table
-        Table contentTable = dialog.getContentTable();
+        Table contentTable = dialogSize.getContentTable();
         contentTable.clear();
         contentTable.defaults().pad(10);
         contentTable.add(new ScrollPane(scrollPeople, skin)).fill().expand().colspan(2).padBottom(0).padTop(70);
@@ -105,8 +76,8 @@ public class UILogic {
     }
 
     public static void showUI(final SeatingLogic seatingLogic) {
-        dialog.setTouchable(Touchable.enabled);
-        dialog.show(stage);
+        dialogSize.setTouchable(Touchable.enabled);
+        dialogSize.show(stage);
 
         //Loop through the people and check which ones are sitting at the tapped table
         for(Actor person : scrollPeople.getChildren()) {
@@ -123,57 +94,78 @@ public class UILogic {
         scrollPeople.getChildren().sort(new PersonCheckBoxComparator());
         scrollPeople.invalidate();
 
+        if(changeCreatePersonButtonListener != null) {
+            createPersonButton.removeListener(changeCreatePersonButtonListener);
+        }
         createPersonButton.addListener(changeCreatePersonButtonListener = new ChangeListener() {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
-                createPersonButton.setDisabled(true);
-
-                final Table confirmPersonTable = new Table();
-                TextButton.TextButtonStyle confirmNewPersonButtonStyle = new TextButton.TextButtonStyle();
-                confirmNewPersonButtonStyle.font = new BitmapFont();
-                final TextButton confirmNewPersonButton = new TextButton("OK", confirmNewPersonButtonStyle);
-
-                final TextField newPersonName = new TextField("asd", skin);
-
-                confirmPersonTable.add(confirmNewPersonButton);
-                confirmPersonTable.add(newPersonName);
-                scrollPeople.addActorAt(0, confirmPersonTable);
-
-                confirmNewPersonButton.addListener(new ChangeListener() {
-                    @Override
-                    public void changed(ChangeEvent event, Actor actor) {
-                        scrollPeople.removeActor(confirmPersonTable);
-                        createPersonButton.setDisabled(false);
-
-                        if (!newPersonName.getText().equals("")) {
-                            final Person person = seatingLogic.createPerson(newPersonName.getText().toUpperCase());
-
-                            final PersonCheckBox personCheckBox = new PersonCheckBox(person.getName(), skin);
-                            personCheckBox.person = person;
-
-                            personCheckBox.addListener(new ChangeListener() {
-                                @Override
-                                public void changed(ChangeEvent event, Actor actor) {
-                                    if(personCheckBox.isChecked()) {
-                                        seatingLogic.addPersonToTable(seatingLogic.tappedTable, person);
-                                    } else {
-                                        seatingLogic.removePersonFromTable(seatingLogic.tappedTable, person);
-                                    }
-                                }
-                            });
-
-                            scrollPeople.addActorAt(0, personCheckBox);
-                        }
-                    }
-                });
+                createNewPersonDialog(seatingLogic);
             }
         });
     }
 
-    public static void hideUI() {
-        dialog.setTouchable(Touchable.disabled);
-        dialog.hide();
-        createPersonButton.removeListener(changeCreatePersonButtonListener);
+    private static void createNewPersonDialog(final SeatingLogic seatingLogic) {
+        final DialogSize dialog = new DialogSize(400f, 200f, uiSkin, "dialog");
+
+        //Set the title table
+        Table titleTable = dialog.getTitleTable();
+        titleTable.clear();
+        titleTable.add(new Label("New Person", uiSkin)).height(30).padTop(70);
+
+        //Set the content table
+        Table contentTable = dialog.getContentTable();
+        contentTable.debugAll();
+        contentTable.clear();
+        contentTable.add(new Label("Name:", uiSkin));
+        final TextField newPersonName = new TextField("", skin);
+        contentTable.add(newPersonName);
+        contentTable.row();
+        final TextButton createNewPersonButton = new TextButton("Create", skin);
+        createNewPersonButton.addListener(new ChangeListener() {
+              @Override
+              public void changed(ChangeEvent event, Actor actor) {
+                  if (!newPersonName.getText().equals("")) {
+                      final Person person = seatingLogic.createPerson(newPersonName.getText().toUpperCase());
+
+                      final PersonCheckBox personCheckBox = new PersonCheckBox(person.getName(), skin);
+                      personCheckBox.person = person;
+
+                      personCheckBox.addListener(new ChangeListener() {
+                          @Override
+                          public void changed(ChangeEvent event, Actor actor) {
+                              if(personCheckBox.isChecked()) {
+                                  seatingLogic.addPersonToTable(seatingLogic.tappedTable, person);
+                              } else {
+                                  seatingLogic.removePersonFromTable(seatingLogic.tappedTable, person);
+                              }
+                          }
+                      });
+
+                      scrollPeople.addActorAt(0, personCheckBox);
+                  }
+                  newPersonName.setText("");
+                  dialog.hide();
+              }
+          }
+        );
+
+        contentTable.add(createNewPersonButton);
+        final TextButton cancelButton = new TextButton("Cancel", skin);
+        cancelButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                newPersonName.setText("");
+                dialog.hide();
+            }
+        });
+        contentTable.add(cancelButton);
+
+        dialog.show(stage);
+        dialog.setY(stage.getHeight());
+
+        stage.setKeyboardFocus(newPersonName);
+        newPersonName.getOnscreenKeyboard().show(true);
     }
 }
 
