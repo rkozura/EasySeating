@@ -12,13 +12,14 @@ import java.util.List;
 public class Table implements Model {
     private int TABLE_RADIUS = 75;
 
+    public String tableIdentifier;
     public Circle bounds;
     public List<Person> assignedSeats;
 
     public Table(float x, float y) {
         bounds = new Circle();
         bounds.set(x, y, TABLE_RADIUS);
-        assignedSeats = new ArrayList<Person>();
+        assignedSeats = new ArrayList<>();
     }
 
     @Override

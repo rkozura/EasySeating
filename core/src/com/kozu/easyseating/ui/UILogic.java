@@ -45,7 +45,6 @@ public class UILogic {
         scrollPeople = new VerticalGroup();
 
         dialogSize = new DialogSize(200f, 400f, uiSkin, "dialog");
-        System.out.println(dialogSize.getMinWidth());
 
         //Set the title table
         Table titleTable = dialogSize.getTitleTable();
@@ -68,6 +67,12 @@ public class UILogic {
     public static void showUI(final SeatingLogic seatingLogic) {
         dialogSize.setTouchable(Touchable.enabled);
         dialogSize.show(stage);
+
+        //Set the dialog title to the table identifier
+        Table titleTable = dialogSize.getTitleTable();
+        titleTable.clear();
+        titleTable.add(new Label("   Table "+seatingLogic.tappedTable.tableIdentifier+"   "
+                , uiSkin)).height(30).padTop(70);
 
         //Loop through the people and check which ones are sitting at the tapped table
         for(Actor person : scrollPeople.getChildren()) {
@@ -101,12 +106,12 @@ public class UILogic {
         //Set the title table
         Table titleTable = dialog.getTitleTable();
         titleTable.clear();
-        titleTable.add(new Label("New Person", uiSkin)).height(30).padTop(70);
+        titleTable.add(new Label("   New Person   ", uiSkin)).padTop(70);
 
         //Set the content table
         Table contentTable = dialog.getContentTable();
         contentTable.clear();
-        contentTable.add(new Label("Name:", uiSkin));
+        contentTable.add(new Label("   Name:   ", uiSkin));
         final TextField newPersonName = new TextField("", skin);
         newPersonName.addListener(new FocusListener() {
             @Override

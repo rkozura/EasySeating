@@ -28,7 +28,7 @@ public class SeatingLogic {
     public Table getTableAtPosition(Vector3 pos) {
         Table returnTable = null;
 
-        for(Table table : conference.tables) {
+        for(Table table : conference.getTables()) {
             if(table.bounds.contains(pos.x, pos.y)) {
                 returnTable = table;
                 break;
@@ -51,7 +51,7 @@ public class SeatingLogic {
 
     public void addPersonToTable(Table table, Person person) {
         //Find the person in an existing table and remove
-        for(Table allTable : conference.tables) {
+        for(Table allTable : conference.getTables()) {
             if(allTable.assignedSeats.contains(person)) {
                 removePersonFromTable(allTable, person);
                 break;
@@ -83,7 +83,7 @@ public class SeatingLogic {
 
     public void addTableAtPosition(Vector3 pos) {
         Table table = new Table(pos.x, pos.y);
-        conference.tables.add(table);
+        conference.addTable(table);
     }
 
     public void moveTableToPosition(Table table, Vector3 pos) {
