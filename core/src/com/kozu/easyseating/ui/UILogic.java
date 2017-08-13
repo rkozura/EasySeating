@@ -105,7 +105,6 @@ public class UILogic {
 
         //Set the content table
         Table contentTable = dialog.getContentTable();
-        contentTable.debugAll();
         contentTable.clear();
         contentTable.add(new Label("Name:", uiSkin));
         final TextField newPersonName = new TextField("", skin);
