@@ -17,6 +17,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Person;
 
+import org.apache.commons.lang3.StringUtils;
+
 import static com.kozu.easyseating.EasySeatingGame.skin;
 import static com.kozu.easyseating.EasySeatingGame.uiSkin;
 
@@ -37,12 +39,14 @@ public class UILogic {
     private static VerticalGroup scrollPeople;
 
     private static ChangeListener changeCreatePersonButtonListener;
+    private static ScrollPane scrollPane;
 
     static Dialog dialogSize;
 
     static {
         stage = new Stage(new ScreenViewport());
         scrollPeople = new VerticalGroup();
+        scrollPeople.left();
 
         dialogSize = new DialogSize(200f, 400f, uiSkin, "dialog");
 
@@ -55,7 +59,9 @@ public class UILogic {
         Table contentTable = dialogSize.getContentTable();
         contentTable.clear();
         contentTable.defaults().pad(10);
-        contentTable.add(new ScrollPane(scrollPeople, skin)).fill().expand().colspan(2).padBottom(0).padTop(70);
+        scrollPane = new ScrollPane(scrollPeople, skin);
+        scrollPane.setScrollingDisabled(true, false);
+        contentTable.add(scrollPane).fill().expand().colspan(2).padBottom(0).padTop(70);
         contentTable.row();
         Table newSortTable = new Table();
         newSortTable.defaults().pad(10);
@@ -81,13 +87,24 @@ public class UILogic {
             personCheckBox.setProgrammaticChangeEvents(false);
             if(seatingLogic.tappedTable.assignedSeats.contains(personCheckBox.person)) {
                 personCheckBox.setChecked(true);
+                personCheckBox.getImageCell().setActor(personCheckBox.defaultImageActor);
             } else {
                 personCheckBox.setChecked(false);
+                for(com.kozu.easyseating.object.Table table : seatingLogic.conference.getTables()) {
+                    if(table.assignedSeats.contains(personCheckBox.person)) {
+                        float prefWidth = personCheckBox.getImageCell().getPrefWidth();
+                        Label personTableIdentifier = new Label(table.tableIdentifier, uiSkin, "nobackground");
+                        personCheckBox.getImageCell().setActor(personTableIdentifier)
+                                .prefWidth(prefWidth);
+                        break;
+                    }
+                }
             }
             personCheckBox.setProgrammaticChangeEvents(true);
         }
         scrollPeople.getChildren().sort(new PersonCheckBoxComparator());
         scrollPeople.invalidate();
+        scrollPane.setScrollY(0);
 
         if(changeCreatePersonButtonListener != null) {
             createPersonButton.removeListener(changeCreatePersonButtonListener);
@@ -129,23 +146,11 @@ public class UILogic {
         createNewPersonButton.addListener(new ChangeListener() {
               @Override
               public void changed(ChangeEvent event, Actor actor) {
-                  if (!newPersonName.getText().equals("")) {
+                  newPersonName.setText(newPersonName.getText().trim());
+                  if (!StringUtils.isBlank(newPersonName.getText())) {
                       final Person person = seatingLogic.createPerson(newPersonName.getText().toUpperCase());
 
-                      final PersonCheckBox personCheckBox = new PersonCheckBox(person.getName(), skin);
-                      personCheckBox.person = person;
-
-                      personCheckBox.addListener(new ChangeListener() {
-                          @Override
-                          public void changed(ChangeEvent event, Actor actor) {
-                              if(personCheckBox.isChecked()) {
-                                  seatingLogic.addPersonToTable(seatingLogic.tappedTable, person);
-                              } else {
-                                  seatingLogic.removePersonFromTable(seatingLogic.tappedTable, person);
-                              }
-                          }
-                      });
-
+                      final PersonCheckBox personCheckBox = new PersonCheckBox(seatingLogic, person, skin);
                       scrollPeople.addActorAt(0, personCheckBox);
                   }
                   newPersonName.setText("");
