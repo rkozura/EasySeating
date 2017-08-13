@@ -23,11 +23,9 @@ import static com.kozu.easyseating.EasySeatingGame.skin;
 import static com.kozu.easyseating.EasySeatingGame.uiSkin;
 
 /**
- * Created by Rob on 8/5/2017.
- */
-
-/**
  * Displays the UI used to add people to the conference
+ *
+ * Created by Rob on 8/5/2017.
  */
 public class UILogic {
     private static final float BUTTON_WIDTH = Math.round(.5* Gdx.graphics.getPpiX());
@@ -41,7 +39,7 @@ public class UILogic {
     private static ChangeListener changeCreatePersonButtonListener;
     private static ScrollPane scrollPane;
 
-    static Dialog dialogSize;
+    private static Dialog dialogSize;
 
     static {
         stage = new Stage(new ScreenViewport());
@@ -102,7 +100,7 @@ public class UILogic {
             }
             personCheckBox.setProgrammaticChangeEvents(true);
         }
-        scrollPeople.getChildren().sort(new PersonCheckBoxComparator());
+        scrollPeople.getChildren().sort(new PersonCheckBoxComparators.PersonCheckBoxNameComparator());
         scrollPeople.invalidate();
         scrollPane.setScrollY(0);
 
