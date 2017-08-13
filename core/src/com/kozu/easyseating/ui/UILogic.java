@@ -3,7 +3,6 @@ package com.kozu.easyseating.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -69,7 +68,6 @@ public class UILogic {
     }
 
     public static void showUI(final SeatingLogic seatingLogic) {
-        dialogSize.setTouchable(Touchable.enabled);
         dialogSize.show(stage);
 
         //Set the dialog title to the table identifier

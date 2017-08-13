@@ -1,6 +1,7 @@
 package com.kozu.easyseating.ui;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -39,10 +40,22 @@ public class DialogSize extends Dialog {
             @Override
             public void tap(InputEvent event, float x, float y, int count, int button) {
                 if (x < 0 || x > getWidth() || y < 0 || y > getHeight()) {
-                    setTouchable(Touchable.disabled);
                     hide();
                 }
             }
         });
+    }
+
+    @Override
+    public Dialog show(Stage stage) {
+        setTouchable(Touchable.enabled);
+        return super.show(stage);
+    }
+
+    @Override
+    public void hide() {
+        //Disable touching while playing hiding animation so input doesn't go to it
+        setTouchable(Touchable.disabled);
+        super.hide();
     }
 }
