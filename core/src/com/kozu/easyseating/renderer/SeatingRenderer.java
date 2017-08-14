@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.logic.SeatingLogic;
@@ -28,6 +29,7 @@ public class SeatingRenderer {
     SeatingLogic seatingLogic;
 
     public SeatingRenderer(SeatingLogic seatingLogic) {
+        //TODO move to assett manager
         Texture tableTexture = new Texture(Gdx.files.internal("lightpaperfibers.png"));
         TextureRegion tr = new TextureRegion(tableTexture);
         tableTile = new TiledDrawable(tr);
@@ -37,6 +39,7 @@ public class SeatingRenderer {
 
     public void render() {
         renderTables();
+        renderFloor();
     }
 
     public void renderTables() {
@@ -83,6 +86,24 @@ public class SeatingRenderer {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(Color.CYAN);
             shapeRenderer.circle(person.position.x, person.position.y, 30);
+            shapeRenderer.end();
+        }
+    }
+
+    private void renderFloor() {
+        shapeRenderer.setProjectionMatrix(EasySeatingGame.batch.getProjectionMatrix());
+        shapeRenderer.setTransformMatrix(EasySeatingGame.batch.getTransformMatrix());
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.BLUE);
+        shapeRenderer.rect(0, 0, seatingLogic.conference.conferenceWidth, seatingLogic.conference.conferenceHeight);
+        shapeRenderer.end();
+
+        for(Vector2 point : seatingLogic.conference.snapGrid.keySet()) {
+            shapeRenderer.setProjectionMatrix(EasySeatingGame.batch.getProjectionMatrix());
+            shapeRenderer.setTransformMatrix(EasySeatingGame.batch.getTransformMatrix());
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Point);
+            shapeRenderer.setColor(Color.BLUE);
+            shapeRenderer.point(point.x, point.y, 0);
             shapeRenderer.end();
         }
     }

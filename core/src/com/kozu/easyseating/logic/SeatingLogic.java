@@ -1,5 +1,6 @@
 package com.kozu.easyseating.logic;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.kozu.easyseating.object.Conference;
 import com.kozu.easyseating.object.Person;
@@ -12,17 +13,34 @@ import java.util.Random;
 import aurelienribon.tweenengine.Tween;
 
 /**
+ * SeatingLogic contains all the operations one can do to the conference.  Also contains selected
+ * and tapped tables for use by the controller to determine what happens to gestures
+ *
  * Created by Rob on 8/2/2017.
  */
-
 public class SeatingLogic {
+    private static final float CONFERENCE_WIDTH = 1500f;
+    private static final float CONFERENCE_HEIGHT = 1000f;
+    private static final float GRID_SIZE = 150f;
+
     public Conference conference;
 
     public Table selectedTable;
     public Table tappedTable;
 
     public SeatingLogic() {
-        conference = new Conference();
+        conference = new Conference(CONFERENCE_WIDTH, CONFERENCE_HEIGHT);
+
+        //Generate the snapgrid
+        float x=GRID_SIZE, y=GRID_SIZE;
+        while(x <= conference.conferenceWidth) {
+            while (y <= conference.conferenceHeight) {
+                conference.snapGrid.put(new Vector2(x, y), null);
+                y += GRID_SIZE;
+            }
+            y = GRID_SIZE;
+            x += GRID_SIZE;
+        }
     }
 
     public Table getTableAtPosition(Vector3 pos) {
@@ -82,8 +100,34 @@ public class SeatingLogic {
     }
 
     public void addTableAtPosition(Vector3 pos) {
-        Table table = new Table(pos.x, pos.y);
-        conference.addTable(table);
+        //Add table to the closest mark
+        Vector2 closestXY = null;
+        double closestDistance = 0;
+        for(Vector2 key : conference.snapGrid.keySet()) {
+            double distance = Math.hypot(pos.x - key.x, pos.y - key.y);
+            if(distance == 0 || closestDistance == 0 || distance < closestDistance) {
+                if(conference.snapGrid.get(key) == null) {
+                    closestDistance = distance;
+                    closestXY = key;
+                }
+            }
+        }
+        if(closestXY != null) {
+            Table table = new Table(closestXY);
+            conference.snapGrid.put(closestXY, table);
+
+            conference.getTables().add(table);
+            table.tableIdentifier = String.valueOf(conference.getTables().size());
+        }
+    }
+
+    public void removeTable(Table table) {
+        conference.snapGrid.put(table.position, null); //Clear the snap position
+        conference.getTables().remove(table); //remove the table from the conference
+
+        for(int i = 0; i<conference.getTables().size(); i++) {
+            conference.getTables().get(i).tableIdentifier = String.valueOf(i+1);
+        }
     }
 
     public void moveTableToPosition(Table table, Vector3 pos) {
