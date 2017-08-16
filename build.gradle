@@ -110,6 +110,7 @@ project(":core") {
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        compile "org.apache.pdfbox:pdfbox:2.0.7"
         compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.6'
         compile fileTree(dir: '../libs', include: '*.jar')
     }

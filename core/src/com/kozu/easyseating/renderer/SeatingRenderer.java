@@ -102,7 +102,7 @@ public class SeatingRenderer {
             shapeRenderer.setProjectionMatrix(EasySeatingGame.batch.getProjectionMatrix());
             shapeRenderer.setTransformMatrix(EasySeatingGame.batch.getTransformMatrix());
             shapeRenderer.begin(ShapeRenderer.ShapeType.Point);
-            shapeRenderer.setColor(Color.BLUE);
+            shapeRenderer.setColor(Color.RED);
             shapeRenderer.point(point.x, point.y, 0);
             shapeRenderer.end();
         }

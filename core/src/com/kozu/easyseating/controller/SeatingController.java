@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Table;
+import com.kozu.easyseating.pdf.PDFGenerator;
 import com.kozu.easyseating.ui.UILogic;
 
 /**
@@ -67,14 +68,17 @@ public class SeatingController implements GestureDetector.GestureListener {
      */
     @Override
     public boolean longPress(float x, float y) {
-        Vector3 pos = convertScreenCoordsToWorldCoords(x, y);
+//        Vector3 pos = convertScreenCoordsToWorldCoords(x, y);
+//
+//        Table table = seatingLogic.getTableAtPosition(pos);
+//        if(table != null) {
+//            seatingLogic.removeTable(table);
+//            //seatingLogic.selectedTable = table;
+//        } else {
+//            //seatingLogic.selectedTable = null;
+//        }
+        new PDFGenerator(seatingLogic).generatePDF();
 
-        Table table = seatingLogic.getTableAtPosition(pos);
-        if(table != null) {
-            seatingLogic.selectedTable = table;
-        } else {
-            seatingLogic.selectedTable = null;
-        }
 
         return true;
     }
