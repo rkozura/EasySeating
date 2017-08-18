@@ -80,6 +80,12 @@ public class SeatingLogic {
 
     public void removePerson(Person person) {
         conference.persons.remove(person);
+        for(Table table : conference.getTables()) {
+            if(table.assignedSeats.contains(person)) {
+                table.assignedSeats.remove(person);
+                break;
+            }
+        }
     }
 
     public void addPersonToTable(Table table, Person person) {

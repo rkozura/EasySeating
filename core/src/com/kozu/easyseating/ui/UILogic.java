@@ -33,30 +33,30 @@ public class UILogic {
     public static Stage stage;
 
     private static TextButton createPersonButton = new TextButton("New", uiSkin, "small");
-    private static VerticalGroup scrollPeople;
+    private static TextButton createPersonVenueButton = new TextButton("New", uiSkin, "small");
+    private static VerticalGroup tableScrollPeople;
 
     private static ChangeListener changeCreatePersonButtonListener;
     private static ScrollPane scrollPane;
 
-    private static Dialog dialogSize;
+    private static Dialog venueDialog;
+    private static ScrollPane venueScrollPane;
+
+    private static Dialog tableDialog;
 
     static {
         stage = new Stage(new ScreenViewport());
-        scrollPeople = new VerticalGroup();
-        scrollPeople.left();
+        tableScrollPeople = new VerticalGroup();
+        tableScrollPeople.left();
 
-        dialogSize = new DialogSize(200f, 400f, uiSkin, "dialog");
+        tableDialog = new DialogSize(200f, 400f, uiSkin, "dialog");
 
-        //Set the title table
-        Table titleTable = dialogSize.getTitleTable();
-        titleTable.clear();
-        titleTable.add(new Label("   Table 1   ", uiSkin)).height(30).padTop(70);
 
         //Set the content table
-        Table contentTable = dialogSize.getContentTable();
+        Table contentTable = tableDialog.getContentTable();
         contentTable.clear();
         contentTable.defaults().pad(10);
-        scrollPane = new ScrollPane(scrollPeople, skin);
+        scrollPane = new ScrollPane(null, skin);
         scrollPane.setScrollingDisabled(true, false);
         contentTable.add(scrollPane).fill().expand().colspan(2).padBottom(0).padTop(70);
         contentTable.row();
@@ -65,47 +65,84 @@ public class UILogic {
         newSortTable.add(createPersonButton).width(75);
         newSortTable.add(new TextButton("Sort", uiSkin, "small")).width(75);
         contentTable.add(newSortTable);
+
+
+
+
+
+
+
+        venueDialog = new DialogSize(200f, 400f, uiSkin, "dialog");
+        Table titleTable = venueDialog.getTitleTable();
+        titleTable.clear();
+        titleTable.add(new Label("   Venue   ", uiSkin)).padTop(70);
+        //Set the content table
+        Table venueDialogContentTable = venueDialog.getContentTable();
+        venueDialogContentTable.clear();
+        venueDialogContentTable.defaults().pad(10);
+        venueScrollPane = new ScrollPane(null, skin);
+        venueScrollPane.setScrollingDisabled(true, false);
+        venueDialogContentTable.add(venueScrollPane).fill().expand().colspan(2).padBottom(0).padTop(70);
+        venueDialogContentTable.row();
+        Table newSortTable2 = new Table();
+        newSortTable2.defaults().pad(10);
+        newSortTable2.add(createPersonVenueButton).width(75);
+        newSortTable2.add(new TextButton("Sort", uiSkin, "small")).width(75);
+        venueDialogContentTable.add(newSortTable2);
+
+
+
+        Table uiTable = new Table();
+        uiTable.setFillParent(true);
+        uiTable.top().right();
+        TextButton venueButton = new TextButton("Venue", uiSkin, "small");
+        venueButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                for(Actor person : tableScrollPeople.getChildren()) {
+                    PersonSelectorRow personSelectorRow = (PersonSelectorRow)person;
+                    personSelectorRow.selectPersonWithVenue();
+                }
+                venueScrollPane.setWidget(tableScrollPeople);
+                venueDialog.show(stage);
+            }
+        });
+        uiTable.add(venueButton);
+        TextButton optionsButton = new TextButton("Options", uiSkin, "small");
+        uiTable.add(optionsButton).expandX().right();
+
+        stage.addActor(uiTable);
     }
 
+
+
     public static void showUI(final SeatingLogic seatingLogic) {
-        dialogSize.show(stage);
+        scrollPane.setWidget(tableScrollPeople);
+        tableDialog.show(stage);
 
         //Set the dialog title to the table identifier
-        Table titleTable = dialogSize.getTitleTable();
+        Table titleTable = tableDialog.getTitleTable();
         titleTable.clear();
         titleTable.add(new Label("   Table "+seatingLogic.tappedTable.tableIdentifier+"   "
                 , uiSkin)).height(30).padTop(70);
 
         //Loop through the people and check which ones are sitting at the tapped table
-        for(Actor person : scrollPeople.getChildren()) {
-            PersonCheckBox personCheckBox = (PersonCheckBox)person;
-            //Don't fire handlers when setting initial checked status
-            personCheckBox.setProgrammaticChangeEvents(false);
-            if(seatingLogic.tappedTable.assignedSeats.contains(personCheckBox.person)) {
-                personCheckBox.setChecked(true);
-                personCheckBox.getImageCell().setActor(personCheckBox.defaultImageActor);
-            } else {
-                personCheckBox.setChecked(false);
-                for(com.kozu.easyseating.object.Table table : seatingLogic.conference.getTables()) {
-                    if(table.assignedSeats.contains(personCheckBox.person)) {
-                        float prefWidth = personCheckBox.getImageCell().getPrefWidth();
-                        Label personTableIdentifier = new Label(table.tableIdentifier, uiSkin, "nobackground");
-                        personCheckBox.getImageCell().setActor(personTableIdentifier)
-                                .prefWidth(prefWidth);
-                        break;
-                    }
-                }
-            }
-            personCheckBox.setProgrammaticChangeEvents(true);
+        for(Actor person : tableScrollPeople.getChildren()) {
+            PersonSelectorRow personSelectorRow = (PersonSelectorRow)person;
+            personSelectorRow.selectPersonWithTable(seatingLogic.tappedTable);
         }
-        scrollPeople.getChildren().sort(new PersonCheckBoxComparators.PersonCheckBoxNameComparator());
-        scrollPeople.invalidate();
+        tableScrollPeople.getChildren().sort(new PersonSelectorRowComparators.PersonSelectorRowNameComparator());
+        tableScrollPeople.invalidate();
         scrollPane.setScrollY(0);
 
+        newPersonButtonAddListener(createPersonButton, seatingLogic);
+    }
+
+    private static void newPersonButtonAddListener(TextButton textButton, final SeatingLogic seatingLogic) {
         if(changeCreatePersonButtonListener != null) {
-            createPersonButton.removeListener(changeCreatePersonButtonListener);
+            textButton.removeListener(changeCreatePersonButtonListener);
         }
-        createPersonButton.addListener(changeCreatePersonButtonListener = new ChangeListener() {
+        textButton.addListener(changeCreatePersonButtonListener = new ChangeListener() {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
                 createNewPersonDialog(seatingLogic);
@@ -146,8 +183,14 @@ public class UILogic {
                   if (!StringUtils.isBlank(newPersonName.getText())) {
                       final Person person = seatingLogic.createPerson(newPersonName.getText().toUpperCase());
 
-                      final PersonCheckBox personCheckBox = new PersonCheckBox(seatingLogic, person, skin);
-                      scrollPeople.addActorAt(0, personCheckBox);
+                      final PersonSelectorRow personSelectorRow = new PersonSelectorRow(person, seatingLogic);
+                      if(seatingLogic.tappedTable != null) {
+                          personSelectorRow.selectPersonWithTable(seatingLogic.tappedTable);
+                      } else {
+                          personSelectorRow.selectPersonWithVenue();
+                      }
+                      //final PersonCheckBox personCheckBox = new PersonCheckBox(seatingLogic, person, skin);
+                      tableScrollPeople.addActorAt(0, personSelectorRow);
                   }
                   newPersonName.setText("");
                   dialog.hide();
