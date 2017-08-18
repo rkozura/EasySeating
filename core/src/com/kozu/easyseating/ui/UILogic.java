@@ -189,8 +189,7 @@ public class UILogic {
                       } else {
                           personSelectorRow.selectPersonWithVenue();
                       }
-                      //final PersonCheckBox personCheckBox = new PersonCheckBox(seatingLogic, person, skin);
-                      tableScrollPeople.addActorAt(0, personSelectorRow);
+                      tableScrollPeople.left().fill().expand().addActorAt(0, personSelectorRow);
                   }
                   newPersonName.setText("");
                   dialog.hide();
