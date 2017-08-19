@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -16,6 +17,8 @@ import com.kozu.easyseating.object.Table;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.kozu.easyseating.EasySeatingGame.uiSkin;
+
 /**
  * Created by Rob on 8/2/2017.
  */
@@ -26,15 +29,16 @@ public class SeatingRenderer {
     private TiledDrawable tableTile;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
-    SeatingLogic seatingLogic;
+    private GlyphLayout layout;
 
-    public SeatingRenderer(SeatingLogic seatingLogic) {
+    private SeatingLogic seatingLogic = SeatingLogic.getInstance();
+
+    public SeatingRenderer() {
         //TODO move to assett manager
         Texture tableTexture = new Texture(Gdx.files.internal("lightpaperfibers.png"));
         TextureRegion tr = new TextureRegion(tableTexture);
         tableTile = new TiledDrawable(tr);
-
-        this.seatingLogic = seatingLogic;
+        layout = new GlyphLayout();
     }
 
     public void render() {
@@ -71,6 +75,13 @@ public class SeatingRenderer {
 
             //Disable depth testing so people are not clipped
             Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+
+            EasySeatingGame.batch.begin();
+            uiSkin.getFont("smalltext").setColor(Color.BLACK);
+            //Now draw the table identifier
+            uiSkin.getFont("smalltext").draw(EasySeatingGame.batch, table.tableIdentifier,
+                    table.bounds.x, table.bounds.y);
+            EasySeatingGame.batch.end();
         }
 
         for(Table table : seatingLogic.conference.getTables()) {

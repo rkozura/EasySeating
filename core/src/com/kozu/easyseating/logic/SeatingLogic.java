@@ -28,7 +28,20 @@ public class SeatingLogic {
     public Table selectedTable;
     public Table tappedTable;
 
-    public SeatingLogic() {
+    private static SeatingLogic instance;
+
+    public static SeatingLogic getInstance() {
+        if(instance == null){
+            synchronized (SeatingLogic.class) {
+                if(instance == null){
+                    instance = new SeatingLogic();
+                }
+            }
+        }
+        return instance;
+    }
+
+    protected SeatingLogic() {
         conference = new Conference(CONFERENCE_WIDTH, CONFERENCE_HEIGHT);
 
         //divide the area but the number of tiles to get the max area a tile could cover

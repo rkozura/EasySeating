@@ -31,14 +31,11 @@ public class SeatingScreen extends ScreenAdapter {
         viewport.apply();
         camera.position.set(camera.viewportWidth/2, camera.viewportHeight/2, 0);
 
-        //Create the logic class...has methods to modify objects and return them
-        seatingLogic = new SeatingLogic();
-
         //Create the renderer.  Renderer needs to see the logic to know what to render
-        renderer = new SeatingRenderer(seatingLogic);
+        renderer = new SeatingRenderer();
 
         //Setup the controller, which listens for gestures
-        gestureDetector = new GestureDetector(new SeatingController(camera, seatingLogic));
+        gestureDetector = new GestureDetector(new SeatingController(camera));
     }
 
     @Override

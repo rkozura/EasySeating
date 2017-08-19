@@ -16,11 +16,9 @@ import com.kozu.easyseating.ui.UILogic;
 public class SeatingController implements GestureDetector.GestureListener {
 
     private Camera camera;
-    private SeatingLogic seatingLogic;
 
-    public SeatingController(Camera camera, SeatingLogic seatingLogic) {
+    public SeatingController(Camera camera) {
         this.camera = camera;
-        this.seatingLogic = seatingLogic;
     }
 
     @Override
@@ -44,13 +42,14 @@ public class SeatingController implements GestureDetector.GestureListener {
     public boolean tap(float x, float y, int count, int button) {
         Vector3 pos = convertScreenCoordsToWorldCoords(x, y);
 
+        SeatingLogic seatingLogic = SeatingLogic.getInstance();
         if(seatingLogic.selectedTable != null) {
             seatingLogic.moveTableToPosition(seatingLogic.selectedTable, pos);
         } else {
                 Table table = seatingLogic.getTableAtPosition(pos);
                 if(table != null) {
                     seatingLogic.tappedTable = table;
-                    UILogic.showUI(seatingLogic);
+                    UILogic.showUI();
                 } else {
                     seatingLogic.addTableAtPosition(pos);
                 }
@@ -77,6 +76,7 @@ public class SeatingController implements GestureDetector.GestureListener {
 //        } else {
 //            //seatingLogic.selectedTable = null;
 //        }
+        SeatingLogic seatingLogic = SeatingLogic.getInstance();
         new PDFGenerator(seatingLogic).generatePDF();
 
 

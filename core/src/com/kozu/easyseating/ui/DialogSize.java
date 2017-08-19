@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
+import com.kozu.easyseating.logic.SeatingLogic;
 
 /**
  * Created by Rob on 8/12/2017.
@@ -56,6 +57,7 @@ public class DialogSize extends Dialog {
     public void hide() {
         //Disable touching while playing hiding animation so input doesn't go to it
         setTouchable(Touchable.disabled);
+        SeatingLogic.getInstance().tappedTable = null;
         super.hide();
     }
 }

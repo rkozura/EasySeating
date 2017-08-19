@@ -28,7 +28,7 @@ public class PersonSelectorRow extends Table {
 
     public PersonSelectorRow(Person person, SeatingLogic seatingLogic) {
         padLeft(20f);
-        
+
         setTouchable(Touchable.enabled);
         this.seatingLogic = seatingLogic;
         this.person = person;
@@ -36,14 +36,11 @@ public class PersonSelectorRow extends Table {
         assignedTableLabel = new Label("", uiSkin, "row");
         personLabel = new Label(person.getName(), uiSkin, "row");
         checkedImage = new Image(uiSkin.getDrawable("green_checkmark"));
-        System.out.println(checkedImage.getWidth());
-        System.out.println(checkedImage.getPrefWidth());
-        System.out.println(checkedImage.getMaxWidth());
 
         //Set the cell size to the checkmark size so the table doesnt try and resize itself
         checkedCell = add().prefWidth(checkedImage.getWidth()).prefHeight(checkedImage.getHeight());
         add(personLabel).growX();
-        debug();
+        debugAll();
     }
 
     public void selectPersonWithTable(final com.kozu.easyseating.object.Table table) {
@@ -54,7 +51,7 @@ public class PersonSelectorRow extends Table {
             for(com.kozu.easyseating.object.Table thisTable : seatingLogic.conference.getTables()) {
                 if(thisTable.assignedSeats.contains(person)) {
                     assignedTableLabel.setText(thisTable.tableIdentifier);
-                    checkedCell.setActor(assignedTableLabel).center();
+                    checkedCell.setActor(assignedTableLabel);
                     break;
                 }
             }
