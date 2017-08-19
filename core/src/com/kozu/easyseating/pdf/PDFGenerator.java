@@ -46,16 +46,16 @@ public class PDFGenerator {
 
             for(Table table : seatingLogic.conference.getTables()) {
                 drawCircle(cos, table.getX()*ratio, table.getY()*ratio, 70*ratio, Color.GRAY);
+
+                cos.beginText();
+                cos.newLineAtOffset(table.getX()*ratio, table.getY()*ratio);
+                cos.setFont( fontPlain, 12 );
+                cos.setNonStrokingColor(Color.BLACK);
+                cos.showText(table.tableIdentifier);
+                cos.endText();
             }
-            //int numberOfCellsY = Math.round(NUMBER_OF_BOXES * 1.4141f);
-//            cos.beginText();
-//            cos.setFont(fontPlain, 12);
-//            cos.moveTextPositionByAmount(100, rect.getHeight() - 50 * (++line));
-//            cos.drawString("Hello World");
-//            cos.endText();
 
             // Save the results and ensure that the document is properly closed:
-
             cos.close();
             document.save(outputFileName);
             document.close();
