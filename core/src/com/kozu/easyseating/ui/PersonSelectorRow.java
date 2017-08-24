@@ -1,16 +1,21 @@
 package com.kozu.easyseating.ui;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Person;
 
 import static com.kozu.easyseating.EasySeatingGame.uiSkin;
+import static com.kozu.easyseating.ui.UILogic.personSelectorRow;
+import static com.kozu.easyseating.ui.UILogic.venueButtons;
 
 /**
  * Created by Rob on 8/17/2017.
@@ -89,8 +94,20 @@ public class PersonSelectorRow extends Table {
         addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                seatingLogic.removePerson(person);
-                remove();
+                personSelectorRow = PersonSelectorRow.this;
+
+                venueButtons.clear();
+                TextButton deleteVenueButton = new TextButton("Delete", uiSkin, "small");
+                venueButtons.add(deleteVenueButton).width(75);
+                venueButtons.add(new TextButton("Cancel", uiSkin, "small")).width(75);
+
+                deleteVenueButton.addListener(new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        seatingLogic.removePerson(person);
+                        remove();
+                    }
+                });
             }
         });
     }

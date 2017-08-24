@@ -44,6 +44,9 @@ public class UILogic {
 
     private static Dialog tableDialog;
 
+    public static PersonSelectorRow personSelectorRow;
+    static Table venueButtons;
+
     static {
         stage = new Stage(new ScreenViewport());
         tableScrollPeople = new VerticalGroup();
@@ -84,11 +87,9 @@ public class UILogic {
         venueScrollPane.setScrollingDisabled(true, false);
         venueDialogContentTable.add(venueScrollPane).fill().expand().colspan(2).padBottom(0).padTop(70);
         venueDialogContentTable.row();
-        Table newSortTable2 = new Table();
-        newSortTable2.defaults().pad(10);
-        newSortTable2.add(createPersonVenueButton).width(75);
-        newSortTable2.add(new TextButton("Sort", uiSkin, "small")).width(75);
-        venueDialogContentTable.add(newSortTable2);
+        venueButtons = new Table();
+        venueButtons.defaults().pad(10);
+        venueDialogContentTable.add(venueButtons);
 
 
 
@@ -106,6 +107,10 @@ public class UILogic {
                 venueScrollPane.setWidget(tableScrollPeople);
                 venueDialog.show(stage);
                 newPersonButtonAddListener(createPersonVenueButton, SeatingLogic.getInstance());
+
+                venueButtons.clear();
+                venueButtons.add(createPersonVenueButton).width(75);
+                venueButtons.add(new TextButton("Sort", uiSkin, "small")).width(75);
             }
         });
         uiTable.add(venueButton);
