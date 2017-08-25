@@ -17,10 +17,12 @@ public class SeatingController implements GestureDetector.GestureListener {
 
     private Camera camera;
     private SeatingLogic seatingLogic;
+    private UILogic uiLogic;
 
-    public SeatingController(Camera camera, SeatingLogic seatingLogic) {
+    public SeatingController(Camera camera, SeatingLogic seatingLogic, UILogic uiLogic) {
         this.camera = camera;
         this.seatingLogic = seatingLogic;
+        this.uiLogic = uiLogic;
     }
 
     @Override
@@ -44,16 +46,11 @@ public class SeatingController implements GestureDetector.GestureListener {
     public boolean tap(float x, float y, int count, int button) {
         Vector3 pos = convertScreenCoordsToWorldCoords(x, y);
 
-        if(seatingLogic.selectedTable != null) {
-            seatingLogic.moveTableToPosition(seatingLogic.selectedTable, pos);
+        Table table = seatingLogic.getTableAtPosition(pos);
+        if(table != null) {
+            uiLogic.showTableDialog(seatingLogic, table);
         } else {
-                Table table = seatingLogic.getTableAtPosition(pos);
-                if(table != null) {
-                    seatingLogic.tappedTable = table;
-                    UILogic.showUI(seatingLogic);
-                } else {
-                    seatingLogic.addTableAtPosition(pos);
-                }
+            seatingLogic.addTableAtPosition(pos);
         }
 
         return true;

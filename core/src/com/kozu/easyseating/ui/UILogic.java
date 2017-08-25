@@ -37,62 +37,22 @@ public class UILogic {
     private static VerticalGroup tableScrollPeople;
 
     private static ChangeListener changeCreatePersonButtonListener;
-    private static ScrollPane scrollPane;
 
-    private static Dialog venueDialog;
-    private static ScrollPane venueScrollPane;
-
-    private static Dialog tableDialog;
 
     public static PersonSelectorRow personSelectorRow;
     static Table venueButtons;
 
-    static {
+    SeatingLogic seatingLogic;
+
+    public UILogic(final SeatingLogic seatingLogic) {
+        this.seatingLogic = seatingLogic;
         stage = new Stage(new ScreenViewport());
         tableScrollPeople = new VerticalGroup();
         tableScrollPeople.left();
 
-        tableDialog = new DialogSize(200f, 400f, uiSkin, "dialog");
-
-
-        //Set the content table
-        Table contentTable = tableDialog.getContentTable();
-        contentTable.clear();
-        contentTable.defaults().pad(10);
-        scrollPane = new ScrollPane(null, skin);
-        scrollPane.setScrollingDisabled(true, false);
-        contentTable.add(scrollPane).fill().expand().colspan(2).padBottom(0).padTop(70);
-        contentTable.row();
-        Table newSortTable = new Table();
-        newSortTable.defaults().pad(10);
-        newSortTable.add(createPersonButton).width(75);
-        newSortTable.add(new TextButton("Sort", uiSkin, "small")).width(75);
-        contentTable.add(newSortTable);
-
-
-
-
-
-
-
-        venueDialog = new DialogSize(200f, 400f, uiSkin, "dialog");
-        Table titleTable = venueDialog.getTitleTable();
-        titleTable.clear();
-        titleTable.add(new Label("   Venue   ", uiSkin)).padTop(70);
-        //Set the content table
-        Table venueDialogContentTable = venueDialog.getContentTable();
-        venueDialogContentTable.clear();
-        venueDialogContentTable.defaults().pad(10);
-        venueScrollPane = new ScrollPane(null, skin);
-        venueScrollPane.setScrollingDisabled(true, false);
-        venueDialogContentTable.add(venueScrollPane).fill().expand().colspan(2).padBottom(0).padTop(70);
-        venueDialogContentTable.row();
-        venueButtons = new Table();
-        venueButtons.defaults().pad(10);
-        venueDialogContentTable.add(venueButtons);
-
-
-
+        //Setup the screen wide UI
+        //-Venue Button
+        //-Options Button
         Table uiTable = new Table();
         uiTable.setFillParent(true);
         uiTable.top().right();
@@ -100,13 +60,9 @@ public class UILogic {
         venueButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                for(Actor person : tableScrollPeople.getChildren()) {
-                    PersonSelectorRow personSelectorRow = (PersonSelectorRow)person;
-                    personSelectorRow.selectPersonWithVenue();
-                }
-                venueScrollPane.setWidget(tableScrollPeople);
-                venueDialog.show(stage);
-                //newPersonButtonAddListener(createPersonVenueButton, SeatingLogic.getInstance()); //TODO change ui code to create uis on the fly
+                showVenueDialog(seatingLogic);
+
+                newPersonButtonAddListener(createPersonVenueButton, seatingLogic, null);
 
                 venueButtons.clear();
                 venueButtons.add(createPersonVenueButton).width(75);
@@ -120,43 +76,81 @@ public class UILogic {
         stage.addActor(uiTable);
     }
 
+    public void showTableDialog(SeatingLogic seatingLogic, com.kozu.easyseating.object.Table table) {
+        Dialog tableDialog = new DialogSize(200f, 400f, uiSkin, "dialog");
 
+        //Set the content table
+        Table contentTable = tableDialog.getContentTable();
+        contentTable.clear();
+        contentTable.defaults().pad(10);
+        ScrollPane scrollPane = new ScrollPane(tableScrollPeople, skin);
+        scrollPane.setScrollingDisabled(true, false);
+        contentTable.add(scrollPane).fill().expand().colspan(2).padBottom(0).padTop(70);
+        contentTable.row();
+        Table newSortTable = new Table();
+        newSortTable.defaults().pad(10);
+        newSortTable.add(createPersonButton).width(75);
+        newSortTable.add(new TextButton("Sort", uiSkin, "small")).width(75);
+        contentTable.add(newSortTable);
 
-    public static void showUI(SeatingLogic seatingLogic) {
-        scrollPane.setWidget(tableScrollPeople);
         tableDialog.show(stage);
 
         //Set the dialog title to the table identifier
         Table titleTable = tableDialog.getTitleTable();
         titleTable.clear();
-        titleTable.add(new Label("   Table "+seatingLogic.tappedTable.tableIdentifier+"   "
+        titleTable.add(new Label("   Table "+table.tableIdentifier+"   "
                 , uiSkin)).height(30).padTop(70);
 
         //Loop through the people and check which ones are sitting at the tapped table
         for(Actor person : tableScrollPeople.getChildren()) {
             PersonSelectorRow personSelectorRow = (PersonSelectorRow)person;
-            personSelectorRow.selectPersonWithTable(seatingLogic.tappedTable);
+            personSelectorRow.selectPersonWithTable(table);
         }
         tableScrollPeople.getChildren().sort(new PersonSelectorRowComparators.PersonSelectorRowNameComparator());
         tableScrollPeople.invalidate();
         scrollPane.setScrollY(0);
 
-        newPersonButtonAddListener(createPersonButton, seatingLogic);
+        newPersonButtonAddListener(createPersonButton, seatingLogic, table);
     }
 
-    private static void newPersonButtonAddListener(TextButton textButton, final SeatingLogic seatingLogic) {
+    public void showVenueDialog(SeatingLogic seatingLogic) {
+        Dialog venueDialog = new DialogSize(200f, 400f, uiSkin, "dialog");
+        Table titleTable = venueDialog.getTitleTable();
+        titleTable.clear();
+        titleTable.add(new Label("   Venue   ", uiSkin)).padTop(70);
+        //Set the content table
+        Table venueDialogContentTable = venueDialog.getContentTable();
+        venueDialogContentTable.clear();
+        venueDialogContentTable.defaults().pad(10);
+        ScrollPane venueScrollPane = new ScrollPane(tableScrollPeople, skin);
+        venueScrollPane.setScrollingDisabled(true, false);
+        venueDialogContentTable.add(venueScrollPane).fill().expand().colspan(2).padBottom(0).padTop(70);
+        venueDialogContentTable.row();
+        venueButtons = new Table();
+        venueButtons.defaults().pad(10);
+        venueDialogContentTable.add(venueButtons);
+
+        for(Actor person : tableScrollPeople.getChildren()) {
+            PersonSelectorRow personSelectorRow = (PersonSelectorRow)person;
+            personSelectorRow.selectPersonWithVenue();
+        }
+
+        venueDialog.show(stage);
+    }
+
+    private void newPersonButtonAddListener(TextButton textButton, final SeatingLogic seatingLogic, final com.kozu.easyseating.object.Table table) {
         if(changeCreatePersonButtonListener != null) {
             textButton.removeListener(changeCreatePersonButtonListener);
         }
         textButton.addListener(changeCreatePersonButtonListener = new ChangeListener() {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
-                createNewPersonDialog(seatingLogic);
+                createNewPersonDialog(seatingLogic, table);
             }
         });
     }
 
-    private static void createNewPersonDialog(final SeatingLogic seatingLogic) {
+    private void createNewPersonDialog(final SeatingLogic seatingLogic, final com.kozu.easyseating.object.Table table) {
         final DialogSize dialog = new DialogSize(400f, 200f, uiSkin, "dialog");
 
         //Set the title table
@@ -190,8 +184,8 @@ public class UILogic {
                       final Person person = seatingLogic.createPerson(newPersonName.getText().toUpperCase());
 
                       final PersonSelectorRow personSelectorRow = new PersonSelectorRow(person, seatingLogic);
-                      if(seatingLogic.tappedTable != null) {
-                          personSelectorRow.selectPersonWithTable(seatingLogic.tappedTable);
+                      if(table != null) {
+                          personSelectorRow.selectPersonWithTable(table);
                       } else {
                           personSelectorRow.selectPersonWithVenue();
                       }

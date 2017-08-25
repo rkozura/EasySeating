@@ -25,9 +25,6 @@ public class SeatingLogic {
 
     public Conference conference;
 
-    public Table selectedTable;
-    public Table tappedTable;
-
     public SeatingLogic() {
         conference = new Conference(CONFERENCE_WIDTH, CONFERENCE_HEIGHT);
 

@@ -20,7 +20,6 @@ public class SeatingScreen extends ScreenAdapter {
     private  SeatingRenderer renderer;
     private Viewport viewport;
     private GestureDetector gestureDetector;
-    private SeatingLogic seatingLogic;
 
     public SeatingScreen() {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
@@ -32,13 +31,15 @@ public class SeatingScreen extends ScreenAdapter {
         camera.position.set(camera.viewportWidth/2, camera.viewportHeight/2, 0);
 
         //Create the logic class...has methods to modify objects and return them
-        seatingLogic = new SeatingLogic();
+        SeatingLogic seatingLogic = new SeatingLogic();
+
+        UILogic uiLogic = new UILogic(seatingLogic);
+
+        //Setup the controller, which listens for gestures
+        gestureDetector = new GestureDetector(new SeatingController(camera, seatingLogic, uiLogic));
 
         //Create the renderer.  Renderer needs to see the logic to know what to render
         renderer = new SeatingRenderer(seatingLogic);
-
-        //Setup the controller, which listens for gestures
-        gestureDetector = new GestureDetector(new SeatingController(camera, seatingLogic));
     }
 
     @Override
