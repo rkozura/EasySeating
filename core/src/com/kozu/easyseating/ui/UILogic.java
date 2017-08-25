@@ -106,7 +106,7 @@ public class UILogic {
                 }
                 venueScrollPane.setWidget(tableScrollPeople);
                 venueDialog.show(stage);
-                newPersonButtonAddListener(createPersonVenueButton, SeatingLogic.getInstance());
+                //newPersonButtonAddListener(createPersonVenueButton, SeatingLogic.getInstance()); //TODO change ui code to create uis on the fly
 
                 venueButtons.clear();
                 venueButtons.add(createPersonVenueButton).width(75);
@@ -122,26 +122,26 @@ public class UILogic {
 
 
 
-    public static void showUI() {
+    public static void showUI(SeatingLogic seatingLogic) {
         scrollPane.setWidget(tableScrollPeople);
         tableDialog.show(stage);
 
         //Set the dialog title to the table identifier
         Table titleTable = tableDialog.getTitleTable();
         titleTable.clear();
-        titleTable.add(new Label("   Table "+SeatingLogic.getInstance().tappedTable.tableIdentifier+"   "
+        titleTable.add(new Label("   Table "+seatingLogic.tappedTable.tableIdentifier+"   "
                 , uiSkin)).height(30).padTop(70);
 
         //Loop through the people and check which ones are sitting at the tapped table
         for(Actor person : tableScrollPeople.getChildren()) {
             PersonSelectorRow personSelectorRow = (PersonSelectorRow)person;
-            personSelectorRow.selectPersonWithTable(SeatingLogic.getInstance().tappedTable);
+            personSelectorRow.selectPersonWithTable(seatingLogic.tappedTable);
         }
         tableScrollPeople.getChildren().sort(new PersonSelectorRowComparators.PersonSelectorRowNameComparator());
         tableScrollPeople.invalidate();
         scrollPane.setScrollY(0);
 
-        newPersonButtonAddListener(createPersonButton, SeatingLogic.getInstance());
+        newPersonButtonAddListener(createPersonButton, seatingLogic);
     }
 
     private static void newPersonButtonAddListener(TextButton textButton, final SeatingLogic seatingLogic) {
@@ -151,12 +151,12 @@ public class UILogic {
         textButton.addListener(changeCreatePersonButtonListener = new ChangeListener() {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
-                createNewPersonDialog();
+                createNewPersonDialog(seatingLogic);
             }
         });
     }
 
-    private static void createNewPersonDialog() {
+    private static void createNewPersonDialog(final SeatingLogic seatingLogic) {
         final DialogSize dialog = new DialogSize(400f, 200f, uiSkin, "dialog");
 
         //Set the title table
@@ -187,11 +187,11 @@ public class UILogic {
               public void changed(ChangeEvent event, Actor actor) {
                   newPersonName.setText(newPersonName.getText().trim());
                   if (!StringUtils.isBlank(newPersonName.getText())) {
-                      final Person person = SeatingLogic.getInstance().createPerson(newPersonName.getText().toUpperCase());
+                      final Person person = seatingLogic.createPerson(newPersonName.getText().toUpperCase());
 
-                      final PersonSelectorRow personSelectorRow = new PersonSelectorRow(person, SeatingLogic.getInstance());
-                      if(SeatingLogic.getInstance().tappedTable != null) {
-                          personSelectorRow.selectPersonWithTable(SeatingLogic.getInstance().tappedTable);
+                      final PersonSelectorRow personSelectorRow = new PersonSelectorRow(person, seatingLogic);
+                      if(seatingLogic.tappedTable != null) {
+                          personSelectorRow.selectPersonWithTable(seatingLogic.tappedTable);
                       } else {
                           personSelectorRow.selectPersonWithVenue();
                       }

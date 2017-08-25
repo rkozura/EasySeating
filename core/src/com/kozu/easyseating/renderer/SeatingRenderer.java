@@ -31,14 +31,16 @@ public class SeatingRenderer {
 
     private GlyphLayout layout;
 
-    private SeatingLogic seatingLogic = SeatingLogic.getInstance();
+    private SeatingLogic seatingLogic;
 
-    public SeatingRenderer() {
+    public SeatingRenderer(SeatingLogic seatingLogic) {
         //TODO move to assett manager
         Texture tableTexture = new Texture(Gdx.files.internal("lightpaperfibers.png"));
         TextureRegion tr = new TextureRegion(tableTexture);
         tableTile = new TiledDrawable(tr);
         layout = new GlyphLayout();
+
+        this.seatingLogic = seatingLogic;
     }
 
     public void render() {
