@@ -77,7 +77,7 @@ public class SeatingController implements GestureDetector.GestureListener {
 //        } else {
 //            //seatingLogic.selectedTable = null;
 //        }
-        new PDFGenerator(seatingLogic).generatePDF();
+        PDFGenerator.generatePDF(seatingLogic);
 
 
         return true;

@@ -18,12 +18,7 @@ import java.io.IOException;
  */
 
 public class PDFGenerator {
-    private SeatingLogic seatingLogic;
-
-    public PDFGenerator(SeatingLogic seatingLogic) {
-        this.seatingLogic = seatingLogic;
-    }
-    public void generatePDF() {
+    public static void generatePDF(SeatingLogic seatingLogic) {
         int line = 0;
 
         String outputFileName = "C://Users//Rob//Desktop//Simple.pdf";
@@ -65,7 +60,7 @@ public class PDFGenerator {
         }
     }
 
-    private void drawCircle(PDPageContentStream contentStream, float cx, float cy, float r, Color color) throws IOException {
+    private static void drawCircle(PDPageContentStream contentStream, float cx, float cy, float r, Color color) throws IOException {
         final float k = 0.552284749831f;
         contentStream.setNonStrokingColor(color);
         contentStream.moveTo(cx - r, cy);
