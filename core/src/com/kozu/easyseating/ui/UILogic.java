@@ -32,17 +32,13 @@ public class UILogic {
 
     public static Stage stage;
 
-    private static TextButton createPersonButton = new TextButton("New", uiSkin, "small");
-    private static TextButton createPersonVenueButton = new TextButton("New", uiSkin, "small");
     private static VerticalGroup tableScrollPeople;
 
-    private static ChangeListener changeCreatePersonButtonListener;
-
-
-    public static PersonSelectorRow personSelectorRow;
     static Table venueButtons;
 
     SeatingLogic seatingLogic;
+
+    public static boolean selectedPerson = false;
 
     public UILogic(final SeatingLogic seatingLogic) {
         this.seatingLogic = seatingLogic;
@@ -61,12 +57,6 @@ public class UILogic {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 showVenueDialog(seatingLogic);
-
-                newPersonButtonAddListener(createPersonVenueButton, seatingLogic, null);
-
-                venueButtons.clear();
-                venueButtons.add(createPersonVenueButton).width(75);
-                venueButtons.add(new TextButton("Sort", uiSkin, "small")).width(75);
             }
         });
         uiTable.add(venueButton);
@@ -89,6 +79,7 @@ public class UILogic {
         contentTable.row();
         Table newSortTable = new Table();
         newSortTable.defaults().pad(10);
+        TextButton createPersonButton = new TextButton("New", uiSkin, "small");
         newSortTable.add(createPersonButton).width(75);
         newSortTable.add(new TextButton("Sort", uiSkin, "small")).width(75);
         contentTable.add(newSortTable);
@@ -114,6 +105,8 @@ public class UILogic {
     }
 
     public void showVenueDialog(SeatingLogic seatingLogic) {
+        selectedPerson = false;
+
         Dialog venueDialog = new DialogSize(200f, 400f, uiSkin, "dialog");
         Table titleTable = venueDialog.getTitleTable();
         titleTable.clear();
@@ -136,13 +129,58 @@ public class UILogic {
         }
 
         venueDialog.show(stage);
+
+        addDefaultVenueButtons();
+    }
+
+    private void addDefaultVenueButtons() {
+        TextButton createPersonVenueButton = new TextButton("New", uiSkin, "small");
+        newPersonButtonAddListener(createPersonVenueButton, seatingLogic, null);
+
+        venueButtons.clear();
+        venueButtons.add(createPersonVenueButton).width(75);
+        venueButtons.add(new TextButton("Sort", uiSkin, "small")).width(75);
+    }
+
+    public void showDeletePersonButton(final PersonSelectorRow personSelectorRow) {
+        if(!selectedPerson) {
+            selectedPerson = true;
+
+            personSelectorRow.highlightRow();
+
+            venueButtons.clear();
+            TextButton deleteVenueButton = new TextButton("Delete", uiSkin, "small");
+            venueButtons.add(deleteVenueButton).width(75);
+            TextButton cancelVenueButton = new TextButton("Cancel", uiSkin, "small");
+            venueButtons.add(cancelVenueButton).width(75);
+
+            deleteVenueButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    seatingLogic.removePerson(personSelectorRow.person);
+                    personSelectorRow.remove();
+
+                    addDefaultVenueButtons();
+
+                    selectedPerson = false;
+                }
+            });
+
+            cancelVenueButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    personSelectorRow.unHighlightRow();
+
+                    addDefaultVenueButtons();
+
+                    selectedPerson = false;
+                }
+            });
+        }
     }
 
     private void newPersonButtonAddListener(TextButton textButton, final SeatingLogic seatingLogic, final com.kozu.easyseating.object.Table table) {
-        if(changeCreatePersonButtonListener != null) {
-            textButton.removeListener(changeCreatePersonButtonListener);
-        }
-        textButton.addListener(changeCreatePersonButtonListener = new ChangeListener() {
+        textButton.addListener(new ChangeListener() {
             @Override
             public void changed (ChangeEvent event, Actor actor) {
                 createNewPersonDialog(seatingLogic, table);
@@ -183,7 +221,7 @@ public class UILogic {
                   if (!StringUtils.isBlank(newPersonName.getText())) {
                       final Person person = seatingLogic.createPerson(newPersonName.getText().toUpperCase());
 
-                      final PersonSelectorRow personSelectorRow = new PersonSelectorRow(person, seatingLogic);
+                      final PersonSelectorRow personSelectorRow = new PersonSelectorRow(person, seatingLogic, UILogic.this);
                       if(table != null) {
                           personSelectorRow.selectPersonWithTable(table);
                       } else {
