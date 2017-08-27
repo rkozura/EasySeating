@@ -108,8 +108,8 @@ public class SplashScreen extends ScreenAdapter {
 
             EasySeatingGame.uiSkin = skin;
 
-            SeatingScreen seatingScreen = new SeatingScreen();
-            game.setScreen(seatingScreen);
+            MainScreen mainScreen = new MainScreen(game);
+            game.setScreen(mainScreen);
         } else {
             loadingBar.setValue(manager.getProgress());
             stage.act();
