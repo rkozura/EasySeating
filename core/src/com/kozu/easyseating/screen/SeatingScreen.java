@@ -21,7 +21,7 @@ public class SeatingScreen extends ScreenAdapter {
     private Viewport viewport;
     private GestureDetector gestureDetector;
 
-    public SeatingScreen() {
+    public SeatingScreen(String conferenceName) {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 
         //Create the camera and apply a viewport
@@ -31,7 +31,7 @@ public class SeatingScreen extends ScreenAdapter {
         camera.position.set(camera.viewportWidth/2, camera.viewportHeight/2, 0);
 
         //Create the logic class...has methods to modify objects and return them
-        SeatingLogic seatingLogic = new SeatingLogic();
+        SeatingLogic seatingLogic = new SeatingLogic(conferenceName);
 
         UILogic uiLogic = new UILogic(seatingLogic);
 

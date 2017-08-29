@@ -25,8 +25,8 @@ public class SeatingLogic {
 
     public Conference conference;
 
-    public SeatingLogic() {
-        conference = new Conference(CONFERENCE_WIDTH, CONFERENCE_HEIGHT);
+    public SeatingLogic(String conferenceName) {
+        conference = new Conference(conferenceName, CONFERENCE_WIDTH, CONFERENCE_HEIGHT);
 
         //divide the area but the number of tiles to get the max area a tile could cover
         //this optimal size for a tile will more often than not make the tiles overlap, but

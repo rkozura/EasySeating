@@ -110,7 +110,7 @@ public class UILogic {
         Dialog venueDialog = new DialogSize(200f, 400f, uiSkin, "dialog");
         Table titleTable = venueDialog.getTitleTable();
         titleTable.clear();
-        titleTable.add(new Label("   Venue   ", uiSkin)).padTop(70);
+        titleTable.add(new Label(seatingLogic.conference.conferenceName, uiSkin)).padTop(70);
         //Set the content table
         Table venueDialogContentTable = venueDialog.getContentTable();
         venueDialogContentTable.clear();

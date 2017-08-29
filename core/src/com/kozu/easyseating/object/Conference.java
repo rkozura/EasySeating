@@ -15,13 +15,15 @@ import java.util.Map;
  * A conference is where tables are setup at
  */
 public class Conference {
+    public String conferenceName;
     public float conferenceWidth;
     public float conferenceHeight;
     public Map<Vector2, Table> snapGrid;
     private List<Table> tables;
     public List<Person> persons;
 
-    public Conference(float conferenceWidth, float conferenceHeight) {
+    public Conference(String conferenceName, float conferenceWidth, float conferenceHeight) {
+        this.conferenceName = conferenceName;
         this.tables = new ArrayList<Table>();
         this.persons = new ArrayList<Person>();
         this.conferenceWidth = conferenceWidth;
