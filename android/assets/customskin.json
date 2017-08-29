@@ -25,6 +25,15 @@
       font: smalltext,
       fontColor: white
     }
+  ,
+  circle: {
+    up: blue_circle,
+    down: blue_circle,
+    checked: blue_circle,
+    disabled: blue_circle,
+    font: smalltext,
+    fontColor: white
+  }
 },
   com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
   dialog: { titleFont: normaltext, background: blue_button06, titleFontColor: white, stageBackground: dialogDim }

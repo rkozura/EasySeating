@@ -42,7 +42,7 @@ public class MainScreen extends ScreenAdapter {
 
         uiStage.addActor(image);
 
-        Table table = new Table(uiSkin);
+        Table table = new Table();
         table.setFillParent(true);
         uiStage.addActor(table);
 
@@ -57,6 +57,13 @@ public class MainScreen extends ScreenAdapter {
         table.add(newButton);
         table.add(new TextButton("Continue",uiSkin));
         table.add(new TextButton("Load",uiSkin));
+
+        Table helpTable = new Table();
+        helpTable.setFillParent(true);
+        TextButton helpButton = new TextButton("?", uiSkin, "circle");
+        helpTable.add(helpButton).expand().bottom().right();
+
+        uiStage.addActor(helpTable);
     }
 
     private void createVenueDialog() {

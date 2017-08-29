@@ -31,9 +31,16 @@ blue_button12
   orig: 49, 45
   offset: 0, 0
   index: -1
+blue_circle
+  rotate: false
+  xy: 296, 15
+  size: 36, 36
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
 green_checkmark
   rotate: false
-  xy: 296, 31
+  xy: 334, 31
   size: 21, 20
   orig: 21, 20
   offset: 0, 0
