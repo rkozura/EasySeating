@@ -96,7 +96,7 @@ public class MainScreen extends ScreenAdapter {
                                               public void changed(ChangeEvent event, Actor actor) {
                                                   newVenueName.setText(newVenueName.getText().trim());
                                                   if (!StringUtils.isBlank(newVenueName.getText())) {
-                                                      game.setScreen(new SeatingScreen(newVenueName.getText()));
+                                                      game.setScreen(new SeatingScreen(newVenueName.getText(), game));
                                                   }
                                                   newVenueName.setText("");
                                                   dialog.hide();

@@ -1,5 +1,6 @@
 package com.kozu.easyseating.ui;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -15,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Person;
+import com.kozu.easyseating.pdf.PDFGenerator;
+import com.kozu.easyseating.screen.MainScreen;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -40,8 +43,12 @@ public class UILogic {
 
     public static boolean selectedPerson = false;
 
-    public UILogic(final SeatingLogic seatingLogic) {
+    private Game game;
+
+    public UILogic(final SeatingLogic seatingLogic, Game game) {
         this.seatingLogic = seatingLogic;
+        this.game = game;
+
         stage = new Stage(new ScreenViewport());
         tableScrollPeople = new VerticalGroup();
         tableScrollPeople.left();
@@ -61,6 +68,12 @@ public class UILogic {
         });
         uiTable.add(venueButton);
         TextButton optionsButton = new TextButton("Options", uiSkin, "small");
+        optionsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                showOptionsDialog();
+            }
+        });
         uiTable.add(optionsButton).expandX().right();
 
         stage.addActor(uiTable);
@@ -131,6 +144,45 @@ public class UILogic {
         venueDialog.show(stage);
 
         addDefaultVenueButtons();
+    }
+
+    public void showOptionsDialog() {
+        Dialog optionsDialog = new DialogSize(200f, 400f, uiSkin, "dialog");
+        Table titleTable = optionsDialog.getTitleTable();
+        titleTable.clear();
+        titleTable.add(new Label("Options", uiSkin)).padTop(70);
+        //Set the content table
+        Table optionsDialogContentTable = optionsDialog.getContentTable();
+        optionsDialogContentTable.clear();
+        optionsDialogContentTable.defaults().pad(10);
+        TextButton exportButton = new TextButton("Export", uiSkin, "small");
+        exportButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                PDFGenerator.generatePDF(seatingLogic);
+            }
+        });
+        TextButton renameButton = new TextButton("Rename", uiSkin, "small");
+        renameButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                renameVenueDialog(seatingLogic);
+            }
+        });
+        TextButton helpButton = new TextButton("Help", uiSkin, "small");
+        TextButton exitButton = new TextButton("Main Menu", uiSkin, "small");
+        exitButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(new MainScreen(game));
+            }
+        });
+        optionsDialogContentTable.add(exportButton).row();
+        optionsDialogContentTable.add(renameButton).row();
+        optionsDialogContentTable.add(helpButton).row();
+        optionsDialogContentTable.add(exitButton);
+
+        optionsDialog.show(stage);
     }
 
     private void addDefaultVenueButtons() {
@@ -217,20 +269,20 @@ public class UILogic {
         createNewPersonButton.addListener(new ChangeListener() {
               @Override
               public void changed(ChangeEvent event, Actor actor) {
-                  newPersonName.setText(newPersonName.getText().trim());
-                  if (!StringUtils.isBlank(newPersonName.getText())) {
-                      final Person person = seatingLogic.createPerson(newPersonName.getText().toUpperCase());
+              newPersonName.setText(newPersonName.getText().trim());
+              if (!StringUtils.isBlank(newPersonName.getText())) {
+                  final Person person = seatingLogic.createPerson(newPersonName.getText().toUpperCase());
 
-                      final PersonSelectorRow personSelectorRow = new PersonSelectorRow(person, seatingLogic, UILogic.this);
-                      if(table != null) {
-                          personSelectorRow.selectPersonWithTable(table);
-                      } else {
-                          personSelectorRow.selectPersonWithVenue();
-                      }
-                      tableScrollPeople.left().fill().expand().addActorAt(0, personSelectorRow);
+                  final PersonSelectorRow personSelectorRow = new PersonSelectorRow(person, seatingLogic, UILogic.this);
+                  if(table != null) {
+                      personSelectorRow.selectPersonWithTable(table);
+                  } else {
+                      personSelectorRow.selectPersonWithVenue();
                   }
-                  newPersonName.setText("");
-                  dialog.hide();
+                  tableScrollPeople.left().fill().expand().addActorAt(0, personSelectorRow);
+              }
+              newPersonName.setText("");
+              dialog.hide();
               }
           }
         );
@@ -250,6 +302,62 @@ public class UILogic {
         dialog.setY(stage.getHeight());
 
         stage.setKeyboardFocus(newPersonName);
+    }
+
+    private void renameVenueDialog(final SeatingLogic seatingLogic) {
+        final DialogSize dialog = new DialogSize(400f, 200f, uiSkin, "dialog");
+
+        //Set the title table
+        Table titleTable = dialog.getTitleTable();
+        titleTable.clear();
+        titleTable.add(new Label("   Venue Name   ", uiSkin)).padTop(70);
+
+        //Set the content table
+        Table contentTable = dialog.getContentTable();
+        contentTable.clear();
+        contentTable.add(new Label("   Name:   ", uiSkin));
+        final TextField renameVenueName = new TextField("", skin);
+        renameVenueName.addListener(new FocusListener() {
+            @Override
+            public void keyboardFocusChanged(FocusEvent event, Actor actor, boolean focused) {
+                super.keyboardFocusChanged(event, actor, focused);
+                if (!focused)
+                    Gdx.input.setOnscreenKeyboardVisible(false);
+                else
+                    Gdx.input.setOnscreenKeyboardVisible(true);
+            }
+        });
+        contentTable.add(renameVenueName);
+        contentTable.row();
+        final TextButton renameVenueButton = new TextButton("Rename", uiSkin);
+        renameVenueButton.addListener(new ChangeListener() {
+              @Override
+              public void changed(ChangeEvent event, Actor actor) {
+                  renameVenueName.setText(renameVenueName.getText().trim());
+                  if (StringUtils.isNotBlank(renameVenueName.getText())) {
+                      seatingLogic.conference.conferenceName = renameVenueName.getText();
+                  }
+                  renameVenueName.setText("");
+                  dialog.hide();
+              }
+          }
+        );
+
+        contentTable.add(renameVenueButton);
+        final TextButton cancelButton = new TextButton("Cancel", uiSkin);
+        cancelButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                renameVenueName.setText("");
+                dialog.hide();
+            }
+        });
+        contentTable.add(cancelButton);
+
+        dialog.show(stage);
+        dialog.setY(stage.getHeight());
+
+        stage.setKeyboardFocus(renameVenueName);
     }
 }
 

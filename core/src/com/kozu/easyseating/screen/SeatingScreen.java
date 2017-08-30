@@ -1,5 +1,6 @@
 package com.kozu.easyseating.screen;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
@@ -12,16 +13,19 @@ import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.controller.SeatingController;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.renderer.SeatingRenderer;
+import com.kozu.easyseating.tweenutil.CameraAccessor;
 import com.kozu.easyseating.tweenutil.TweenUtil;
 import com.kozu.easyseating.ui.UILogic;
 
+import aurelienribon.tweenengine.Tween;
+
 public class SeatingScreen extends ScreenAdapter {
-    OrthographicCamera camera;
+    private OrthographicCamera camera;
     private  SeatingRenderer renderer;
     private Viewport viewport;
     private GestureDetector gestureDetector;
 
-    public SeatingScreen(String conferenceName) {
+    public SeatingScreen(String conferenceName, Game game) {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 
         //Create the camera and apply a viewport
@@ -33,7 +37,7 @@ public class SeatingScreen extends ScreenAdapter {
         //Create the logic class...has methods to modify objects and return them
         SeatingLogic seatingLogic = new SeatingLogic(conferenceName);
 
-        UILogic uiLogic = new UILogic(seatingLogic);
+        UILogic uiLogic = new UILogic(seatingLogic, game);
 
         //Setup the controller, which listens for gestures
         gestureDetector = new GestureDetector(new SeatingController(camera, seatingLogic, uiLogic));
@@ -44,6 +48,11 @@ public class SeatingScreen extends ScreenAdapter {
 
     @Override
     public void show() {
+        //Zoom the camera in from high to low.  Gives the user an overview of the seating
+        camera.zoom = 3f;
+        Tween.to(camera, CameraAccessor.ZOOM, 1.9f).target(1f)
+                .start(TweenUtil.getTweenManager());
+
         InputMultiplexer multi = new InputMultiplexer();
         multi.addProcessor(UILogic.stage);
         multi.addProcessor(gestureDetector);

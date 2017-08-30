@@ -1,12 +1,12 @@
 package com.kozu.easyseating.controller;
 
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Table;
-import com.kozu.easyseating.pdf.PDFGenerator;
 import com.kozu.easyseating.ui.UILogic;
 
 /**
@@ -74,8 +74,6 @@ public class SeatingController implements GestureDetector.GestureListener {
 //        } else {
 //            //seatingLogic.selectedTable = null;
 //        }
-        PDFGenerator.generatePDF(seatingLogic);
-
 
         return true;
     }
@@ -115,14 +113,38 @@ public class SeatingController implements GestureDetector.GestureListener {
         return false;
     }
 
+    private Vector2 oldInitialFirstPointer=null, oldInitialSecondPointer=null;
+    private float oldScale;
     @Override
-    public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
-        return false;
+    public boolean pinch (Vector2 initialFirstPointer, Vector2 initialSecondPointer, Vector2 firstPointer, Vector2 secondPointer){
+        if(!(initialFirstPointer.equals(oldInitialFirstPointer)&&initialSecondPointer.equals(oldInitialSecondPointer))){
+            oldInitialFirstPointer = initialFirstPointer.cpy();
+            oldInitialSecondPointer = initialSecondPointer.cpy();
+            oldScale = ((OrthographicCamera)camera).zoom;
+        }
+        Vector3 center = new Vector3(
+                (firstPointer.x+initialSecondPointer.x)/2,
+                (firstPointer.y+initialSecondPointer.y)/2,
+                0
+        );
+        zoomCamera(center, oldScale * initialFirstPointer.dst(initialSecondPointer) / firstPointer.dst(secondPointer));
+
+        return true;
     }
 
     @Override
     public void pinchStop() {
 
+    }
+
+    private void zoomCamera(Vector3 origin, float scale){
+        camera.update();
+        Vector3 oldUnprojection = camera.unproject(origin.cpy()).cpy();
+        ((OrthographicCamera)camera).zoom = scale; //Larger value of zoom = small images, border view
+        ((OrthographicCamera)camera).zoom = Math.min(2.0f, Math.max(((OrthographicCamera)camera).zoom, 0.5f));
+        camera.update();
+        Vector3 newUnprojection = camera.unproject(origin.cpy()).cpy();
+        camera.position.add(oldUnprojection.cpy().add(newUnprojection.cpy().scl(-1f)));
     }
 
     /**
