@@ -94,27 +94,19 @@ public class SeatingLogic {
             }
         }
 
-        //Find the next seat position for this table
-        //TODO we can change this to use size of assignedseats instead of looping through assignedseats
-        double nextSeatAngle = 0;
-        for (Person personTemp : table.assignedSeats) {
-            nextSeatAngle += 30;
-        }
-
-        double nextSeatRadians = Math.toRadians(nextSeatAngle);
-        float x = (float) (table.bounds.radius * Math.cos(nextSeatRadians)) + table.bounds.x;
-        float y = (float) (table.bounds.radius * Math.sin(nextSeatRadians)) + table.bounds.y;
-
-        person.position.set(x, y);
         table.assignedSeats.add(person);
+        setPersonPositions(table, new Vector3(table.bounds.x, table.bounds.y, 0));
     }
 
     public void removePersonFromTable(Table table, Person person) {
         if(!table.assignedSeats.isEmpty()) {
             table.assignedSeats.remove(person);
-        }
 
-        setPersonPositions(table, new Vector3(table.bounds.x, table.bounds.y, 0));
+            //If still not empty, set the person positions
+            if(!table.assignedSeats.isEmpty()) {
+                setPersonPositions(table, new Vector3(table.bounds.x, table.bounds.y, 0));
+            }
+        }
     }
 
     public void addTableAtPosition(Vector3 pos) {
@@ -157,18 +149,20 @@ public class SeatingLogic {
     }
 
     private void setPersonPositions(Table table, Vector3 pos) {
+        double angleBetweenSeats = 360 / table.assignedSeats.size();
+
         double nextSeatAngle = 0;
-        for(Person person : table.assignedSeats) {
+        for (Person person : table.assignedSeats) {
             double nextSeatRadians = Math.toRadians(nextSeatAngle);
-            float x = (float) (table.bounds.radius * Math.cos(nextSeatRadians)) + pos.x;
-            float y = (float) (table.bounds.radius * Math.sin(nextSeatRadians)) + pos.y;
+            float x = (float) (table.getRadius() * Math.cos(nextSeatRadians)) + pos.x;
+            float y = (float) (table.getRadius() * Math.sin(nextSeatRadians)) + pos.y;
 
             //Delay the movement of people for effect
             Tween.to(person, EntityAccessor.POSITION_XY, .2f).target(x,y)
-                    .delay(new Random().nextFloat() * (.3f - .05f) + .05f)
+                    .delay(new Random().nextFloat() * (.3f - .05f) + .05f) //Delay .05 to .3 seconds
                     .start(TweenUtil.getTweenManager());
 
-            nextSeatAngle += 30;
+            nextSeatAngle += angleBetweenSeats;
         }
     }
 }

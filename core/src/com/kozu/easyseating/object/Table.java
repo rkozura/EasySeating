@@ -11,7 +11,7 @@ import java.util.List;
  */
 
 public class Table implements Model {
-    private int TABLE_RADIUS = 75;
+    private final int INIT_TABLE_RADIUS = 75;
 
     public String tableIdentifier;
     public Circle bounds;
@@ -21,7 +21,7 @@ public class Table implements Model {
     public Table(Vector2 position) {
         this.position = position;
         bounds = new Circle();
-        bounds.set(position.x, position.y, TABLE_RADIUS);
+        bounds.set(position.x, position.y, INIT_TABLE_RADIUS);
         assignedSeats = new ArrayList<>();
     }
 
@@ -43,5 +43,13 @@ public class Table implements Model {
     @Override
     public void setY(float y) {
         bounds.y = y;
+    }
+
+    public void setRadius(float radius) {
+        bounds.radius = radius;
+    }
+
+    public float getRadius() {
+        return bounds.radius;
     }
 }
