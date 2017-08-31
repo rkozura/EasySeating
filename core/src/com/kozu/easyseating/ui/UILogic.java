@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.pdf.PDFGenerator;
@@ -49,7 +49,7 @@ public class UILogic {
         this.seatingLogic = seatingLogic;
         this.game = game;
 
-        stage = new Stage(new ScreenViewport());
+        stage = new Stage(new StretchViewport(800, 480));
         tableScrollPeople = new VerticalGroup();
         tableScrollPeople.left();
 
@@ -80,7 +80,7 @@ public class UILogic {
     }
 
     public void showTableDialog(SeatingLogic seatingLogic, com.kozu.easyseating.object.Table table) {
-        Dialog tableDialog = new DialogSize(200f, 400f, uiSkin, "dialog");
+        Dialog tableDialog = new DialogSize(275f, 400f, uiSkin, "dialog");
 
         //Set the content table
         Table contentTable = tableDialog.getContentTable();
@@ -94,8 +94,8 @@ public class UILogic {
         newSortTable.defaults().pad(10);
         TextButton createPersonButton = new TextButton("New", uiSkin, "small");
         newSortTable.add(createPersonButton).width(75);
-        newSortTable.add(new TextButton("Sort", uiSkin, "small")).width(75);
-        contentTable.add(newSortTable);
+        newSortTable.add(new TextButton("Sort", uiSkin, "small")).width(75).growX().right();
+        contentTable.add(newSortTable).growX();
 
         tableDialog.show(stage);
 

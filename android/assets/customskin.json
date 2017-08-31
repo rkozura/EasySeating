@@ -41,7 +41,7 @@
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
   default: { font: normaltext, fontColor: black, background: blue_button12 },
   nobackground: { font: normaltext, fontColor: black},
-  row: { font: smalltext, fontColor: black}
+  row: { font: normaltext, fontColor: black}
 },
   com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
   default: { checkboxOn: green_checkmark, font: smalltext, fontColor: black }

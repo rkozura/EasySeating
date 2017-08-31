@@ -35,8 +35,8 @@ public class SeatingRenderer {
     }
 
     public void render() {
-        renderTables();
         renderFloor();
+        renderTables();
     }
 
     public void renderTables() {
