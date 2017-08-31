@@ -316,7 +316,7 @@ public class UILogic {
         Table contentTable = dialog.getContentTable();
         contentTable.clear();
         contentTable.add(new Label("   Name:   ", uiSkin));
-        final TextField renameVenueName = new TextField("", skin);
+        final TextField renameVenueName = new TextField(seatingLogic.conference.conferenceName, skin);
         renameVenueName.addListener(new FocusListener() {
             @Override
             public void keyboardFocusChanged(FocusEvent event, Actor actor, boolean focused) {
