@@ -40,45 +40,43 @@ public class SeatingRenderer {
     }
 
     public void renderTables() {
-        for(Table table : seatingLogic.conference.getTables()) {
-            Gdx.gl.glDepthFunc(GL20.GL_LESS);
-            Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-            Gdx.gl.glDepthMask(true);
-            Gdx.gl.glColorMask(false, false, false, false);
+        if(seatingLogic.conference.getTables().size() > 0) {
+            for (Table table : seatingLogic.conference.getTables()) {
+                Gdx.gl.glDepthFunc(GL20.GL_LESS);
+                Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+                Gdx.gl.glDepthMask(true);
+                Gdx.gl.glColorMask(false, false, false, false);
 
-            shapeRenderer.setProjectionMatrix(EasySeatingGame.batch.getProjectionMatrix());
-            shapeRenderer.setTransformMatrix(EasySeatingGame.batch.getTransformMatrix());
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.circle(table.bounds.x, table.bounds.y, table.bounds.radius);
-            shapeRenderer.end();
+                shapeRenderer.setProjectionMatrix(EasySeatingGame.batch.getProjectionMatrix());
+                shapeRenderer.setTransformMatrix(EasySeatingGame.batch.getTransformMatrix());
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                shapeRenderer.circle(table.bounds.x, table.bounds.y, table.bounds.radius);
+                shapeRenderer.end();
+            }
 
+            //Draw the table texture
             EasySeatingGame.batch.begin();
-
             Gdx.gl.glColorMask(true, true, true, true);
             Gdx.gl.glDepthFunc(GL20.GL_EQUAL);
-
-            //Draw the table texture just enough to cover the table
-            //TODO move the width/height computations to table class so it does not happen
-            //every render
-            tableTile.draw(EasySeatingGame.batch, table.bounds.x - table.bounds.radius,
-                    table.bounds.y - table.bounds.radius, table.bounds.radius*2,
-                    table.bounds.radius*2);
-
+            tableTile.draw(EasySeatingGame.batch, 0, 0, seatingLogic.conference.conferenceWidth,
+                    seatingLogic.conference.conferenceHeight);
             EasySeatingGame.batch.end();
 
             //Disable depth testing so people are not clipped
             Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 
-            EasySeatingGame.batch.begin();
-            uiSkin.getFont("smalltext").setColor(Color.BLACK);
-            //Now draw the table identifier
-            uiSkin.getFont("smalltext").draw(EasySeatingGame.batch, table.tableIdentifier,
-                    table.bounds.x, table.bounds.y);
-            EasySeatingGame.batch.end();
-        }
+            for (Table table : seatingLogic.conference.getTables()) {
+                EasySeatingGame.batch.begin();
+                uiSkin.getFont("smalltext").setColor(Color.BLACK);
+                //Now draw the table identifier
+                uiSkin.getFont("smalltext").draw(EasySeatingGame.batch, table.tableIdentifier,
+                        table.bounds.x, table.bounds.y);
+                EasySeatingGame.batch.end();
+            }
 
-        for(Table table : seatingLogic.conference.getTables()) {
-            renderAssignedSeats(table);
+            for (Table table : seatingLogic.conference.getTables()) {
+                renderAssignedSeats(table);
+            }
         }
     }
 
