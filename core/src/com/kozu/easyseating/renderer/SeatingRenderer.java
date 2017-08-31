@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -14,9 +13,6 @@ import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.kozu.easyseating.EasySeatingGame.uiSkin;
 
 /**
@@ -24,12 +20,8 @@ import static com.kozu.easyseating.EasySeatingGame.uiSkin;
  */
 
 public class SeatingRenderer {
-    public List<Table> tables = new ArrayList<Table>();
-
     private TiledDrawable tableTile;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
-
-    private GlyphLayout layout;
 
     private SeatingLogic seatingLogic;
 
@@ -38,7 +30,6 @@ public class SeatingRenderer {
         Texture tableTexture = new Texture(Gdx.files.internal("lightpaperfibers.png"));
         TextureRegion tr = new TextureRegion(tableTexture);
         tableTile = new TiledDrawable(tr);
-        layout = new GlyphLayout();
 
         this.seatingLogic = seatingLogic;
     }
