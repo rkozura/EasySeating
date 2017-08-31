@@ -8,10 +8,12 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Person implements Model {
     private String name;
+    private String initials = "";
+
     public Vector2 position = new Vector2();
 
     public Person(String name) {
-        this.name = name;
+        setName(name);
     }
 
     public String getName() {
@@ -20,6 +22,12 @@ public class Person implements Model {
 
     public void setName(String name) {
         this.name = name;
+
+        initials = "";
+        String[] names = name.split(" ");
+        for(String oneName : names) {
+            initials += oneName.charAt(0);
+        }
     }
 
     @Override
@@ -49,5 +57,9 @@ public class Person implements Model {
         } else {
             return false;
         }
+    }
+
+    public String getInitials() {
+        return initials;
     }
 }

@@ -100,6 +100,13 @@ public class SeatingRenderer {
             shapeRenderer.setColor(Color.CYAN);
             shapeRenderer.circle(person.position.x, person.position.y, 30);
             shapeRenderer.end();
+
+            EasySeatingGame.batch.begin();
+            uiSkin.getFont("smalltext").setColor(Color.BLACK);
+            //Now draw the table identifier
+            uiSkin.getFont("smalltext").draw(EasySeatingGame.batch, person.getInitials(),
+                    person.position.x, person.position.y);
+            EasySeatingGame.batch.end();
         }
     }
 
