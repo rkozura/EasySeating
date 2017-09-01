@@ -59,6 +59,10 @@ public class SplashScreen extends ScreenAdapter {
         smallFont.fontParameters.size = 12;
         manager.load("smallfont.ttf", BitmapFont.class, smallFont);
 
+        FreetypeFontLoader.FreeTypeFontLoaderParameter largeFont = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+        largeFont.fontFileName = "font.ttf";
+        largeFont.fontParameters.size = 58;
+        manager.load("largefont.ttf", BitmapFont.class, largeFont);
 
         Pixmap pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.RED);
@@ -102,6 +106,7 @@ public class SplashScreen extends ScreenAdapter {
             Skin skin = new Skin();
             skin.add("normaltext", manager.get("font.ttf", BitmapFont.class), BitmapFont.class);
             skin.add("smalltext", manager.get("smallfont.ttf", BitmapFont.class), BitmapFont.class);
+            skin.add("largetext", manager.get("largefont.ttf", BitmapFont.class), BitmapFont.class);
 
             skin.addRegions(atlas);
             skin.load(Gdx.files.internal("customskin.json"));

@@ -79,8 +79,8 @@ public class UILogic {
         stage.addActor(uiTable);
     }
 
-    public void showTableDialog(SeatingLogic seatingLogic, com.kozu.easyseating.object.Table table) {
-        Dialog tableDialog = new DialogSize(275f, 400f, uiSkin, "dialog");
+    public void showTableDialog(final SeatingLogic seatingLogic, final com.kozu.easyseating.object.Table table) {
+        final Dialog tableDialog = new DialogSize(275f, 400f, uiSkin, "dialog");
 
         //Set the content table
         Table contentTable = tableDialog.getContentTable();
@@ -94,6 +94,15 @@ public class UILogic {
         newSortTable.defaults().pad(10);
         TextButton createPersonButton = new TextButton("New", uiSkin, "small");
         newSortTable.add(createPersonButton).width(75);
+        TextButton deleteButton = new TextButton("Delete", uiSkin, "small");
+        deleteButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                seatingLogic.removeTable(table);
+                tableDialog.hide();
+            }
+        });
+        newSortTable.add(deleteButton).width(75);
         newSortTable.add(new TextButton("Sort", uiSkin, "small")).width(75).growX().right();
         contentTable.add(newSortTable).growX();
 

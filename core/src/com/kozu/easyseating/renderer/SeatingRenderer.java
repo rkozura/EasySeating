@@ -67,9 +67,9 @@ public class SeatingRenderer {
 
             for (Table table : seatingLogic.conference.getTables()) {
                 EasySeatingGame.batch.begin();
-                uiSkin.getFont("smalltext").setColor(Color.BLACK);
+                uiSkin.getFont("largetext").setColor(Color.BLACK);
                 //Now draw the table identifier
-                uiSkin.getFont("smalltext").draw(EasySeatingGame.batch, table.tableIdentifier,
+                uiSkin.getFont("largetext").draw(EasySeatingGame.batch, table.tableIdentifier,
                         table.bounds.x, table.bounds.y);
                 EasySeatingGame.batch.end();
             }

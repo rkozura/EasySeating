@@ -67,12 +67,18 @@ public class PersonSelectorRow extends Table {
             checked = true;
             checkedCell.setActor(checkedImage);
         } else {
+            boolean foundTable = false;
             for(com.kozu.easyseating.object.Table thisTable : seatingLogic.conference.getTables()) {
                 if(thisTable.assignedSeats.contains(person)) {
+                    foundTable = true;
                     assignedTableLabel.setText(thisTable.tableIdentifier);
                     checkedCell.setActor(assignedTableLabel).center();
                     break;
                 }
+            }
+
+            if(!foundTable) {
+                checkedCell.clearActor();
             }
             checked = false;
         }
