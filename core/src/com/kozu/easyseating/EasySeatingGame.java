@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
+import com.kozu.easyseating.resolver.PersonImporter;
 import com.kozu.easyseating.screen.SplashScreen;
 import com.kozu.easyseating.tweenutil.CameraAccessor;
 import com.kozu.easyseating.tweenutil.EntityAccessor;
@@ -15,10 +16,14 @@ import com.kozu.easyseating.tweenutil.EntityAccessor;
 import aurelienribon.tweenengine.Tween;
 
 public class EasySeatingGame extends Game {
-
+    public static PersonImporter importer;
     public static Batch batch;
     public static Skin skin;
     public static Skin uiSkin;
+
+    public EasySeatingGame(PersonImporter importer) {
+        this.importer = importer;
+    }
 
     @Override
     public void create() {

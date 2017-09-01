@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.pdf.PDFGenerator;
@@ -250,6 +251,68 @@ public class UILogic {
     }
 
     private void createNewPersonDialog(final SeatingLogic seatingLogic, final com.kozu.easyseating.object.Table table) {
+        final Dialog newPersonOptionsDialog = new DialogSize(275f, 400f, uiSkin, "dialog");
+
+        //Set the title table
+        Table titleTable = newPersonOptionsDialog.getTitleTable();
+        titleTable.clear();
+        titleTable.add(new Label("   New Person   ", uiSkin)).padTop(70);
+
+        //Set the content table
+        Table contentTable = newPersonOptionsDialog.getContentTable();
+        contentTable.clear();
+        TextButton customPerson = new TextButton("Custom", uiSkin);
+        customPerson.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                newPersonOptionsDialog.hide();
+                createCustomPersonDialog(seatingLogic, table);
+            }
+        });
+        contentTable.add(customPerson);
+        contentTable.row();
+        TextButton importPerson = new TextButton("Import", uiSkin);
+        importPerson.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                createImportPersonDialog(seatingLogic, table);
+            }
+        });
+        contentTable.add(importPerson);
+
+        newPersonOptionsDialog.show(stage);
+        newPersonOptionsDialog.setY(stage.getHeight());
+    }
+
+    private void createImportPersonDialog(final SeatingLogic seatingLogic, final com.kozu.easyseating.object.Table table) {
+        EasySeatingGame.importer.getPersonList();
+//        //get people
+//
+//        Dialog importPersonDialog = new DialogSize(200f, 400f, uiSkin, "dialog");
+//        Table titleTable = importPersonDialog.getTitleTable();
+//        titleTable.clear();
+//        titleTable.add(new Label("Import", uiSkin)).padTop(70);
+//        //Set the content table
+//        Table importPersonDialogContentTable = importPersonDialog.getContentTable();
+//        importPersonDialogContentTable.clear();
+//        importPersonDialogContentTable.defaults().pad(10);
+//        ScrollPane venueScrollPane = new ScrollPane(tableScrollPeople, skin);
+//        venueScrollPane.setScrollingDisabled(true, false);
+//        importPersonDialogContentTable.add(venueScrollPane).fill().expand().colspan(2).padBottom(0).padTop(70);
+//        importPersonDialogContentTable.row();
+//        venueButtons = new Table();
+//        venueButtons.defaults().pad(10);
+//        importPersonDialogContentTable.add(venueButtons);
+//
+//        for(Actor person : tableScrollPeople.getChildren()) {
+//            PersonSelectorRow personSelectorRow = (PersonSelectorRow)person;
+//            personSelectorRow.selectPersonWithVenue();
+//        }
+//
+//        venueDialog.show(stage);
+    }
+
+    private void createCustomPersonDialog(final SeatingLogic seatingLogic, final com.kozu.easyseating.object.Table table) {
         final DialogSize dialog = new DialogSize(400f, 200f, uiSkin, "dialog");
 
         //Set the title table
@@ -276,24 +339,24 @@ public class UILogic {
         contentTable.row();
         final TextButton createNewPersonButton = new TextButton("Create", uiSkin);
         createNewPersonButton.addListener(new ChangeListener() {
-              @Override
-              public void changed(ChangeEvent event, Actor actor) {
-              newPersonName.setText(newPersonName.getText().trim());
-              if (!StringUtils.isBlank(newPersonName.getText())) {
-                  final Person person = seatingLogic.createPerson(newPersonName.getText().toUpperCase());
+                                              @Override
+                                              public void changed(ChangeEvent event, Actor actor) {
+                                                  newPersonName.setText(newPersonName.getText().trim());
+                                                  if (!StringUtils.isBlank(newPersonName.getText())) {
+                                                      final Person person = seatingLogic.createPerson(newPersonName.getText().toUpperCase());
 
-                  final PersonSelectorRow personSelectorRow = new PersonSelectorRow(person, seatingLogic, UILogic.this);
-                  if(table != null) {
-                      personSelectorRow.selectPersonWithTable(table);
-                  } else {
-                      personSelectorRow.selectPersonWithVenue();
-                  }
-                  tableScrollPeople.left().fill().expand().addActorAt(0, personSelectorRow);
-              }
-              newPersonName.setText("");
-              dialog.hide();
-              }
-          }
+                                                      final PersonSelectorRow personSelectorRow = new PersonSelectorRow(person, seatingLogic, UILogic.this);
+                                                      if(table != null) {
+                                                          personSelectorRow.selectPersonWithTable(table);
+                                                      } else {
+                                                          personSelectorRow.selectPersonWithVenue();
+                                                      }
+                                                      tableScrollPeople.left().fill().expand().addActorAt(0, personSelectorRow);
+                                                  }
+                                                  newPersonName.setText("");
+                                                  dialog.hide();
+                                              }
+                                          }
         );
 
         contentTable.add(createNewPersonButton);
