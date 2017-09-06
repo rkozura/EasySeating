@@ -2,19 +2,18 @@ package com.kozu.easyseating.screen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.github.czyzby.lml.annotation.LmlAction;
+import com.github.czyzby.lml.parser.impl.AbstractLmlView;
+import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.ui.DialogSize;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,44 +25,23 @@ import static com.kozu.easyseating.EasySeatingGame.uiSkin;
  * Created by Rob on 8/27/2017.
  */
 
-public class MainScreen extends ScreenAdapter {
+public class MainScreen extends AbstractLmlView {
     private Stage uiStage;
     private Game game;
 
-    public MainScreen(final Game game) {
-        this.game = game;
+    public MainScreen() {
+        super(new Stage());
+    }
 
-        Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+    @Override
+    public void show() {
+        super.show();
 
-        uiStage = new Stage(new ScreenViewport());
-
-        Image image = new Image(uiSkin.getPatch("blue_button06"));
-        image.setFillParent(true);
-
-        uiStage.addActor(image);
-
-        Table table = new Table();
-        table.setFillParent(true);
-        uiStage.addActor(table);
-
-        TextButton newButton = new TextButton("New",uiSkin);
-        newButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                createVenueDialog();
-            }
-        });
-
-        table.add(newButton);
-        table.add(new TextButton("Continue",uiSkin));
-        table.add(new TextButton("Load",uiSkin));
-
-        Table helpTable = new Table();
-        helpTable.setFillParent(true);
-        TextButton helpButton = new TextButton("?", uiSkin, "circle");
-        helpTable.add(helpButton).expand().bottom().right();
-
-        uiStage.addActor(helpTable);
+//        EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
+//        Image image = new Image(core.getParser().getData().getSkin("custom").getPatch("blue_button06"));
+//        image.setFillParent(true);
+//
+//        getStage().addActor(image);
     }
 
     private void createVenueDialog() {
@@ -121,24 +99,24 @@ public class MainScreen extends ScreenAdapter {
         uiStage.setKeyboardFocus(newVenueName);
     }
 
+    @LmlAction("openDialog")
+    public void openDialog() {
+        EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
+        core.getParser().fillStage(getStage(), Gdx.files.internal("views/NewVenueDialog.lml"));
+    }
+
+    public DialogSize getDialogSize() {
+        return new DialogSize(100, 100, EasySeatingGame.uiSkin, "dialog");
+    }
+
+
     @Override
-    public void show() {
-        InputMultiplexer multi = new InputMultiplexer();
-        multi.addProcessor(uiStage);
-        Gdx.input.setInputProcessor(multi);
+    public FileHandle getTemplateFile() {
+        return Gdx.files.internal("views/MainMenuView.lml");
     }
 
     @Override
-    public void render(float delta) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        //Update (act) and draw the UI after everything else
-        uiStage.act();
-        uiStage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        uiStage.getViewport().update(width, height);
+    public String getViewId() {
+        return "second";
     }
 }

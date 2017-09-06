@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<!DOCTYPE table SYSTEM "lml.dtd">
+
+<table fillparent="true">
+    <textbutton onclick="openDialog" style="blue">New</textbutton>
+    <textbutton>Continue</textbutton>
+    <textbutton>Load</textbutton>
+</table>

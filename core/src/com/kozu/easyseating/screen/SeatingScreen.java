@@ -21,7 +21,7 @@ import aurelienribon.tweenengine.Tween;
 
 public class SeatingScreen extends ScreenAdapter {
     private OrthographicCamera camera;
-    private  SeatingRenderer renderer;
+    private SeatingRenderer renderer;
     private Viewport viewport;
     private GestureDetector gestureDetector;
 

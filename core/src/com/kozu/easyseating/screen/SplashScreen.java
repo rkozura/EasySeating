@@ -1,24 +1,21 @@
 package com.kozu.easyseating.screen;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.github.czyzby.lml.annotation.LmlAction;
+import com.github.czyzby.lml.annotation.LmlActor;
+import com.github.czyzby.lml.parser.impl.AbstractLmlView;
 import com.kozu.easyseating.EasySeatingGame;
 
 /**
@@ -26,20 +23,18 @@ import com.kozu.easyseating.EasySeatingGame;
  *
  * Created by Rob on 8/11/2017.
  */
-public class SplashScreen extends ScreenAdapter {
+public class SplashScreen extends AbstractLmlView {
     private AssetManager manager;
-    private Game game;
     private TextureAtlas atlas;
-    private Stage stage;
-    private ProgressBar loadingBar;
 
-    public SplashScreen(Game game) {
-        this.game = game;
+    @LmlActor("progressBar") private ProgressBar loadingBar;
+
+    public SplashScreen() {
+        super(new Stage());
     }
 
     @Override
     public void show() {
-        stage = new Stage();
         manager = new AssetManager();
 
         //Load the vector tff font file
@@ -63,43 +58,12 @@ public class SplashScreen extends ScreenAdapter {
         largeFont.fontFileName = "font.ttf";
         largeFont.fontParameters.size = 58;
         manager.load("largefont.ttf", BitmapFont.class, largeFont);
-
-        Pixmap pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.RED);
-        pixmap.fill();
-        TextureRegionDrawable drawable = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-        pixmap.dispose();
-
-        ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle();
-        progressBarStyle.background = drawable;
-
-        pixmap = new Pixmap(0, 20, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.GREEN);
-        pixmap.fill();
-        drawable = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-        pixmap.dispose();
-
-        progressBarStyle.knob = drawable;
-
-        pixmap = new Pixmap(100, 20, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.GREEN);
-        pixmap.fill();
-        drawable = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-        pixmap.dispose();
-
-        progressBarStyle.knobBefore = drawable;
-
-
-        loadingBar = new ProgressBar(0.0f, 1.0f, 0.01f, false, progressBarStyle);
-        loadingBar.setValue(0.0f);
-        loadingBar.setAnimateDuration(0.05f);
-        loadingBar.setBounds(10, 10, 100, 20);
-
-        stage.addActor(loadingBar);
     }
 
     @Override
     public void render(float delta) {
+        super.render(delta);
+
         if (manager.update()) {
             atlas = manager.get("customskin.atlas", TextureAtlas.class);
 
@@ -113,13 +77,27 @@ public class SplashScreen extends ScreenAdapter {
 
             EasySeatingGame.uiSkin = skin;
 
-            MainScreen mainScreen = new MainScreen(game);
-            game.setScreen(mainScreen);
+            loadingBar.setValue(manager.getProgress());
         } else {
             loadingBar.setValue(manager.getProgress());
-            stage.act();
-            stage.draw();
         }
+    }
+
+    @LmlAction("loaded")
+    public void loaded() {
+        EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
+        core.getParser().getData().addSkin("custom", EasySeatingGame.uiSkin);
+        core.setView(MainScreen.class);
+    }
+
+    @Override
+    public FileHandle getTemplateFile() {
+        return Gdx.files.internal("views/LoadingView.lml");
+    }
+
+    @Override
+    public String getViewId() {
+        return "first";
     }
 
     @Override

@@ -18,7 +18,6 @@ import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.pdf.PDFGenerator;
-import com.kozu.easyseating.screen.MainScreen;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -184,7 +183,7 @@ public class UILogic {
         exitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new MainScreen(game));
+                //game.setScreen(new MainScreen());
             }
         });
         optionsDialogContentTable.add(exportButton).row();
