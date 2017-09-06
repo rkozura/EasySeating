@@ -97,7 +97,6 @@ public class EasySeatingGame extends LmlApplicationListener {
 
             @Override
             protected void handleValidChild(final LmlTag childTag) {
-                getParser().throwErrorIfStrict("Labels cannot have children. Even the blinking ones.");
             }
         };
     }

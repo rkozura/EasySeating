@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
-import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
 import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.ui.DialogSize;
@@ -97,12 +96,6 @@ public class MainScreen extends AbstractLmlView {
         dialog.setY(uiStage.getHeight());
 
         uiStage.setKeyboardFocus(newVenueName);
-    }
-
-    @LmlAction("openDialog")
-    public void openDialog() {
-        EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
-        core.getParser().fillStage(getStage(), Gdx.files.internal("views/NewVenueDialog.lml"));
     }
 
     public DialogSize getDialogSize() {

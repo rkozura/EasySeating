@@ -2,7 +2,16 @@
 <!DOCTYPE table SYSTEM "lml.dtd">
 
 <table fillparent="true">
-    <textbutton onclick="openDialog" style="blue">New</textbutton>
+    <textbutton style="blue">
+        New
+        <:clicklistener>
+            <visdialog title="Venue Name" style="dialog" movable="false">
+                <textfield></textfield>
+                <textbutton onresult="onErrorApprove" growx="true">ok</textbutton>
+            </visdialog>
+        </:clicklistener>
+    </textbutton>
+
     <textbutton>Continue</textbutton>
     <textbutton>Load</textbutton>
 </table>
