@@ -6,8 +6,8 @@
         New
         <:clicklistener>
             <dialogsize title="Venue Name" style="dialog" movable="false">
-                <textfield create="$setup" id="venueName"></textfield>
-                <textbutton onresult="onErrorApprove" growx="true">ok</textbutton>
+                <textfield oncreate="setup" id="venueName"></textfield>
+                <textbutton onresult="checkForInvalidVenueName" growx="true">ok</textbutton>
             </dialogsize>
         </:clicklistener>
     </textbutton>
