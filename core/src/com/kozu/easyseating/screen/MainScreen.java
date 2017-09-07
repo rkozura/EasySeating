@@ -44,7 +44,7 @@ public class MainScreen extends AbstractLmlView {
     }
 
     private void createVenueDialog() {
-        final DialogSize dialog = new DialogSize(400f, 200f, uiSkin, "dialog");
+        final DialogSize dialog = new DialogSize("", uiSkin, "dialog");
 
         //Set the title table
         Table titleTable = dialog.getTitleTable();
@@ -99,7 +99,7 @@ public class MainScreen extends AbstractLmlView {
     }
 
     public DialogSize getDialogSize() {
-        return new DialogSize(100, 100, EasySeatingGame.uiSkin, "dialog");
+        return new DialogSize("", EasySeatingGame.uiSkin, "dialog");
     }
 
 

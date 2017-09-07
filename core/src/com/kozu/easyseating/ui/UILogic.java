@@ -80,7 +80,7 @@ public class UILogic {
     }
 
     public void showTableDialog(final SeatingLogic seatingLogic, final com.kozu.easyseating.object.Table table) {
-        final Dialog tableDialog = new DialogSize(275f, 400f, uiSkin, "dialog");
+        final Dialog tableDialog = new Dialog("", uiSkin);// = new DialogSize(275f, 400f, uiSkin, "dialog");
 
         //Set the content table
         Table contentTable = tableDialog.getContentTable();
@@ -129,7 +129,7 @@ public class UILogic {
     public void showVenueDialog(SeatingLogic seatingLogic) {
         selectedPerson = false;
 
-        Dialog venueDialog = new DialogSize(200f, 400f, uiSkin, "dialog");
+        Dialog venueDialog = new Dialog("", uiSkin);//new DialogSize(200f, 400f, uiSkin, "dialog");
         Table titleTable = venueDialog.getTitleTable();
         titleTable.clear();
         titleTable.add(new Label(seatingLogic.conference.conferenceName, uiSkin)).padTop(70);
@@ -156,7 +156,7 @@ public class UILogic {
     }
 
     public void showOptionsDialog() {
-        Dialog optionsDialog = new DialogSize(200f, 400f, uiSkin, "dialog");
+        Dialog optionsDialog = new Dialog("", uiSkin);//new DialogSize(200f, 400f, uiSkin, "dialog");
         Table titleTable = optionsDialog.getTitleTable();
         titleTable.clear();
         titleTable.add(new Label("Options", uiSkin)).padTop(70);
@@ -250,7 +250,7 @@ public class UILogic {
     }
 
     private void createNewPersonDialog(final SeatingLogic seatingLogic, final com.kozu.easyseating.object.Table table) {
-        final Dialog newPersonOptionsDialog = new DialogSize(275f, 400f, uiSkin, "dialog");
+        final Dialog newPersonOptionsDialog = new Dialog("", uiSkin);//new DialogSize(275f, 400f, uiSkin, "dialog");
 
         //Set the title table
         Table titleTable = newPersonOptionsDialog.getTitleTable();
@@ -312,7 +312,7 @@ public class UILogic {
     }
 
     private void createCustomPersonDialog(final SeatingLogic seatingLogic, final com.kozu.easyseating.object.Table table) {
-        final DialogSize dialog = new DialogSize(400f, 200f, uiSkin, "dialog");
+        final Dialog dialog = new Dialog("", uiSkin);//new DialogSize(400f, 200f, uiSkin, "dialog");
 
         //Set the title table
         Table titleTable = dialog.getTitleTable();
@@ -376,7 +376,7 @@ public class UILogic {
     }
 
     private void renameVenueDialog(final SeatingLogic seatingLogic) {
-        final DialogSize dialog = new DialogSize(400f, 200f, uiSkin, "dialog");
+        final Dialog dialog = new Dialog("", uiSkin);//new DialogSize(400f, 200f, uiSkin, "dialog");
 
         //Set the title table
         Table titleTable = dialog.getTitleTable();

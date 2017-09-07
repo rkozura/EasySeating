@@ -5,13 +5,13 @@
     <textbutton style="blue">
         New
         <:clicklistener>
-            <visdialog title="Venue Name" style="dialog" movable="false">
+            <dialogsize title="Venue Name" style="dialog" movable="false">
                 <textfield></textfield>
                 <textbutton onresult="onErrorApprove" growx="true">ok</textbutton>
-            </visdialog>
+            </dialogsize>
         </:clicklistener>
     </textbutton>
 
-    <textbutton>Continue</textbutton>
-    <textbutton>Load</textbutton>
+    <textbutton disabled="true">Continue</textbutton>
+    <textbutton disabled="true">Load</textbutton>
 </table>

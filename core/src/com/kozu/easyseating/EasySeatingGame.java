@@ -4,12 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.github.czyzby.lml.parser.LmlParser;
-import com.github.czyzby.lml.parser.impl.tag.AbstractActorLmlTag;
+import com.github.czyzby.lml.parser.impl.tag.actor.DialogLmlTag;
 import com.github.czyzby.lml.parser.impl.tag.builder.TextLmlActorBuilder;
-import com.github.czyzby.lml.parser.tag.LmlActorBuilder;
 import com.github.czyzby.lml.parser.tag.LmlTag;
 import com.github.czyzby.lml.parser.tag.LmlTagProvider;
 import com.github.czyzby.lml.util.LmlApplicationListener;
@@ -38,7 +37,7 @@ public class EasySeatingGame extends LmlApplicationListener {
     @Override
     protected LmlParser createParser() {
         return VisLml.parser()
-                .tag(getCustomTagProvider(), "dialogsize")
+                .tag(getDialogSizeProvider(), "dialogsize")
                 .build();
     }
 
@@ -63,40 +62,16 @@ public class EasySeatingGame extends LmlApplicationListener {
         batch.dispose();
     }
 
-    private static LmlTagProvider getCustomTagProvider() {
+    private static LmlTagProvider getDialogSizeProvider() {
         return new LmlTagProvider() {
             @Override
             public LmlTag create(final LmlParser parser, final LmlTag parentTag, final StringBuilder rawTagData) {
-                return getCustomTag(parser, parentTag, rawTagData);
-            }
-        };
-    }
-
-    // Creates a custom Label that blinks.
-    private static LmlTag getCustomTag(final LmlParser parser, final LmlTag parentTag, final StringBuilder rawTagData) {
-        return new AbstractActorLmlTag(parser, parentTag, rawTagData) {
-            @Override
-            protected LmlActorBuilder getNewInstanceOfBuilder() {
-                // Normally you don't have to override this method, but we want to support String constructor, so we
-                // supply one of default, extended builders:
-                return new TextLmlActorBuilder();
-                // By using this builder, we're automatically support "text", "txt" and "value" attributes, which will
-                // use #setText(String) method to modify the builder.
-            }
-
-            @Override
-            protected Actor getNewInstanceOfActor(final LmlActorBuilder builder) {
-                // Safe to cast builder. Always the same object type as returned by getNewInstanceOfBuilder:
-                return new DialogSize(100,100, getSkin(builder), builder.getStyleName());
-            }
-
-            @Override
-            protected void handlePlainTextLine(final String plainTextLine) {
-                getParser().throwErrorIfStrict("Labels cannot have children. Even the blinking ones.");
-            }
-
-            @Override
-            protected void handleValidChild(final LmlTag childTag) {
+                return new DialogLmlTag(parser, parentTag, rawTagData){
+                    @Override
+                    protected Dialog getNewInstanceOfWindow(TextLmlActorBuilder builder) {
+                        return new DialogSize(builder.getText(), getSkin(builder), builder.getStyleName());
+                    }
+                };
             }
         };
     }
