@@ -6,7 +6,7 @@
         New
         <:clicklistener>
             <dialogsize title="Venue Name" style="dialog" movable="false">
-                <textfield></textfield>
+                <textfield create="$setup" id="venueName"></textfield>
                 <textbutton onresult="onErrorApprove" growx="true">ok</textbutton>
             </dialogsize>
         </:clicklistener>
