@@ -18,9 +18,11 @@ import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
 import com.kozu.easyseating.resolver.PersonImporter;
 import com.kozu.easyseating.screen.MainScreen;
+import com.kozu.easyseating.screen.SeatingScreen;
 import com.kozu.easyseating.screen.SplashScreen;
 import com.kozu.easyseating.tweenutil.CameraAccessor;
 import com.kozu.easyseating.tweenutil.EntityAccessor;
+import com.kozu.easyseating.tweenutil.TweenUtil;
 import com.kozu.easyseating.ui.DialogSize;
 
 import aurelienribon.tweenengine.Tween;
@@ -40,6 +42,7 @@ public class EasySeatingGame extends LmlApplicationListener {
         return VisLml.parser()
                 .tag(getDialogSizeProvider(), "dialogsize")
                 .actions("container", MainScreen.class)
+                .actions("seatingScreen", SeatingScreen.class)
                 .build();
     }
 
@@ -57,6 +60,14 @@ public class EasySeatingGame extends LmlApplicationListener {
         Tween.setCombinedAttributesLimit(4);
 
         setView(SplashScreen.class);
+    }
+
+    @Override
+    public void render() {
+        //Always update the tween engine
+        TweenUtil.getTweenManager().update(Gdx.graphics.getDeltaTime());
+
+        super.render();
     }
 
     @Override

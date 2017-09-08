@@ -87,8 +87,7 @@ public class SplashScreen extends AbstractLmlView {
     public void loaded() {
         EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
         core.getParser().getData().addSkin("custom", EasySeatingGame.uiSkin);
-        AbstractLmlView view = core.getParser().createView(MainScreen.class, Gdx.files.internal("views/MainMenuView.lml"));
-        core.setView(view);
+        core.setView(MainScreen.class);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.kozu.easyseating.ui;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -43,11 +42,8 @@ public class UILogic {
 
     public static boolean selectedPerson = false;
 
-    private Game game;
-
-    public UILogic(final SeatingLogic seatingLogic, Game game) {
+    public UILogic(final SeatingLogic seatingLogic) {
         this.seatingLogic = seatingLogic;
-        this.game = game;
 
         stage = new Stage(new StretchViewport(800, 480));
         tableScrollPeople = new VerticalGroup();

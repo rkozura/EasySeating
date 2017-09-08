@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE table SYSTEM "lml.dtd">
+
+<table fillparent="true">
+    <dialogsize title="Options" style="dialog" movable="false">
+        <textbutton onclick="export" row="true">Export</textbutton>
+        <textbutton row="true">Rename</textbutton>
+        <textbutton row="true">Help</textbutton>
+        <textbutton row="true">Main Menu</textbutton>
+    </dialogsize>
+</table>

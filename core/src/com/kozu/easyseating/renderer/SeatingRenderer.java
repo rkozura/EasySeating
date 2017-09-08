@@ -40,6 +40,7 @@ public class SeatingRenderer {
     }
 
     public void renderTables() {
+        Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
         if(seatingLogic.conference.getTables().size() > 0) {
             for (Table table : seatingLogic.conference.getTables()) {
                 Gdx.gl.glDepthFunc(GL20.GL_LESS);

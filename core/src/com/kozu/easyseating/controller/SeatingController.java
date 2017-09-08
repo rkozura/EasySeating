@@ -94,11 +94,11 @@ public class SeatingController implements GestureDetector.GestureListener {
      */
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
-        camera.update();
         camera.position.add(
                 camera.unproject(new Vector3(0, 0, 0))
                         .add(camera.unproject(new Vector3(deltaX, deltaY, 0)).scl(-1f))
         );
+        camera.update();
 
         return true;
     }
