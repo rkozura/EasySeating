@@ -2,7 +2,36 @@
 <!DOCTYPE table SYSTEM "lml.dtd">
 
 <table fillparent="true">
-    <textbutton style="blue" expand="true" align="TOPLEFT">Venue</textbutton>
-    <textbutton onclick="openOptions" style="blue" align="TOPRIGHT">Options
-    </textbutton>
+    <textbutton onclick="openVenue" style="blue" expand="true" align="TOPLEFT">Venue</textbutton>
+    <textbutton onclick="openOptions" style="blue" align="TOPRIGHT">Options</textbutton>
 </table>
+
+<dialogsize id="optionsDialog" title="Options" titlealign="center" style="dialog" movable="false"
+    visible="false" onecolumn="true">
+    <textbutton onclick="export">Export</textbutton>
+    <textbutton>Rename</textbutton>
+    <textbutton>Help</textbutton>
+    <textbutton>Main Menu</textbutton>
+</dialogsize>
+
+<dialogsize id="venueDialog" titlealign="center" style="dialog" movable="false" visible="false">
+    <container size="300" row="true" colspan="2">
+        <scrollpane id="peopleVenuePane">
+            <verticalgroup id="peopleVerticalGroup"/>
+        </scrollpane>
+    </container>
+    <textbutton onclick="openCreatePersonDialog">Add</textbutton>
+    <textbutton>Sort</textbutton>
+</dialogsize>
+
+<dialogsize id="createPersonDialog" title="Create Person" titlealign="center" style="dialog" movable="false"
+visible="false" onecolumn="true">
+    <textbutton onclick="openCustomPersonDialog">Custom</textbutton>
+    <textbutton>Import Contacts</textbutton>
+</dialogsize>
+
+<dialogsize id="customPersonDialog" title="Custom Person" titlealign="center" style="dialog" movable="false"
+visible="false" onecolumn="true">
+    <textfield id="personName"></textfield>
+    <textbutton onclick="createCustomPerson">Create</textbutton>
+</dialogsize>

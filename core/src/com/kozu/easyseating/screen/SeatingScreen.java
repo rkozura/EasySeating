@@ -7,19 +7,23 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.Array;
 import com.github.czyzby.kiwi.util.gdx.GdxUtilities;
 import com.github.czyzby.lml.annotation.LmlAction;
-import com.github.czyzby.lml.parser.LmlView;
+import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
 import com.github.czyzby.lml.util.LmlUtilities;
 import com.kotcrab.vis.ui.widget.VisTextButton;
+import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.controller.SeatingController;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.renderer.SeatingRenderer;
 import com.kozu.easyseating.tweenutil.CameraAccessor;
 import com.kozu.easyseating.tweenutil.TweenUtil;
+import com.kozu.easyseating.ui.DialogSize;
 import com.kozu.easyseating.ui.UILogic;
 
 import aurelienribon.tweenengine.Tween;
@@ -30,7 +34,15 @@ public class SeatingScreen extends AbstractLmlView {
     private OrthographicCamera camera;
     private SeatingRenderer renderer;
     private GestureDetector gestureDetector;
-    private static SeatingLogic seatingLogic;
+    private SeatingLogic seatingLogic;
+
+    @LmlActor("optionsDialog") private DialogSize optionsDialog;
+    @LmlActor("venueDialog") private DialogSize venueDialog;
+    @LmlActor("createPersonDialog") private DialogSize createPersonDialog;
+    @LmlActor("customPersonDialog") private DialogSize customPersonDialog;
+
+    @LmlActor("peopleVenuePane") private ScrollPane peopleVenuePane;
+    @LmlActor("peopleVerticalGroup") private VerticalGroup peopleVerticalGroup;
 
     public SeatingScreen() {
         super(new Stage());
@@ -90,21 +102,56 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlAction("openOptions")
     public void openOptions() {
-        EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
-        //core.getParser().fillStage(getStage(), Gdx.files.internal("views/OptionsView.lml"));
-        LmlView optionsView = core.getParser().createView(OptionsScreen.class, Gdx.files.internal("views/OptionsView.lml"));
-        Array<Actor> s = core.getParser().createView(optionsView, Gdx.files.internal("views/OptionsView.lml"));
+        optionsDialog.setVisible(true);
+        optionsDialog.show(getStage());
+    }
 
-        LmlUtilities.appendActorsToStage(getStage(), s);
+    @LmlAction("openVenue")
+    public void openVenue() {
+        peopleVenuePane.setWidget(peopleVerticalGroup);
+
+        venueDialog.getTitleLabel().setText(seatingLogic.conference.conferenceName);
+        venueDialog.setVisible(true);
+        venueDialog.show(getStage());
     }
 
     @LmlAction("export")
     public void export(VisTextButton visTextButton) {
-        if(seatingLogic == null) {
-            System.out.println("seatingLogic is null");
-        } else {
-            System.out.println("export");
-        }
+        System.out.println("export");
+    }
+
+    @LmlAction("openCreatePersonDialog")
+    public void openCreatePersonDialog() {
+        createPersonDialog.setVisible(true);
+        createPersonDialog.show(getStage());
+        createPersonDialog.toFront();
+    }
+
+    @LmlAction("openCustomPersonDialog")
+    public void createPerson() {
+        VisTextField customPersonTextField = (VisTextField)LmlUtilities.getActorWithId(customPersonDialog, "personName");
+        customPersonTextField.setText("");
+        //getStage().setKeyboardFocus(customPersonTextField); //TODO Text field not focusing
+
+        createPersonDialog.hide();
+
+        customPersonDialog.setVisible(true);
+        customPersonDialog.show(getStage());
+        customPersonDialog.toFront();
+    }
+
+    @LmlAction("createCustomPerson")
+    public void createCustomPerson() {
+        String personName = ((VisTextField) LmlUtilities.getActorWithId(customPersonDialog, "personName")).getText();
+
+        EasySeatingGame easySeatingGame = (EasySeatingGame) Gdx.app.getApplicationListener();
+        Array<Actor> actors = easySeatingGame.getParser().parseTemplate(Gdx.files.internal("views/PersonView.lml"));
+        VisTextButton personTextButton = (VisTextButton)actors.get(0);
+        personTextButton.setText(personName);
+
+        peopleVerticalGroup.addActor(personTextButton);
+
+        customPersonDialog.hide();
     }
 
     @Override

@@ -2,7 +2,5 @@
 <!DOCTYPE table SYSTEM "lml.dtd">
 
 <table fillparent="true">
-    <progressbar id="progressBar" oncomplete="loaded">
-
-    </progressbar>
+    <progressbar id="progressBar" oncomplete="loaded" animateduration=".2"/>
 </table>

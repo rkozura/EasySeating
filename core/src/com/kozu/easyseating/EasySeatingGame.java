@@ -18,7 +18,6 @@ import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
 import com.kozu.easyseating.resolver.PersonImporter;
 import com.kozu.easyseating.screen.MainScreen;
-import com.kozu.easyseating.screen.SeatingScreen;
 import com.kozu.easyseating.screen.SplashScreen;
 import com.kozu.easyseating.tweenutil.CameraAccessor;
 import com.kozu.easyseating.tweenutil.EntityAccessor;
@@ -42,7 +41,6 @@ public class EasySeatingGame extends LmlApplicationListener {
         return VisLml.parser()
                 .tag(getDialogSizeProvider(), "dialogsize")
                 .actions("container", MainScreen.class)
-                .actions("seatingScreen", SeatingScreen.class)
                 .build();
     }
 
