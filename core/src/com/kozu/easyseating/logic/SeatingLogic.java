@@ -140,6 +140,14 @@ public class SeatingLogic {
         }
     }
 
+    public boolean isPersonAtTable(Table table, Person person) {
+        if(table.assignedSeats.contains(person)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void moveTableToPosition(Table table, Vector3 pos) {
         Tween.to(table, EntityAccessor.POSITION_XY, .2f).target(pos.x,pos.y)
                 .start(TweenUtil.getTweenManager());

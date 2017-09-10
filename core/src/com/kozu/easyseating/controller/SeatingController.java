@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Table;
-import com.kozu.easyseating.ui.UILogic;
+import com.kozu.easyseating.screen.SeatingScreen;
 
 /**
  * Created by Rob on 8/4/2017.
@@ -17,12 +17,12 @@ public class SeatingController implements GestureDetector.GestureListener {
 
     private Camera camera;
     private SeatingLogic seatingLogic;
-    private UILogic uiLogic;
+    private SeatingScreen seatingScreen;
 
-    public SeatingController(Camera camera, SeatingLogic seatingLogic, UILogic uiLogic) {
+    public SeatingController(Camera camera, SeatingLogic seatingLogic, SeatingScreen seatingScreen) {
         this.camera = camera;
         this.seatingLogic = seatingLogic;
-        this.uiLogic = uiLogic;
+        this.seatingScreen = seatingScreen;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class SeatingController implements GestureDetector.GestureListener {
 
         Table table = seatingLogic.getTableAtPosition(pos);
         if(table != null) {
-            uiLogic.showTableDialog(seatingLogic, table);
+            seatingScreen.openTable(table);
         } else {
             seatingLogic.addTableAtPosition(pos);
         }

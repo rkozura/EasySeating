@@ -1,5 +1,7 @@
 package com.kozu.easyseating.ui;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.adapter.ArrayAdapter;
@@ -26,28 +28,38 @@ public class PeopleListAdapter<ItemT> extends ArrayAdapter<ItemT, VisTable> {
     public PeopleListAdapter(Array<ItemT> array, SimpleListAdapter.SimpleListAdapterStyle style) {
         super(array);
         this.style = style;
+
+        setSelectionMode(SelectionMode.MULTIPLE);
     }
 
-    //TODO might delete.  Select and deselect view are on mouse down, and selection is on mouse up
-//    private VisTable selectedView;
-//    @Override
-//    protected void selectView(VisTable view) {
-//        if(selectedView == null || selectedView != view) {
-//            (view.getChildren().get(0)).setColor(Color.CYAN);
-//            selectedView = view;
-//        } else {
-//            ((VisLabel)(view.getChildren().get(0))).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
-//            selectedView = null;
-//        }
-//
-//
-//    }
-//
-//    @Override
-//    protected void deselectView(VisTable view) {
-//        ((VisLabel)(view.getChildren().get(0))).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
-//
-//    }
+    //TODO might delete.  Select and deselect view are on mouse down, and itemselection is on mouse up,
+    //TODO would have to fix Vis code, setselectionmode needs to be checked as well
+    private VisTable selectedView;
+    @Override
+    protected void selectView(VisTable view) {
+        if(selectedView == null || selectedView != view) {
+            (view.getChildren().get(0)).setColor(Color.CYAN);
+            selectedView = view;
+        } else {
+            ((VisLabel)(view.getChildren().get(0))).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
+            selectedView = null;
+        }
+
+
+    }
+
+    @Override
+    protected void deselectView(VisTable view) {
+        //((VisLabel)(view.getChildren().get(0))).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
+
+    }
+
+
+    @Override
+    public void itemsChanged() {
+
+        super.itemsChanged();
+    }
 
     @Override
     protected VisTable createView(ItemT item) {

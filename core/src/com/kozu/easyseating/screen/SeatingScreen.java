@@ -12,7 +12,6 @@ import com.github.czyzby.kiwi.util.gdx.GdxUtilities;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
-import com.github.czyzby.lml.util.Lml;
 import com.github.czyzby.lml.util.LmlUtilities;
 import com.kotcrab.vis.ui.util.ToastManager;
 import com.kotcrab.vis.ui.util.adapter.ListAdapter;
@@ -21,12 +20,12 @@ import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kozu.easyseating.controller.SeatingController;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Person;
+import com.kozu.easyseating.object.Table;
 import com.kozu.easyseating.renderer.SeatingRenderer;
 import com.kozu.easyseating.tweenutil.CameraAccessor;
 import com.kozu.easyseating.tweenutil.TweenUtil;
 import com.kozu.easyseating.ui.DialogSize;
 import com.kozu.easyseating.ui.PeopleListAdapter;
-import com.kozu.easyseating.ui.UILogic;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -43,8 +42,11 @@ public class SeatingScreen extends AbstractLmlView {
     private ToastManager toastManager;
     @LmlActor("optionsDialog") private DialogSize optionsDialog;
     @LmlActor("venueDialog") private DialogSize venueDialog;
+    @LmlActor("tableDialog") private DialogSize tableDialog;
     @LmlActor("createPersonDialog") private DialogSize createPersonDialog;
     @LmlActor("customPersonDialog") private DialogSize customPersonDialog;
+    @LmlActor("editPersonDialog") private DialogSize editPersonDialog;
+
 
     @LmlActor("peopleVenuePane") private ScrollPane peopleVenuePane;
 
@@ -73,10 +75,8 @@ public class SeatingScreen extends AbstractLmlView {
         //Create the logic class...has methods to modify objects and return them
         seatingLogic = new SeatingLogic(conferenceName);
 
-        UILogic uiLogic = new UILogic(seatingLogic);
-
         //Setup the controller, which listens for gestures
-        gestureDetector = new GestureDetector(new SeatingController(camera, seatingLogic, uiLogic));
+        gestureDetector = new GestureDetector(new SeatingController(camera, seatingLogic, this));
 
         //Create the renderer.  Renderer needs to see the logic to know what to render
         renderer = new SeatingRenderer(seatingLogic);
@@ -116,6 +116,15 @@ public class SeatingScreen extends AbstractLmlView {
         venueDialog.show(getStage());
     }
 
+    private Table selectedTable;
+    public void openTable(Table table) {
+        selectedTable = table;
+        tableDialog.getTitleLabel().setText("Table "+table.tableIdentifier);
+        tableDialog.setVisible(true);
+        tableDialog.show(getStage());
+        tableDialog.toFront();
+    }
+
     @LmlAction("export")
     public void export(VisTextButton visTextButton) {
         System.out.println("export");
@@ -153,23 +162,68 @@ public class SeatingScreen extends AbstractLmlView {
         } else {
             seatingLogic.createPerson(personName);
 
-            personPeopleListAdapter.itemsChanged();
+            venuePeopleListAdapter.itemsChanged();
+            tablePeopleListAdapter.itemsChanged();
 
             customPersonDialog.hide();
         }
     }
 
-    PeopleListAdapter<Person> personPeopleListAdapter;
-    @LmlAction("venuePersonAdapter")
-    public ListAdapter<?> venuePersonAdapter() {
-        personPeopleListAdapter = new PeopleListAdapter<Person>(seatingLogic.conference.persons);
-        return personPeopleListAdapter;
+    private Person selectedPerson;
+    @LmlAction("venuePersonListener")
+    public void venuePersonListener(final Person selectedItem) {
+        selectedPerson = selectedItem;
+
+        VisTextField renamePersonTextField = (VisTextField)LmlUtilities.getActorWithId(editPersonDialog, "editPersonName");
+        renamePersonTextField.setText(selectedItem.getName());
+
+        editPersonDialog.getTitleLabel().setText(selectedItem.getName()+" Details");
+        editPersonDialog.setVisible(true);
+        editPersonDialog.show(getStage());
+        editPersonDialog.toFront();
     }
 
-    @LmlAction("venuePersonListener")
-    public void handleItemClick(final Person selectedItem) {
-        // Printing selected item into the console:
-        Gdx.app.log(Lml.LOGGER_TAG, "Selected: " + selectedItem);
+    @LmlAction("deletePerson")
+    public void deletePerson() {
+        seatingLogic.removePerson(selectedPerson);
+        venuePeopleListAdapter.itemsChanged();
+        tablePeopleListAdapter.itemsChanged();
+        editPersonDialog.hide();
+    }
+
+    @LmlAction("confirmEditPerson")
+    public void confirmEditPerson() {
+        VisTextField renamePersonTextField = (VisTextField)LmlUtilities.getActorWithId(editPersonDialog, "editPersonName");
+        if(!renamePersonTextField.getText().equals(selectedPerson.getName())) {
+            selectedPerson.setName(renamePersonTextField.getText());
+            venuePeopleListAdapter.itemsChanged();
+            tablePeopleListAdapter.itemsChanged();
+        }
+        editPersonDialog.hide();
+    }
+
+    @LmlAction("tablePersonListener")
+    public void tablePersonListener(final Person selectedItem) {
+        if(seatingLogic.isPersonAtTable(selectedTable, selectedItem)) {
+            seatingLogic.removePersonFromTable(selectedTable, selectedItem);
+        } else {
+            seatingLogic.addPersonToTable(selectedTable, selectedItem);
+        }
+    }
+
+    //Create two adapters for each list view of people
+    private PeopleListAdapter<Person> tablePeopleListAdapter;
+    @LmlAction("tablePersonAdapter")
+    public ListAdapter<?> tablePersonAdapter() {
+        tablePeopleListAdapter = new PeopleListAdapter<Person>(seatingLogic.conference.persons);
+        return tablePeopleListAdapter;
+    }
+
+    private PeopleListAdapter<Person> venuePeopleListAdapter;
+    @LmlAction("venuePersonAdapter")
+    public ListAdapter<?> venuePersonAdapter() {
+        venuePeopleListAdapter = new PeopleListAdapter<Person>(seatingLogic.conference.persons);
+        return venuePeopleListAdapter;
     }
 
     @Override

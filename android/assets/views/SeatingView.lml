@@ -15,7 +15,15 @@
 </dialogsize>
 
 <dialogsize id="venueDialog" titlealign="center" style="dialog" movable="false" visible="false">
-    <listview flickscroll="true" colspan="2" row="true" size="300" adapter="venuePersonAdapter" itemlistener="venuePersonListener"/>
+    <listview flickscroll="true" colspan="2" row="true" size="300" adapter="venuePersonAdapter"
+        itemlistener="venuePersonListener"/>
+    <textbutton onclick="openCreatePersonDialog">Add</textbutton>
+    <textbutton>Sort</textbutton>
+</dialogsize>
+
+<dialogsize id="tableDialog" titlealign="center" style="dialog" movable="false" visible="false">
+    <listview flickscroll="true" colspan="2" row="true" size="300" adapter="tablePersonAdapter"
+        itemlistener="tablePersonListener"/>
     <textbutton onclick="openCreatePersonDialog">Add</textbutton>
     <textbutton>Sort</textbutton>
 </dialogsize>
@@ -30,4 +38,11 @@ visible="false" onecolumn="true">
 visible="false" onecolumn="true">
     <textfield id="personName"></textfield>
     <textbutton onclick="createCustomPerson">Create</textbutton>
+</dialogsize>
+
+<dialogsize id="editPersonDialog" titlealign="center" style="dialog" movable="false" visible="false"
+onecolumn="true">
+    <textfield id="editPersonName"></textfield>
+    <textbutton onclick="deletePerson">Delete</textbutton>
+    <textbutton onclick="confirmEditPerson">Ok</textbutton>
 </dialogsize>
