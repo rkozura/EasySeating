@@ -5,26 +5,30 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Align;
 import com.github.czyzby.kiwi.util.gdx.GdxUtilities;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
+import com.github.czyzby.lml.util.Lml;
 import com.github.czyzby.lml.util.LmlUtilities;
+import com.kotcrab.vis.ui.util.ToastManager;
+import com.kotcrab.vis.ui.util.adapter.ListAdapter;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextField;
-import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.controller.SeatingController;
 import com.kozu.easyseating.logic.SeatingLogic;
+import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.renderer.SeatingRenderer;
 import com.kozu.easyseating.tweenutil.CameraAccessor;
 import com.kozu.easyseating.tweenutil.TweenUtil;
 import com.kozu.easyseating.ui.DialogSize;
+import com.kozu.easyseating.ui.PeopleListAdapter;
 import com.kozu.easyseating.ui.UILogic;
+
+import org.apache.commons.lang3.StringUtils;
 
 import aurelienribon.tweenengine.Tween;
 
@@ -36,17 +40,16 @@ public class SeatingScreen extends AbstractLmlView {
     private GestureDetector gestureDetector;
     private SeatingLogic seatingLogic;
 
+    private ToastManager toastManager;
     @LmlActor("optionsDialog") private DialogSize optionsDialog;
     @LmlActor("venueDialog") private DialogSize venueDialog;
     @LmlActor("createPersonDialog") private DialogSize createPersonDialog;
     @LmlActor("customPersonDialog") private DialogSize customPersonDialog;
 
     @LmlActor("peopleVenuePane") private ScrollPane peopleVenuePane;
-    @LmlActor("peopleVerticalGroup") private VerticalGroup peopleVerticalGroup;
 
     public SeatingScreen() {
         super(new Stage());
-
         //Create the camera and apply a viewport
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 //        viewport = new ScreenViewport(camera);
@@ -108,8 +111,6 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlAction("openVenue")
     public void openVenue() {
-        peopleVenuePane.setWidget(peopleVerticalGroup);
-
         venueDialog.getTitleLabel().setText(seatingLogic.conference.conferenceName);
         venueDialog.setVisible(true);
         venueDialog.show(getStage());
@@ -143,22 +144,44 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlAction("createCustomPerson")
     public void createCustomPerson() {
         String personName = ((VisTextField) LmlUtilities.getActorWithId(customPersonDialog, "personName")).getText();
+        if(StringUtils.isBlank(personName)) {
+            final ToastManager manager = getToastManager(getStage());
+            manager.clear();
+            manager.setAlignment(Align.topLeft);
+            manager.show("Invalid Person Name", 1.5f);
+            manager.toFront();
+        } else {
+            seatingLogic.createPerson(personName);
 
-        EasySeatingGame easySeatingGame = (EasySeatingGame) Gdx.app.getApplicationListener();
-        Array<Actor> actors = easySeatingGame.getParser().parseTemplate(Gdx.files.internal("views/PersonView.lml"));
-        VisTextButton personTextButton = (VisTextButton)actors.get(0);
-        personTextButton.setText(personName);
+            personPeopleListAdapter.itemsChanged();
 
-        peopleVerticalGroup.addActor(personTextButton);
+            customPersonDialog.hide();
+        }
+    }
 
-        customPersonDialog.hide();
+    PeopleListAdapter<Person> personPeopleListAdapter;
+    @LmlAction("venuePersonAdapter")
+    public ListAdapter<?> venuePersonAdapter() {
+        personPeopleListAdapter = new PeopleListAdapter<Person>(seatingLogic.conference.persons);
+        return personPeopleListAdapter;
+    }
+
+    @LmlAction("venuePersonListener")
+    public void handleItemClick(final Person selectedItem) {
+        // Printing selected item into the console:
+        Gdx.app.log(Lml.LOGGER_TAG, "Selected: " + selectedItem);
     }
 
     @Override
     public void resize(int width, int height) {
-        //UILogic.stage.getViewport().update(width, height);
-        //viewport.update(width,height);
         camera.position.set(camera.viewportWidth/2, camera.viewportHeight/2, 0);
         super.resize(width, height);
+    }
+
+    private ToastManager getToastManager(Stage stage) {
+        if (toastManager == null) {
+            toastManager = new ToastManager(stage);
+        }
+        return toastManager;
     }
 }

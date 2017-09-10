@@ -76,7 +76,7 @@ public class SeatingLogic {
     }
 
     public void removePerson(Person person) {
-        conference.persons.remove(person);
+        conference.persons.removeValue(person, false);
         for(Table table : conference.getTables()) {
             if(table.assignedSeats.contains(person)) {
                 table.assignedSeats.remove(person);

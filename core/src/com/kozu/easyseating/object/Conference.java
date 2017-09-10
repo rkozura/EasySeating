@@ -1,6 +1,7 @@
 package com.kozu.easyseating.object;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,12 +21,12 @@ public class Conference {
     public float conferenceHeight;
     public Map<Vector2, Table> snapGrid;
     private List<Table> tables;
-    public List<Person> persons;
+    public static Array<Person> persons = new Array<Person>();
 
     public Conference(String conferenceName, float conferenceWidth, float conferenceHeight) {
         this.conferenceName = conferenceName;
         this.tables = new ArrayList<Table>();
-        this.persons = new ArrayList<Person>();
+        //this.persons = new Array<Person>();
         this.conferenceWidth = conferenceWidth;
         this.conferenceHeight = conferenceHeight;
 

@@ -15,11 +15,7 @@
 </dialogsize>
 
 <dialogsize id="venueDialog" titlealign="center" style="dialog" movable="false" visible="false">
-    <container size="300" row="true" colspan="2">
-        <scrollpane id="peopleVenuePane">
-            <verticalgroup id="peopleVerticalGroup"/>
-        </scrollpane>
-    </container>
+    <listview flickscroll="true" colspan="2" row="true" size="300" adapter="venuePersonAdapter" itemlistener="venuePersonListener"/>
     <textbutton onclick="openCreatePersonDialog">Add</textbutton>
     <textbutton>Sort</textbutton>
 </dialogsize>

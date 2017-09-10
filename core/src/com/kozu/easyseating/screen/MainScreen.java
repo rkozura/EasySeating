@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
 import com.github.czyzby.lml.scene2d.ui.reflected.ReflectedLmlDialog;
@@ -52,9 +53,13 @@ public class MainScreen extends AbstractLmlView {
 
         } else {
             EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
-            SeatingScreen seatingView = core.getParser().createView(SeatingScreen.class, Gdx.files.internal("views/SeatingView.lml"));
-            seatingView.setConferenceName(venueName);
-            core.setView(seatingView);
+            SeatingScreen seatingScreen = new SeatingScreen();
+            seatingScreen.setConferenceName(venueName);
+
+            Array<Actor> seatingView = core.getParser().createView(seatingScreen, seatingScreen.getTemplateFile());
+
+            core.setView(seatingScreen);
+            LmlUtilities.appendActorsToStage(seatingScreen.getStage(), seatingView);
 
             return ReflectedLmlDialog.HIDE;
         }
