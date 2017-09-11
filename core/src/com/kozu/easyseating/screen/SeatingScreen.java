@@ -51,7 +51,7 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlActor("createPersonDialog") private DialogSize createPersonDialog;
     @LmlActor("customPersonDialog") private DialogSize customPersonDialog;
     @LmlActor("editPersonDialog") private DialogSize editPersonDialog;
-
+    @LmlActor("confirmDeletePersonDialog") private DialogSize confirmDeletePersonDialog;
 
     @LmlActor("peopleVenuePane") private ScrollPane peopleVenuePane;
 
@@ -186,10 +186,17 @@ public class SeatingScreen extends AbstractLmlView {
         VisTextField renamePersonTextField = (VisTextField)LmlUtilities.getActorWithId(editPersonDialog, "editPersonName");
         renamePersonTextField.setText(selectedItem.getName());
 
-        editPersonDialog.getTitleLabel().setText(selectedItem.getName()+" Details");
+        editPersonDialog.getTitleLabel().setText("Person Details");
         editPersonDialog.setVisible(true);
         editPersonDialog.show(getStage());
         editPersonDialog.toFront();
+    }
+
+    @LmlAction("openConfirmDeletePersonDialog")
+    public void openConfirmDeletePersonDialog() {
+        confirmDeletePersonDialog.setVisible(true);
+        confirmDeletePersonDialog.show(getStage());
+        confirmDeletePersonDialog.toFront();
     }
 
     @LmlAction("deletePerson")
@@ -198,6 +205,7 @@ public class SeatingScreen extends AbstractLmlView {
         venuePeopleListAdapter.itemsChanged();
         tablePeopleListAdapter.itemsChanged();
         editPersonDialog.hide();
+        confirmDeletePersonDialog.hide();
     }
 
     @LmlAction("confirmEditPerson")

@@ -43,6 +43,12 @@ visible="false" onecolumn="true">
 <dialogsize id="editPersonDialog" titlealign="center" style="dialog" movable="false" visible="false"
 onecolumn="true">
     <textfield id="editPersonName"></textfield>
-    <textbutton onclick="deletePerson">Delete</textbutton>
+    <textbutton onclick="openConfirmDeletePersonDialog">Delete</textbutton>
     <textbutton onclick="confirmEditPerson">Ok</textbutton>
+</dialogsize>
+
+<dialogsize id="confirmDeletePersonDialog" title="Delete Person?" titlealign="center" style="dialog"
+movable="false" visible="false" onecolumn="true">
+    <label>(Person will be removed from the venue and table)</label>
+    <textbutton onclick="deletePerson">Delete</textbutton>
 </dialogsize>
