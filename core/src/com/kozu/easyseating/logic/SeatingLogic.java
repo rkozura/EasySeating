@@ -173,4 +173,17 @@ public class SeatingLogic {
             nextSeatAngle += angleBetweenSeats;
         }
     }
+
+    public Table getAssignedTable(Person person) {
+        Table returnTable = null;
+
+        for(Table table : conference.getTables()) {
+            if(table.assignedSeats.contains(person)) {
+                returnTable = table;
+                break;
+            }
+        }
+
+        return returnTable;
+    }
 }

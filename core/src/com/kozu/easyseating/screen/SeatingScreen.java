@@ -17,7 +17,6 @@ import com.github.czyzby.lml.parser.impl.AbstractLmlView;
 import com.github.czyzby.lml.util.LmlUtilities;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ToastManager;
-import com.kotcrab.vis.ui.util.adapter.AbstractListAdapter;
 import com.kotcrab.vis.ui.util.adapter.ListAdapter;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -214,15 +213,15 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlAction("tablePersonListener")
     public void tablePersonListener(final Person selectedItem) {
-        VisTable view = (VisTable)tablePeopleListAdapter.getView(selectedItem);
+        VisTable view = tablePeopleListAdapter.getView(selectedItem);
 
         if(seatingLogic.isPersonAtTable(selectedTable, selectedItem)) {
             seatingLogic.removePersonFromTable(selectedTable, selectedItem);
-            ((VisLabel)(view.getChildren().get(0))).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
-
+            view.getChildren().get(0).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
         } else {
             seatingLogic.addPersonToTable(selectedTable, selectedItem);
-            ((VisLabel)(view.getChildren().get(0))).setColor(Color.CYAN);
+            view.getChildren().get(0).setColor(Color.CYAN);
+            ((VisLabel)view.getChildren().get(1)).setText("");
         }
     }
 
@@ -245,19 +244,24 @@ public class SeatingScreen extends AbstractLmlView {
      * Sets the person selection
      */
     private void setPersonSelection() {
-        AbstractListAdapter.ListSelection listSelection = tablePeopleListAdapter.getSelectionManager();
-        listSelection.deselectAll();
-
         if(selectedTable != null) {
             for (Person person : tablePeopleListAdapter.iterable()) {
-                VisTable view = (VisTable)tablePeopleListAdapter.getView(person);
+                VisTable view = tablePeopleListAdapter.getView(person);
                 if (seatingLogic.isPersonAtTable(selectedTable, person)) {
-                    ((VisLabel)(view.getChildren().get(0))).setColor(Color.CYAN);
+                    (view.getChildren().get(0)).setColor(Color.CYAN);
+                    ((VisLabel)view.getChildren().get(1)).setText("");
                 } else {
-                    ((VisLabel)(view.getChildren().get(0))).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
+                    (view.getChildren().get(0)).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
+                    Table assignedTable = seatingLogic.getAssignedTable(person);
+                    if(assignedTable != null) {
+                        ((VisLabel) view.getChildren().get(1)).setText(assignedTable.tableIdentifier);
+                    }
                 }
             }
         }
+
+        //This will resort the array based on what is selected
+        tablePeopleListAdapter.itemsDataChanged();
     }
 
     @Override
