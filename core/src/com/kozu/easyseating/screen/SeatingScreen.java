@@ -250,9 +250,11 @@ public class SeatingScreen extends AbstractLmlView {
 
         if(selectedTable != null) {
             for (Person person : tablePeopleListAdapter.iterable()) {
+                VisTable view = (VisTable)tablePeopleListAdapter.getView(person);
                 if (seatingLogic.isPersonAtTable(selectedTable, person)) {
-                    VisTable view = (VisTable)tablePeopleListAdapter.getView(person);
                     ((VisLabel)(view.getChildren().get(0))).setColor(Color.CYAN);
+                } else {
+                    ((VisLabel)(view.getChildren().get(0))).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
                 }
             }
         }
