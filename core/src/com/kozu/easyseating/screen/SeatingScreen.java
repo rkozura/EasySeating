@@ -2,10 +2,12 @@ package com.kozu.easyseating.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.utils.Align;
 import com.github.czyzby.kiwi.util.gdx.GdxUtilities;
@@ -13,8 +15,12 @@ import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
 import com.github.czyzby.lml.util.LmlUtilities;
+import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ToastManager;
+import com.kotcrab.vis.ui.util.adapter.AbstractListAdapter;
 import com.kotcrab.vis.ui.util.adapter.ListAdapter;
+import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kozu.easyseating.controller.SeatingController;
@@ -123,6 +129,8 @@ public class SeatingScreen extends AbstractLmlView {
         tableDialog.setVisible(true);
         tableDialog.show(getStage());
         tableDialog.toFront();
+
+        setPersonSelection();
     }
 
     @LmlAction("export")
@@ -165,6 +173,8 @@ public class SeatingScreen extends AbstractLmlView {
             venuePeopleListAdapter.itemsChanged();
             tablePeopleListAdapter.itemsChanged();
 
+            setPersonSelection();
+
             customPersonDialog.hide();
         }
     }
@@ -204,10 +214,15 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlAction("tablePersonListener")
     public void tablePersonListener(final Person selectedItem) {
+        VisTable view = (VisTable)tablePeopleListAdapter.getView(selectedItem);
+
         if(seatingLogic.isPersonAtTable(selectedTable, selectedItem)) {
             seatingLogic.removePersonFromTable(selectedTable, selectedItem);
+            ((VisLabel)(view.getChildren().get(0))).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
+
         } else {
             seatingLogic.addPersonToTable(selectedTable, selectedItem);
+            ((VisLabel)(view.getChildren().get(0))).setColor(Color.CYAN);
         }
     }
 
@@ -224,6 +239,23 @@ public class SeatingScreen extends AbstractLmlView {
     public ListAdapter<?> venuePersonAdapter() {
         venuePeopleListAdapter = new PeopleListAdapter<Person>(seatingLogic.conference.persons);
         return venuePeopleListAdapter;
+    }
+
+    /**
+     * Sets the person selection
+     */
+    private void setPersonSelection() {
+        AbstractListAdapter.ListSelection listSelection = tablePeopleListAdapter.getSelectionManager();
+        listSelection.deselectAll();
+
+        if(selectedTable != null) {
+            for (Person person : tablePeopleListAdapter.iterable()) {
+                if (seatingLogic.isPersonAtTable(selectedTable, person)) {
+                    VisTable view = (VisTable)tablePeopleListAdapter.getView(person);
+                    ((VisLabel)(view.getChildren().get(0))).setColor(Color.CYAN);
+                }
+            }
+        }
     }
 
     @Override
