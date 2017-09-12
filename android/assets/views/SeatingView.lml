@@ -1,50 +1,58 @@
 <?xml version="1.0"?>
 <!DOCTYPE table SYSTEM "lml.dtd">
 
+<:assign key="buttonWidth" value="{=.7 * $ppi}"/>
+<:assign key="buttonHeight" value="{=.35 * $ppi}"/>
+<:assign key="dialogButtonHeight" value="{=.25 * $ppi}"/>
+
+<:assign key="dialogWidth" value="{=2 * $ppi}"/>
+
 <table fillparent="true">
-    <textbutton onclick="openVenue" style="blue" expand="true" align="TOPLEFT">Venue</textbutton>
-    <textbutton onclick="openOptions" style="blue" align="TOPRIGHT">Options</textbutton>
+    <textbutton onclick="openVenue" width="{buttonWidth}" height="{buttonHeight}" expand="true"
+        style="blue" align="TOPLEFT">Venue</textbutton>
+    <textbutton onclick="openOptions" width="{buttonWidth}" height="{buttonHeight}" style="blue"
+        align="TOPRIGHT">Options</textbutton>
 </table>
 
 <dialogsize id="optionsDialog" title="Options" titlealign="center" style="dialog" movable="false"
     visible="false" onecolumn="true">
-    <textbutton onclick="export">Export</textbutton>
-    <textbutton>Rename</textbutton>
-    <textbutton>Help</textbutton>
-    <textbutton>Main Menu</textbutton>
+    <textbutton width="{buttonWidth}" height="{buttonHeight}" onclick="export">Export</textbutton>
+    <textbutton width="{buttonWidth}" height="{buttonHeight}">Rename</textbutton>
+    <textbutton width="{buttonWidth}" height="{buttonHeight}">Help</textbutton>
+    <textbutton width="{buttonWidth}" height="{buttonHeight}">Main Menu</textbutton>
 </dialogsize>
 
 <dialogsize id="venueDialog" titlealign="center" style="dialog" movable="false" visible="false">
-    <listview flickscroll="true" colspan="2" row="true" size="300" adapter="venuePersonAdapter"
-        itemlistener="venuePersonListener"/>
-    <textbutton onclick="openCreatePersonDialog">Add</textbutton>
-    <textbutton>Sort</textbutton>
+    <listview flickscroll="true" colspan="2" row="true" width="{dialogWidth}" height="$dialogHeight"
+        adapter="venuePersonAdapter" itemlistener="venuePersonListener"/>
+    <textbutton onclick="openCreatePersonDialog" growx="true" height="{dialogButtonHeight}">Add</textbutton>
+    <textbutton growx="true" height="{dialogButtonHeight}">Sort</textbutton>
 </dialogsize>
 
 <dialogsize id="tableDialog" titlealign="center" style="dialog" movable="false" visible="false">
-    <listview flickscroll="true" colspan="2" row="true" size="300" adapter="tablePersonAdapter"
-        itemlistener="tablePersonListener"/>
-    <textbutton onclick="openCreatePersonDialog">Add</textbutton>
-    <textbutton>Sort</textbutton>
+    <listview flickscroll="true" colspan="2" row="true" width="{dialogWidth}" height="$dialogHeight"
+        adapter="tablePersonAdapter" itemlistener="tablePersonListener"/>
+    <textbutton onclick="openCreatePersonDialog" growx="true" height="{dialogButtonHeight}">Add</textbutton>
+    <textbutton growx="true" height="{dialogButtonHeight}">Sort</textbutton>
 </dialogsize>
 
 <dialogsize id="createPersonDialog" title="Create Person" titlealign="center" style="dialog" movable="false"
 visible="false" onecolumn="true">
-    <textbutton onclick="openCustomPersonDialog">Custom</textbutton>
-    <textbutton>Import Contacts</textbutton>
+    <textbutton onclick="openCustomPersonDialog" width="{buttonWidth}" height="{buttonHeight}">Custom</textbutton>
+    <textbutton width="{buttonWidth}" height="{buttonHeight}">Import Contacts</textbutton>
 </dialogsize>
 
 <dialogsize id="customPersonDialog" title="Custom Person" titlealign="center" style="dialog" movable="false"
 visible="false" onecolumn="true">
-    <textfield id="personName"></textfield>
-    <textbutton onclick="createCustomPerson">Create</textbutton>
+    <textfield id="personName" width="{buttonWidth}" height="{buttonHeight}"></textfield>
+    <textbutton onclick="createCustomPerson" width="{buttonWidth}" height="{buttonHeight}">Create</textbutton>
 </dialogsize>
 
 <dialogsize id="editPersonDialog" titlealign="center" style="dialog" movable="false" visible="false"
 onecolumn="true">
-    <textfield id="editPersonName"></textfield>
-    <textbutton onclick="openConfirmDeletePersonDialog">Delete</textbutton>
-    <textbutton onclick="confirmEditPerson">Ok</textbutton>
+    <textfield id="editPersonName" width="{buttonWidth}" height="{buttonHeight}"></textfield>
+    <textbutton onclick="openConfirmDeletePersonDialog" width="{buttonWidth}" height="{buttonHeight}">Delete</textbutton>
+    <textbutton onclick="confirmEditPerson" width="{buttonWidth}" height="{buttonHeight}">Ok</textbutton>
 </dialogsize>
 
 <dialogsize id="confirmDeletePersonDialog" title="Delete Person?" titlealign="center" style="dialog"

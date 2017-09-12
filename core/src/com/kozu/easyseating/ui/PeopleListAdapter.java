@@ -1,6 +1,11 @@
 package com.kozu.easyseating.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.adapter.ArrayAdapter;
@@ -55,13 +60,18 @@ public class PeopleListAdapter<ItemT> extends ArrayAdapter<ItemT, VisTable> {
 
     @Override
     protected VisTable createView(ItemT item) {
+        Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
+        pm1.setColor(Color.DARK_GRAY);
+        pm1.fill();
+
         Person person = (Person)item;
         VisLabel tableLabel = new VisLabel();
         VisLabel personLabel = new VisLabel(person.getName());
         personLabel.setWrap(true);
 
         VisTable table = new VisTable();
-        table.add(personLabel).growX();
+        table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
+        table.add(personLabel).growX().height(.25f* Gdx.graphics.getPpiX());
         table.add(tableLabel).padLeft(10f);
 
         return table;

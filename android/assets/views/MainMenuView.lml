@@ -1,17 +1,20 @@
 <?xml version="1.0"?>
 <!DOCTYPE table SYSTEM "lml.dtd">
 
+<:assign key="buttonWidth" value="{=.7 * $ppi}"/>
+<:assign key="buttonHeight" value="{=.35 * $ppi}"/>
+
 <table fillparent="true">
-    <textbutton style="blue">
+    <textbutton style="blue" width="{buttonWidth}" height="{buttonHeight}">
         New
         <:clicklistener>
             <dialogsize title="Venue Name" style="dialog" movable="false">
-                <textfield oncreate="setup" id="venueName"></textfield>
-                <textbutton onresult="checkForInvalidVenueName" growx="true">ok</textbutton>
+                <textfield oncreate="setup" id="venueName" width="{buttonWidth}" height="{buttonHeight}"></textfield>
+                <textbutton onresult="checkForInvalidVenueName" width="{buttonWidth}" height="{buttonHeight}">Ok</textbutton>
             </dialogsize>
         </:clicklistener>
     </textbutton>
 
-    <textbutton disabled="true">Continue</textbutton>
-    <textbutton disabled="true">Load</textbutton>
+    <textbutton disabled="true" width="{buttonWidth}" height="{buttonHeight}">Continue</textbutton>
+    <textbutton disabled="true" width="{buttonWidth}" height="{buttonHeight}">Load</textbutton>
 </table>

@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.czyzby.kiwi.util.gdx.GdxUtilities;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
@@ -56,7 +57,7 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlActor("peopleVenuePane") private ScrollPane peopleVenuePane;
 
     public SeatingScreen() {
-        super(new Stage());
+        super(new Stage(new ScreenViewport()));
         //Create the camera and apply a viewport
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 //        viewport = new ScreenViewport(camera);
@@ -283,5 +284,16 @@ public class SeatingScreen extends AbstractLmlView {
             toastManager = new ToastManager(stage);
         }
         return toastManager;
+    }
+
+    @LmlAction("ppi")
+    public float getPPI(final VisTable container) {
+        return Gdx.graphics.getPpiX();
+    }
+
+    @LmlAction("dialogHeight")
+    public float getDialogHeight(final VisTable container) {
+        //Allow .5 inches of clickable space above and below the dialog
+        return Gdx.graphics.getHeight()-Gdx.graphics.getPpiX();
     }
 }

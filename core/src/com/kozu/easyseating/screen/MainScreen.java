@@ -12,6 +12,7 @@ import com.github.czyzby.lml.parser.impl.AbstractLmlView;
 import com.github.czyzby.lml.scene2d.ui.reflected.ReflectedLmlDialog;
 import com.github.czyzby.lml.util.LmlUtilities;
 import com.kotcrab.vis.ui.util.ToastManager;
+import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.ui.DialogSize;
@@ -82,5 +83,10 @@ public class MainScreen extends AbstractLmlView {
                 if (!focused) Gdx.input.setOnscreenKeyboardVisible(false);
             }
         });
+    }
+
+    @LmlAction("ppi")
+    public float getPPI(final VisTable container) {
+        return Gdx.graphics.getPpiX();
     }
 }
