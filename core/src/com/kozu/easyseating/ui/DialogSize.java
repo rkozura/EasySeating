@@ -1,5 +1,6 @@
 package com.kozu.easyseating.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -19,6 +20,8 @@ public class DialogSize extends ReflectedLmlDialog {
     }
 
     private void initialize() {
+        padTop(.36f* Gdx.graphics.getPpiX());
+        getTitleLabel().setHeight(.5f* Gdx.graphics.getPpiX());
         addListener(new ActorGestureListener() {
             @Override
             public void tap(InputEvent event, float x, float y, int count, int button) {
@@ -39,6 +42,8 @@ public class DialogSize extends ReflectedLmlDialog {
     public void hide() {
         //Disable touching while playing hiding animation so input doesn't go to it
         setTouchable(Touchable.disabled);
+        //Always hide the onscreen keyboard when closing dialogs
+        Gdx.input.setOnscreenKeyboardVisible(false);
         super.hide();
     }
 }

@@ -35,6 +35,9 @@ public class SplashScreen extends AbstractLmlView {
 
     @Override
     public void show() {
+        //VisUI.load(Gdx.files.internal("visui-style.usl"));
+        //VisUI.load(VisUI.SkinScale.X2);
+
         manager = new AssetManager();
 
         //Load the vector tff font file
@@ -44,19 +47,19 @@ public class SplashScreen extends AbstractLmlView {
 
         manager.load("customskin.atlas", TextureAtlas.class);
 
-        FreetypeFontLoader.FreeTypeFontLoaderParameter normalFont = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        normalFont.fontFileName = "font.ttf";
-        normalFont.fontParameters.size = 32;
-        manager.load("font.ttf", BitmapFont.class, normalFont);
-
         FreetypeFontLoader.FreeTypeFontLoaderParameter smallFont = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         smallFont.fontFileName = "font.ttf";
-        smallFont.fontParameters.size = 12;
+        smallFont.fontParameters.size = (int)(12*Gdx.graphics.getDensity());
         manager.load("smallfont.ttf", BitmapFont.class, smallFont);
+
+        FreetypeFontLoader.FreeTypeFontLoaderParameter normalFont = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+        normalFont.fontFileName = "font.ttf";
+        normalFont.fontParameters.size = (int)(32*Gdx.graphics.getDensity());;
+        manager.load("font.ttf", BitmapFont.class, normalFont);
 
         FreetypeFontLoader.FreeTypeFontLoaderParameter largeFont = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         largeFont.fontFileName = "font.ttf";
-        largeFont.fontParameters.size = 58;
+        largeFont.fontParameters.size = (int)(58*Gdx.graphics.getDensity());;
         manager.load("largefont.ttf", BitmapFont.class, largeFont);
     }
 

@@ -3,12 +3,11 @@
 
 <:assign key="buttonWidth" value="{=.7 * $ppi}"/>
 <:assign key="buttonHeight" value="{=.35 * $ppi}"/>
-
 <table fillparent="true">
     <textbutton style="blue" width="{buttonWidth}" height="{buttonHeight}">
         New
         <:clicklistener>
-            <dialogsize title="Venue Name" style="dialog" movable="false">
+            <dialogsize title="Venue Name" style="dialog" titlealign="center" movable="false">
                 <textfield oncreate="setup" id="venueName" width="{buttonWidth}" height="{buttonHeight}"></textfield>
                 <textbutton onresult="checkForInvalidVenueName" width="{buttonWidth}" height="{buttonHeight}">Ok</textbutton>
             </dialogsize>

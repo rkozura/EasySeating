@@ -1,9 +1,13 @@
 package com.kozu.easyseating;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.github.czyzby.lml.parser.LmlParser;
@@ -32,6 +36,8 @@ public class EasySeatingGame extends LmlApplicationListener {
     public static Skin skin;
     public static Skin uiSkin;
 
+    public static Skin visSkin;
+
     public EasySeatingGame(PersonImporter importer) {
         this.importer = importer;
     }
@@ -46,18 +52,46 @@ public class EasySeatingGame extends LmlApplicationListener {
 
     @Override
     public void create() {
-        VisUI.load(VisUI.SkinScale.X2);
-        super.create();
+        FreeTypeFontGenerator buttonFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("OpenSans-Regular.ttf"));
+        FreeTypeFontGenerator dialogTitleFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Pacifico.ttf"));
+        try {
 
-        batch = new SpriteBatch();
-        skin = new Skin(Gdx.files.internal("data/uiskin.json")); //TODO Create uiskin.json file!
+            FreeTypeFontGenerator.FreeTypeFontParameter buttonFontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+            buttonFontParameter.size = (int) (25 * Gdx.graphics.getDensity());
 
-        Tween.registerAccessor(Camera.class, new CameraAccessor());
-        Tween.registerAccessor(Table.class, new EntityAccessor());
-        Tween.registerAccessor(Person.class, new EntityAccessor());
-        Tween.setCombinedAttributesLimit(4);
 
-        setView(SplashScreen.class);
+            FreeTypeFontGenerator.FreeTypeFontParameter dialogTitleFontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+            dialogTitleFontParameter.size = (int) (35 * Gdx.graphics.getDensity());
+
+
+            AssetManager manager = new AssetManager();
+            manager.load("uiskin.atlas", TextureAtlas.class);
+            manager.finishLoading();
+
+            visSkin = new Skin();
+            visSkin.addRegions(manager.get("uiskin.atlas", TextureAtlas.class));
+            visSkin.add("default-font", buttonFontGenerator.generateFont(buttonFontParameter), BitmapFont.class);
+            visSkin.add("dialog-font", dialogTitleFontGenerator.generateFont(dialogTitleFontParameter), BitmapFont.class);
+
+            VisUI.load(visSkin);
+
+
+            visSkin.load(Gdx.files.internal("uiskin.json"));
+            super.create();
+
+            batch = new SpriteBatch();
+            skin = new Skin(Gdx.files.internal("data/uiskin.json")); //TODO Create uiskin.json file!
+
+            Tween.registerAccessor(Camera.class, new CameraAccessor());
+            Tween.registerAccessor(Table.class, new EntityAccessor());
+            Tween.registerAccessor(Person.class, new EntityAccessor());
+            Tween.setCombinedAttributesLimit(4);
+
+            setView(SplashScreen.class);
+        } finally {
+            buttonFontGenerator.dispose();
+            dialogTitleFontGenerator.dispose();
+        }
     }
 
     @Override

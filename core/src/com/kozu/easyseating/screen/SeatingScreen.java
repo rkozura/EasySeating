@@ -296,4 +296,29 @@ public class SeatingScreen extends AbstractLmlView {
         //Allow .5 inches of clickable space above and below the dialog
         return Gdx.graphics.getHeight()-Gdx.graphics.getPpiX();
     }
+
+    @LmlAction("initTextField")
+    public void initTextField(final VisTextField visTextField) {
+        visTextField.setTextFieldFilter(new VisTextField.TextFieldFilter() {
+            @Override
+            public boolean acceptChar(VisTextField textField, char c) {
+                if(isAlpha(Character.toString(c))) {
+                    return true;
+                } else {
+                    ToastManager manager = getToastManager(getStage());
+                    manager.clear();
+                    manager.setAlignment(Align.topLeft);
+                    manager.show("Invalid character!", 1.5f);
+                    manager.toFront();
+
+                    return false;
+                }
+            }
+        });
+    }
+
+    public boolean isAlpha(String s){
+        String pattern= "^[a-zA-Z]*$";
+        return s.matches(pattern);
+    }
 }
