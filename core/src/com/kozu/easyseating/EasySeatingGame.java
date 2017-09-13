@@ -21,7 +21,6 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
 import com.kozu.easyseating.resolver.PersonImporter;
-import com.kozu.easyseating.screen.MainScreen;
 import com.kozu.easyseating.screen.SplashScreen;
 import com.kozu.easyseating.tweenutil.CameraAccessor;
 import com.kozu.easyseating.tweenutil.EntityAccessor;
@@ -46,7 +45,6 @@ public class EasySeatingGame extends LmlApplicationListener {
     protected LmlParser createParser() {
         return VisLml.parser()
                 .tag(getDialogSizeProvider(), "dialogsize")
-                .actions("container", MainScreen.class)
                 .build();
     }
 
@@ -55,7 +53,6 @@ public class EasySeatingGame extends LmlApplicationListener {
         FreeTypeFontGenerator buttonFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("OpenSans-Regular.ttf"));
         FreeTypeFontGenerator dialogTitleFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Pacifico.ttf"));
         try {
-
             FreeTypeFontGenerator.FreeTypeFontParameter buttonFontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
             buttonFontParameter.size = (int) (25 * Gdx.graphics.getDensity());
 
@@ -73,8 +70,9 @@ public class EasySeatingGame extends LmlApplicationListener {
             visSkin.add("default-font", buttonFontGenerator.generateFont(buttonFontParameter), BitmapFont.class);
             visSkin.add("dialog-font", dialogTitleFontGenerator.generateFont(dialogTitleFontParameter), BitmapFont.class);
 
-            VisUI.load(visSkin);
-
+            if(!VisUI.isLoaded()) {
+                VisUI.load(visSkin);
+            }
 
             visSkin.load(Gdx.files.internal("uiskin.json"));
             super.create();

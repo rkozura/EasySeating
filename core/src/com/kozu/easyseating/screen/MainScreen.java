@@ -4,10 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.github.czyzby.lml.annotation.LmlAction;
+import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
 import com.github.czyzby.lml.scene2d.ui.reflected.ReflectedLmlDialog;
 import com.github.czyzby.lml.util.LmlUtilities;
@@ -24,6 +24,10 @@ import org.apache.commons.lang3.StringUtils;
  */
 
 public class MainScreen extends AbstractLmlView {
+    @LmlActor("createVenueDialog") private DialogSize createVenueDialog;
+
+    @LmlActor("venueName") private VisTextField venueName;
+
     private ToastManager toastManager;
 
     public MainScreen() {
@@ -66,23 +70,23 @@ public class MainScreen extends AbstractLmlView {
         }
     }
 
+    @LmlAction("openCreateVenueDialog")
+    public void openCreateVenueDialog() {
+        createVenueDialog.setVisible(true);
+        createVenueDialog.show(getStage());
+        createVenueDialog.toFront();
+
+        createVenueDialog.setPosition(createVenueDialog.getX(), Gdx.graphics.getHeight()-(Gdx.graphics.getPpiX()/2));
+
+        getStage().setKeyboardFocus(venueName);
+        Gdx.input.setOnscreenKeyboardVisible(true);
+    }
+
     private ToastManager getToastManager(Stage stage) {
         if (toastManager == null) {
             toastManager = new ToastManager(stage);
         }
         return toastManager;
-    }
-
-    //TODO Unable to focus keyboard on adding to stage
-    @LmlAction("setup")
-    public void setup(final VisTextField textField) {
-        textField.addListener(new FocusListener() {
-            @Override
-            public void keyboardFocusChanged(FocusEvent event, Actor actor, boolean focused) {
-                super.keyboardFocusChanged(event, actor, focused);
-                if (!focused) Gdx.input.setOnscreenKeyboardVisible(false);
-            }
-        });
     }
 
     @LmlAction("ppi")

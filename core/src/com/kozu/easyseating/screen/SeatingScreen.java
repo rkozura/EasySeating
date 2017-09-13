@@ -54,6 +54,8 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlActor("editPersonDialog") private DialogSize editPersonDialog;
     @LmlActor("confirmDeletePersonDialog") private DialogSize confirmDeletePersonDialog;
 
+    @LmlActor("personName") private VisTextField personName;
+
     @LmlActor("peopleVenuePane") private ScrollPane peopleVenuePane;
 
     public SeatingScreen() {
@@ -147,15 +149,18 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlAction("openCustomPersonDialog")
     public void createPerson() {
-        VisTextField customPersonTextField = (VisTextField)LmlUtilities.getActorWithId(customPersonDialog, "personName");
-        customPersonTextField.setText("");
-        //getStage().setKeyboardFocus(customPersonTextField); //TODO Text field not focusing
+        personName.setText("");
 
         createPersonDialog.hide();
 
         customPersonDialog.setVisible(true);
         customPersonDialog.show(getStage());
         customPersonDialog.toFront();
+
+        customPersonDialog.setPosition(customPersonDialog.getX(), Gdx.graphics.getHeight()-(Gdx.graphics.getPpiX()/2));
+
+        getStage().setKeyboardFocus(personName);
+        Gdx.input.setOnscreenKeyboardVisible(true);
     }
 
     @LmlAction("createCustomPerson")
@@ -317,6 +322,7 @@ public class SeatingScreen extends AbstractLmlView {
         });
     }
 
+    //TODO add space as also acceptable
     public boolean isAlpha(String s){
         String pattern= "^[a-zA-Z]*$";
         return s.matches(pattern);
