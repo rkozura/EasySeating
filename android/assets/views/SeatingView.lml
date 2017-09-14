@@ -7,7 +7,7 @@
 
 <:assign key="dialogWidth" value="{=2 * $ppi}"/>
 
-<table fillparent="true">
+<table id="seatingViewButtons" fillparent="true">
     <textbutton onclick="openVenue" width="{buttonWidth}" height="{buttonHeight}" expand="true"
         style="blue" align="TOPLEFT">Venue</textbutton>
     <textbutton onclick="openOptions" width="{buttonWidth}" height="{buttonHeight}" style="blue"
@@ -23,14 +23,14 @@
 </dialogsize>
 
 <dialogsize id="venueDialog" titlealign="center" style="dialog" movable="false" visible="false">
-    <listview flickscroll="true" colspan="2" row="true" width="{dialogWidth}" height="$dialogHeight"
+    <listview id="venueListView" flickscroll="true" colspan="2" row="true" width="{dialogWidth}" height="$dialogHeight"
         adapter="venuePersonAdapter" itemlistener="venuePersonListener"/>
     <textbutton onclick="openCreatePersonDialog" growx="true" height="{dialogButtonHeight}">Add</textbutton>
     <textbutton growx="true" height="{dialogButtonHeight}">Sort</textbutton>
 </dialogsize>
 
 <dialogsize id="tableDialog" titlealign="center" style="dialog" movable="false" visible="false">
-    <listview flickscroll="true" colspan="2" row="true" width="{dialogWidth}" height="$dialogHeight"
+    <listview id="tableListView" flickscroll="true" colspan="2" row="true" width="{dialogWidth}" height="$dialogHeight"
         adapter="tablePersonAdapter" itemlistener="tablePersonListener"/>
     <textbutton onclick="openCreatePersonDialog" growx="true" height="{dialogButtonHeight}">Add</textbutton>
     <textbutton growx="true" height="{dialogButtonHeight}">Sort</textbutton>

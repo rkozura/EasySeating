@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.czyzby.kiwi.util.gdx.GdxUtilities;
@@ -19,6 +19,7 @@ import com.github.czyzby.lml.util.LmlUtilities;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ToastManager;
 import com.kotcrab.vis.ui.util.adapter.ListAdapter;
+import com.kotcrab.vis.ui.widget.ListView;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
@@ -56,7 +57,8 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlActor("personName") private VisTextField personName;
 
-    @LmlActor("peopleVenuePane") private ScrollPane peopleVenuePane;
+    @LmlActor("venueListView") private ListView.ListViewTable venueListView;
+    @LmlActor("tableListView") private ListView.ListViewTable tableListView;
 
     public SeatingScreen() {
         super(new Stage(new ScreenViewport()));
@@ -279,9 +281,36 @@ public class SeatingScreen extends AbstractLmlView {
     }
 
     @Override
-    public void resize(int width, int height) {
-        camera.position.set(camera.viewportWidth/2, camera.viewportHeight/2, 0);
-        super.resize(width, height);
+    public void resize(int width, int height, boolean centerCamera) {
+        getStage().getViewport().setWorldSize(width, height);
+        getStage().getViewport().update(width, height, true);
+
+        venueDialog.getContentTable().getCell(venueListView).height(getDialogHeight(null));
+        venuePeopleListAdapter.itemsChanged();
+
+        tableDialog.getContentTable().getCell(tableListView).height(getDialogHeight(null));
+        tablePeopleListAdapter.itemsChanged();
+
+        venueDialog.invalidateHierarchy();
+        venueDialog.pack();
+        tableDialog.invalidateHierarchy();
+        tableDialog.pack();
+
+        centerActorOnStage(optionsDialog);
+        centerActorOnStage(venueDialog);
+        centerActorOnStage(tableDialog);
+        centerActorOnStage(createPersonDialog);
+        centerActorOnStage(customPersonDialog);
+        centerActorOnStage(customPersonDialog);
+        centerActorOnStage(editPersonDialog);
+        centerActorOnStage(confirmDeletePersonDialog);
+
+        super.resize(width, height, centerCamera);
+    }
+
+    private void centerActorOnStage(Actor actor) {
+        actor.setPosition(Math.round((getStage().getWidth() - actor.getWidth()) / 2),
+                Math.round((getStage().getHeight() - actor.getHeight()) / 2));;
     }
 
     private ToastManager getToastManager(Stage stage) {
