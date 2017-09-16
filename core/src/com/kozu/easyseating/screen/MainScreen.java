@@ -93,4 +93,5 @@ public class MainScreen extends AbstractLmlView {
     public float getPPI(final VisTable container) {
         return Gdx.graphics.getPpiX();
     }
+
 }

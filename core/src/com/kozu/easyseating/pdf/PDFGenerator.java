@@ -37,13 +37,13 @@ public class PDFGenerator {
         try {
             cos = new PDPageContentStream(document, page1);
 
-            float ratio = rect.getWidth()/seatingLogic.conference.conferenceWidth;
+            double ratio = rect.getWidth()/seatingLogic.conference.conferenceWidth;
 
             for(Table table : seatingLogic.conference.getTables()) {
-                drawCircle(cos, table.getX()*ratio, table.getY()*ratio, 70*ratio, Color.GRAY);
+                drawCircle(cos, (float)(table.getX()*ratio), (float)(table.getY()*ratio), (float)(70*ratio), Color.GRAY);
 
                 cos.beginText();
-                cos.newLineAtOffset(table.getX()*ratio, table.getY()*ratio);
+                cos.newLineAtOffset((float)(table.getX()*ratio), (float)(table.getY()*ratio));
                 cos.setFont( fontPlain, 12 );
                 cos.setNonStrokingColor(Color.BLACK);
                 cos.showText(table.tableIdentifier);

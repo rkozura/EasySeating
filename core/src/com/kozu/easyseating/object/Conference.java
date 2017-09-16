@@ -17,20 +17,30 @@ import java.util.Map;
  */
 public class Conference {
     public String conferenceName;
-    public float conferenceWidth;
-    public float conferenceHeight;
-    public Map<Vector2, Table> snapGrid;
-    private List<Table> tables;
-    public static Array<Person> persons = new Array<Person>();
+    public double conferenceWidth;
+    public double conferenceHeight;
+    public long gridCountWidth;
+    public long gridCountHeight;
+    public double gridGutterLength;
 
-    public Conference(String conferenceName, float conferenceWidth, float conferenceHeight) {
+    public Map<Vector2, Table> snapGrid;
+
+    private List<Table> tables;
+    public Array<Person> persons;
+
+    public Conference(String conferenceName, double conferenceWidth, double conferenceHeight,
+                      long gridCountWidth, long gridCountHeight, double gridGutterLength) {
         this.conferenceName = conferenceName;
         this.tables = new ArrayList<Table>();
         //this.persons = new Array<Person>();
         this.conferenceWidth = conferenceWidth;
         this.conferenceHeight = conferenceHeight;
+        this.gridCountWidth = gridCountWidth;
+        this.gridCountHeight = gridCountHeight;
+        this.gridGutterLength = gridGutterLength;
 
         snapGrid = new HashMap<>();
+        persons = new Array<Person>();
     }
 
     public List<Table> getTables() {

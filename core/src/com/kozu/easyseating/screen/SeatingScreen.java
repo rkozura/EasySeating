@@ -356,4 +356,10 @@ public class SeatingScreen extends AbstractLmlView {
         String pattern= "^[a-zA-Z]*$";
         return s.matches(pattern);
     }
+
+    @Override
+    public void dispose() {
+        renderer.dispose();
+        super.dispose();
+    }
 }

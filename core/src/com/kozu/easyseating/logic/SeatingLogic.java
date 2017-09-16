@@ -19,39 +19,28 @@ import aurelienribon.tweenengine.Tween;
  * Created by Rob on 8/2/2017.
  */
 public class SeatingLogic {
-    private static final float CONFERENCE_WIDTH = 1000f;
-    private static final float CONFERENCE_HEIGHT = CONFERENCE_WIDTH * 1.5f;
-    private static final int GRID_COUNT = 40;
+    //1.5 is approx. the ratio of a piece of paper
+    private final double CONFERENCE_WIDTH = 1000f;
+    private final long GRID_COUNT_WIDTH = 15;
+    private final long GRID_COUNT_HEIGHT = Math.round(GRID_COUNT_WIDTH*1.5);
+    private final double GRID_GUTTER_LENGTH = CONFERENCE_WIDTH/GRID_COUNT_WIDTH;
+    private final double CONFERENCE_HEIGHT = GRID_GUTTER_LENGTH*GRID_COUNT_HEIGHT;;
 
     public Conference conference;
 
     public SeatingLogic(String conferenceName) {
-        conference = new Conference(conferenceName, CONFERENCE_WIDTH, CONFERENCE_HEIGHT);
+        conference = new Conference(conferenceName, CONFERENCE_WIDTH, CONFERENCE_HEIGHT,
+                GRID_COUNT_WIDTH, GRID_COUNT_HEIGHT, GRID_GUTTER_LENGTH);
 
-        //divide the area but the number of tiles to get the max area a tile could cover
-        //this optimal size for a tile will more often than not make the tiles overlap, but
-        //a tile can never be bigger than this size
-        double maxSize = Math.sqrt((CONFERENCE_HEIGHT * CONFERENCE_WIDTH) / GRID_COUNT);
-        //find the number of whole tiles that can fit into the height
-        double numberOfPossibleWholeTilesH = Math.floor(CONFERENCE_HEIGHT / maxSize);
-        //find the number of whole tiles that can fit into the width
-        double numberOfPossibleWholeTilesW = Math.floor(CONFERENCE_WIDTH / maxSize);
-        //works out how many whole tiles this configuration can hold
-        double total = numberOfPossibleWholeTilesH * numberOfPossibleWholeTilesW;
-
-        //if the number of number of whole tiles that the max size tile ends up with is less than the require number of
-        //tiles, make the maxSize smaller and recaluate
-        while(total < GRID_COUNT){
-            maxSize--;
-            numberOfPossibleWholeTilesH = Math.floor(CONFERENCE_HEIGHT / maxSize);
-            numberOfPossibleWholeTilesW = Math.floor(CONFERENCE_WIDTH / maxSize);
-            total = numberOfPossibleWholeTilesH * numberOfPossibleWholeTilesW;
-        }
-
-        for(double i=maxSize; i<=CONFERENCE_WIDTH-75; i+=maxSize) {
-            for(double j=maxSize; j<=CONFERENCE_HEIGHT-75; j+=maxSize) {
-                conference.snapGrid.put(new Vector2((float)i, (float)j), null);
+        //Generate the snap grid
+        double currentX = GRID_GUTTER_LENGTH, currentY = GRID_GUTTER_LENGTH;
+        for(int i=0; i<GRID_COUNT_WIDTH-1; i++) {
+            for(int j=0; j<GRID_COUNT_HEIGHT-1; j++) {
+                conference.snapGrid.put(new Vector2((float)currentX, (float)currentY), null);
+                currentY += GRID_GUTTER_LENGTH;
             }
+            currentY = GRID_GUTTER_LENGTH;
+            currentX += GRID_GUTTER_LENGTH;
         }
     }
 
