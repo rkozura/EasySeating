@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
@@ -24,6 +25,9 @@ public class SeatingRenderer implements Disposable{
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     private SeatingLogic seatingLogic;
+
+    //Positions the Bitmapfonts
+    private static GlyphLayout glyphLayout = new GlyphLayout();
 
     //TODO move to assett manager
     Texture tableTexture = new Texture(Gdx.files.internal("lightpaperfibers.png"));
@@ -74,21 +78,23 @@ public class SeatingRenderer implements Disposable{
             //Disable depth testing so people are not clipped
             Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 
-            EasySeatingGame.batch.begin();
-            for (Table table : seatingLogic.conference.getTables()) {
-                uiSkin.getFont("largetext").setColor(Color.BLACK);
-                //Now draw the table identifier
-                uiSkin.getFont("largetext").draw(EasySeatingGame.batch, table.tableIdentifier,
-                        table.bounds.x, table.bounds.y);
-            }
-            EasySeatingGame.batch.end();
-
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.setColor(Color.BLACK);
             for (Table table : seatingLogic.conference.getTables()) {
                 shapeRenderer.circle(table.bounds.x, table.bounds.y, table.bounds.radius);
             }
             shapeRenderer.end();
+
+            //Draw the table identifier text
+            EasySeatingGame.batch.begin();
+            for (Table table : seatingLogic.conference.getTables()) {
+                glyphLayout.setText(uiSkin.getFont("largetext"), table.tableIdentifier);
+                uiSkin.getFont("largetext").setColor(Color.BLACK);
+                //Now draw the table identifier
+                uiSkin.getFont("largetext").draw(EasySeatingGame.batch, glyphLayout,
+                        table.bounds.x - glyphLayout.width/2, table.bounds.y + glyphLayout.height/2);
+            }
+            EasySeatingGame.batch.end();
 
             for (Table table : seatingLogic.conference.getTables()) {
                 renderAssignedSeats(table);
@@ -106,10 +112,11 @@ public class SeatingRenderer implements Disposable{
         shapeRenderer.end();
         EasySeatingGame.batch.begin();
         for(Person person : table.assignedSeats) {
+            glyphLayout.setText(uiSkin.getFont("smalltext"), person.getInitials());
             uiSkin.getFont("smalltext").setColor(Color.BLACK);
             //Now draw the table identifier
-            uiSkin.getFont("smalltext").draw(EasySeatingGame.batch, person.getInitials(),
-                    person.position.x, person.position.y);
+            uiSkin.getFont("smalltext").draw(EasySeatingGame.batch, glyphLayout,
+                    person.position.x - glyphLayout.width/2, person.position.y + glyphLayout.height/2);
         }
         EasySeatingGame.batch.end();
     }
