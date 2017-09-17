@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.Disposable;
 import com.kozu.easyseating.EasySeatingGame;
@@ -54,13 +53,12 @@ public class SeatingRenderer implements Disposable{
         Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
 
         if(seatingLogic.conference.getTables().size() > 0) {
+            Gdx.gl.glDepthFunc(GL20.GL_LESS);
+            Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+            Gdx.gl.glDepthMask(true);
+            Gdx.gl.glColorMask(false, false, false, false);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             for (Table table : seatingLogic.conference.getTables()) {
-                Gdx.gl.glDepthFunc(GL20.GL_LESS);
-                Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-                Gdx.gl.glDepthMask(true);
-                Gdx.gl.glColorMask(false, false, false, false);
-
                 shapeRenderer.circle(table.bounds.x, table.bounds.y, table.bounds.radius);
             }
             shapeRenderer.end();
@@ -76,14 +74,21 @@ public class SeatingRenderer implements Disposable{
             //Disable depth testing so people are not clipped
             Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 
+            EasySeatingGame.batch.begin();
             for (Table table : seatingLogic.conference.getTables()) {
-                EasySeatingGame.batch.begin();
                 uiSkin.getFont("largetext").setColor(Color.BLACK);
                 //Now draw the table identifier
                 uiSkin.getFont("largetext").draw(EasySeatingGame.batch, table.tableIdentifier,
                         table.bounds.x, table.bounds.y);
-                EasySeatingGame.batch.end();
             }
+            EasySeatingGame.batch.end();
+
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setColor(Color.BLACK);
+            for (Table table : seatingLogic.conference.getTables()) {
+                shapeRenderer.circle(table.bounds.x, table.bounds.y, table.bounds.radius);
+            }
+            shapeRenderer.end();
 
             for (Table table : seatingLogic.conference.getTables()) {
                 renderAssignedSeats(table);
@@ -101,12 +106,10 @@ public class SeatingRenderer implements Disposable{
         shapeRenderer.end();
         EasySeatingGame.batch.begin();
         for(Person person : table.assignedSeats) {
-
             uiSkin.getFont("smalltext").setColor(Color.BLACK);
             //Now draw the table identifier
             uiSkin.getFont("smalltext").draw(EasySeatingGame.batch, person.getInitials(),
                     person.position.x, person.position.y);
-
         }
         EasySeatingGame.batch.end();
     }
@@ -137,11 +140,11 @@ public class SeatingRenderer implements Disposable{
 
         shapeRenderer.end();
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Point);
-        shapeRenderer.setColor(Color.RED);
-        for(Vector2 point : seatingLogic.conference.snapGrid.keySet()) {
-            shapeRenderer.point(point.x, point.y, 0);
-        }
-        shapeRenderer.end();
+//        shapeRenderer.begin(ShapeRenderer.ShapeType.Point);
+//        shapeRenderer.setColor(Color.RED);
+//        for(Vector2 point : seatingLogic.conference.snapGrid.keySet()) {
+//            shapeRenderer.point(point.x, point.y, 0);
+//        }
+//        shapeRenderer.end();
     }
 }
