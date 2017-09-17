@@ -112,6 +112,11 @@ public class SeatingRenderer implements Disposable{
     }
 
     private void renderFloor() {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.WHITE);
+        shapeRenderer.rect(0, 0, (float)seatingLogic.conference.conferenceWidth, (float)seatingLogic.conference.conferenceHeight);
+        shapeRenderer.end();
+
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.GRAY);
 

@@ -5,12 +5,12 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.czyzby.kiwi.util.gdx.GdxUtilities;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
@@ -42,6 +42,7 @@ import static com.kozu.easyseating.EasySeatingGame.batch;
 
 public class SeatingScreen extends AbstractLmlView {
     private OrthographicCamera camera;
+    private Viewport viewport;
     private SeatingRenderer renderer;
     private GestureDetector gestureDetector;
     private SeatingLogic seatingLogic;
@@ -63,12 +64,9 @@ public class SeatingScreen extends AbstractLmlView {
     public SeatingScreen() {
         super(new Stage(new ScreenViewport()));
         //Create the camera and apply a viewport
-        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-//        viewport = new ScreenViewport(camera);
-//        viewport.apply();
-        camera.position.set(camera.viewportWidth/2, camera.viewportHeight/2, 0);
-
-        camera.unproject(new Vector3(0, 0, 0));
+        camera = new OrthographicCamera();
+        viewport = new ScreenViewport(camera);
+        camera.zoom = 3f;
     }
 
     @Override
@@ -95,7 +93,6 @@ public class SeatingScreen extends AbstractLmlView {
     @Override
     public void show() {
         //Zoom the camera in from high to low.  Gives the user an overview of the seating
-        camera.zoom = 3f;
         Tween.to(camera, CameraAccessor.ZOOM, 1.9f).target(1f)
                 .start(TweenUtil.getTweenManager());
 
@@ -104,11 +101,11 @@ public class SeatingScreen extends AbstractLmlView {
 
     @Override
     public void render(float delta) {
-        camera.update();
-
         batch.setProjectionMatrix(camera.combined);
 
+        viewport.apply();
         renderer.render();
+        getStage().getViewport().apply();
         super.render(delta);
 
     }
@@ -282,7 +279,7 @@ public class SeatingScreen extends AbstractLmlView {
 
     @Override
     public void resize(int width, int height, boolean centerCamera) {
-        getStage().getViewport().setWorldSize(width, height);
+        viewport.update(width, height);
         getStage().getViewport().update(width, height, true);
 
         venueDialog.getContentTable().getCell(venueListView).height(getDialogHeight(null));
