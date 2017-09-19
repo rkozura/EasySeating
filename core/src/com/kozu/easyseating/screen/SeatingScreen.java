@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.czyzby.kiwi.util.gdx.GdxUtilities;
@@ -24,6 +25,7 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextField;
+import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.controller.SeatingController;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Person;
@@ -55,11 +57,13 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlActor("customPersonDialog") private DialogSize customPersonDialog;
     @LmlActor("editPersonDialog") private DialogSize editPersonDialog;
     @LmlActor("confirmDeletePersonDialog") private DialogSize confirmDeletePersonDialog;
+    @LmlActor("importContactsDialog") private DialogSize importContactsDialog;
 
     @LmlActor("personName") private VisTextField personName;
 
     @LmlActor("venueListView") private ListView.ListViewTable venueListView;
     @LmlActor("tableListView") private ListView.ListViewTable tableListView;
+    @LmlActor("contactsListView") private ListView.ListViewTable contactsListView;
 
     public SeatingScreen() {
         super(new Stage(new ScreenViewport()));
@@ -224,6 +228,16 @@ public class SeatingScreen extends AbstractLmlView {
         editPersonDialog.hide();
     }
 
+    @LmlAction("saveContactsDialog")
+    public void saveContactsDialog() {
+        seatingLogic.conference.persons.addAll(selectedContacts);
+        selectedContacts.clear();
+        venuePeopleListAdapter.itemsChanged();
+        tablePeopleListAdapter.itemsChanged();
+
+        importContactsDialog.hide();
+    }
+
     @LmlAction("tablePersonListener")
     public void tablePersonListener(final Person selectedItem) {
         VisTable view = tablePeopleListAdapter.getView(selectedItem);
@@ -251,6 +265,29 @@ public class SeatingScreen extends AbstractLmlView {
     public ListAdapter<?> venuePersonAdapter() {
         venuePeopleListAdapter = new PeopleListAdapter<Person>(seatingLogic.conference.persons);
         return venuePeopleListAdapter;
+    }
+
+    private PeopleListAdapter<Person> contactsPeopleListAdapter;
+    @LmlAction("contactsPersonAdapter")
+    public ListAdapter<?> contactsPersonAdapter() {
+        contactsPeopleListAdapter = new PeopleListAdapter<Person>(EasySeatingGame.importer.getPersonList());
+        return contactsPeopleListAdapter;
+    }
+
+    private Array<Person> selectedContacts = new Array<Person>();
+    @LmlAction("contactsPersonListener")
+    public void contactsPersonListener(final Person selectedItem) {
+        System.out.println(selectedItem);
+        VisTable view = contactsPeopleListAdapter.getView(selectedItem);
+
+        if(!selectedContacts.contains(selectedItem, true)) {
+            selectedContacts.add(selectedItem);
+            System.out.println(view.getChildren().get(0));
+            view.getChildren().get(0).setColor(Color.CYAN);
+        } else {
+            selectedContacts.removeValue(selectedItem, true);
+            view.getChildren().get(0).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
+        }
     }
 
     /**
@@ -288,10 +325,15 @@ public class SeatingScreen extends AbstractLmlView {
         tableDialog.getContentTable().getCell(tableListView).height(getDialogHeight(null));
         tablePeopleListAdapter.itemsChanged();
 
+        importContactsDialog.getContentTable().getCell(contactsListView).height(getDialogHeight(null));
+        contactsPeopleListAdapter.itemsChanged();
+
         venueDialog.invalidateHierarchy();
         venueDialog.pack();
         tableDialog.invalidateHierarchy();
         tableDialog.pack();
+        importContactsDialog.invalidate();
+        importContactsDialog.pack();
 
         centerActorOnStage(optionsDialog);
         centerActorOnStage(venueDialog);
@@ -301,6 +343,7 @@ public class SeatingScreen extends AbstractLmlView {
         centerActorOnStage(customPersonDialog);
         centerActorOnStage(editPersonDialog);
         centerActorOnStage(confirmDeletePersonDialog);
+        centerActorOnStage(importContactsDialog);
 
         super.resize(width, height, centerCamera);
     }
@@ -346,6 +389,27 @@ public class SeatingScreen extends AbstractLmlView {
                 }
             }
         });
+    }
+
+    @LmlAction("openImportContactsDialog")
+    public void openImportContactsDialog() {
+        //clear the selected contacts in case user hid the dialog
+        selectedContacts.clear();
+
+        Array<Person> contactPeople = EasySeatingGame.importer.getPersonList();
+        Array<Person> conferencePeople = seatingLogic.conference.persons;
+
+        //Only show contacts that have not been added to the conference
+        contactPeople.removeAll(conferencePeople, false);
+
+        //Clear and retrieve the person list in case contacts were added
+        contactsPeopleListAdapter.clear();
+        contactsPeopleListAdapter.addAll(contactPeople);
+        createPersonDialog.hide();
+
+        importContactsDialog.setVisible(true);
+        importContactsDialog.show(getStage());
+        importContactsDialog.toFront();
     }
 
     //TODO add space as also acceptable

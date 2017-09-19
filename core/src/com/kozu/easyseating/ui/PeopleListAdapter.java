@@ -23,8 +23,6 @@ import java.util.Comparator;
 public class PeopleListAdapter<ItemT> extends ArrayAdapter<ItemT, VisTable> {
     private SimpleListAdapter.SimpleListAdapterStyle style;
 
-    private float maxTableWidth = 300;
-
     public PeopleListAdapter(Array<ItemT> array) {
         this(array, "default");
     }

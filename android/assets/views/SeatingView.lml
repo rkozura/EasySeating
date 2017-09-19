@@ -39,7 +39,7 @@
 <dialogsize id="createPersonDialog" title="Create Person" titlealign="center" style="dialog" movable="false"
 visible="false" onecolumn="true">
     <textbutton onclick="openCustomPersonDialog" width="{buttonWidth}" height="{buttonHeight}">Custom</textbutton>
-    <textbutton width="{buttonWidth}" height="{buttonHeight}">Import Contacts</textbutton>
+    <textbutton onclick="openImportContactsDialog" width="{buttonWidth}" height="{buttonHeight}">Import Contacts</textbutton>
 </dialogsize>
 
 <dialogsize id="customPersonDialog" title="Custom Person" titlealign="center" style="dialog" movable="false"
@@ -59,4 +59,11 @@ onecolumn="true">
 movable="false" visible="false" onecolumn="true">
     <label>(Person will be removed from the venue and table)</label>
     <textbutton onclick="deletePerson">Delete</textbutton>
+</dialogsize>
+
+<dialogsize id="importContactsDialog" title="Import Contacts" titlealign="center" style="dialog"
+    movable="false" visible="false">
+    <listview id="contactsListView" flickscroll="true" colspan="2" row="true" width="{dialogWidth}"
+        height="$dialogHeight" adapter="contactsPersonAdapter" itemlistener="contactsPersonListener"/>
+    <textbutton onclick="saveContactsDialog" growx="true" height="{dialogButtonHeight}">Save</textbutton>
 </dialogsize>

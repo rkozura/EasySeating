@@ -94,4 +94,10 @@ public class MainScreen extends AbstractLmlView {
         return Gdx.graphics.getPpiX();
     }
 
+    @Override
+    public void show() {
+        //TODO this will show the "allow access dialog"...why doesnt it show up in the adapater?
+        EasySeatingGame.importer.getPersonList();
+        super.show();
+    }
 }
