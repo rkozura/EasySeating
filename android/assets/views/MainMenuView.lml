@@ -4,7 +4,7 @@
 <:assign key="buttonWidth" value="{=.7 * $ppi}"/>
 <:assign key="buttonHeight" value="{=.35 * $ppi}"/>
 
-<table fillparent="true">
+<table fillparent="true" onecolumn="true" defaultpad="10">
     <textbutton onclick="openCreateVenueDialog" style="blue" width="{buttonWidth}" height="{buttonHeight}">New</textbutton>
     <textbutton disabled="true" width="{buttonWidth}" height="{buttonHeight}">Continue</textbutton>
     <textbutton disabled="true" width="{buttonWidth}" height="{buttonHeight}">Load</textbutton>

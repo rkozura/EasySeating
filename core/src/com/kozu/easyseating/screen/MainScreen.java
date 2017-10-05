@@ -2,10 +2,17 @@ package com.kozu.easyseating.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
@@ -15,9 +22,13 @@ import com.kotcrab.vis.ui.util.ToastManager;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kozu.easyseating.EasySeatingGame;
+import com.kozu.easyseating.tweenutil.CameraAccessor;
+import com.kozu.easyseating.tweenutil.TweenUtil;
 import com.kozu.easyseating.ui.DialogSize;
 
 import org.apache.commons.lang3.StringUtils;
+
+import aurelienribon.tweenengine.Tween;
 
 /**
  * Created by Rob on 8/27/2017.
@@ -29,9 +40,23 @@ public class MainScreen extends AbstractLmlView {
     @LmlActor("venueName") private VisTextField venueName;
 
     private ToastManager toastManager;
+    Texture tableTexture = new Texture(Gdx.files.internal("chair.jpg"));
+    TextureRegion tr = new TextureRegion(tableTexture);
+    Sprite sprite = new Sprite(tableTexture);
+
+    private Viewport viewport;
 
     public MainScreen() {
-        super(new Stage());
+        super(new Stage(new ScreenViewport()));
+
+        //Set the fillviewport to the size of the background texture
+        viewport = new FillViewport(tr.getRegionWidth(), tr.getRegionHeight());
+
+        //Zoom it in so there is enough area to move the camera around without moving
+        //the background texture off the screen
+        ((OrthographicCamera)viewport.getCamera()).zoom = .8f;
+
+        tableTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
 
     @Override
@@ -95,9 +120,34 @@ public class MainScreen extends AbstractLmlView {
     }
 
     @Override
+    public void resize(int width, int height, boolean centerCamera) {
+        viewport.getCamera().position.set(width/2f, height/2f, 0);
+        viewport.update(width, height, true);
+        getStage().getViewport().update(width, height, true);
+        super.resize(width, height, centerCamera);
+    }
+
+    @Override
     public void show() {
+        Tween.to(viewport.getCamera(), CameraAccessor.POSITION_XY, 20f)
+                .target(viewport.getCamera().position.x-100, viewport.getCamera().position.y-100)
+                .repeatYoyo(3, 2)
+                .start(TweenUtil.getTweenManager());
         //TODO this will show the "allow access dialog"...why doesnt it show up in the adapater?
         EasySeatingGame.importer.getPersonList();
         super.show();
+    }
+
+    @Override
+    public void render(float delta) {
+        viewport.apply();
+
+        EasySeatingGame.batch.setProjectionMatrix(viewport.getCamera().combined);
+        EasySeatingGame.batch.begin();
+        EasySeatingGame.batch.draw(tr, 0, 0);
+        EasySeatingGame.batch.end();
+
+        getStage().getViewport().apply();
+        super.render(delta);
     }
 }
