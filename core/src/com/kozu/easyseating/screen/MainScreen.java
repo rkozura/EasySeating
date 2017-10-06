@@ -40,7 +40,7 @@ public class MainScreen extends AbstractLmlView {
     @LmlActor("venueName") private VisTextField venueName;
 
     private ToastManager toastManager;
-    Texture tableTexture = new Texture(Gdx.files.internal("chair.jpg"));
+    Texture tableTexture = new Texture(Gdx.files.internal("red_chair.jpeg"));
     TextureRegion tr = new TextureRegion(tableTexture);
     Sprite sprite = new Sprite(tableTexture);
 
@@ -149,5 +149,11 @@ public class MainScreen extends AbstractLmlView {
 
         getStage().getViewport().apply();
         super.render(delta);
+    }
+
+    @Override
+    public void dispose() {
+        tableTexture.dispose();
+        super.dispose();
     }
 }
