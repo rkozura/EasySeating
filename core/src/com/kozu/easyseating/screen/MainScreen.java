@@ -3,9 +3,6 @@ package com.kozu.easyseating.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Align;
@@ -25,6 +22,7 @@ import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.tweenutil.CameraAccessor;
 import com.kozu.easyseating.tweenutil.TweenUtil;
 import com.kozu.easyseating.ui.DialogSize;
+import com.kozu.easyseating.ui.PhotoCarousel;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -40,23 +38,25 @@ public class MainScreen extends AbstractLmlView {
     @LmlActor("venueName") private VisTextField venueName;
 
     private ToastManager toastManager;
-    Texture tableTexture = new Texture(Gdx.files.internal("red_chair.jpeg"));
-    TextureRegion tr = new TextureRegion(tableTexture);
-    Sprite sprite = new Sprite(tableTexture);
 
     private Viewport viewport;
+
+    PhotoCarousel photoCarousel;
 
     public MainScreen() {
         super(new Stage(new ScreenViewport()));
 
+        viewport = new FillViewport(0, 0);
+
+        photoCarousel = new PhotoCarousel(viewport);
+
         //Set the fillviewport to the size of the background texture
-        viewport = new FillViewport(tr.getRegionWidth(), tr.getRegionHeight());
+
+
 
         //Zoom it in so there is enough area to move the camera around without moving
         //the background texture off the screen
         ((OrthographicCamera)viewport.getCamera()).zoom = .8f;
-
-        tableTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class MainScreen extends AbstractLmlView {
     public void show() {
         Tween.to(viewport.getCamera(), CameraAccessor.POSITION_XY, 20f)
                 .target(viewport.getCamera().position.x-100, viewport.getCamera().position.y-100)
-                .repeatYoyo(3, 2)
+                .repeatYoyo(-1, 2)
                 .start(TweenUtil.getTweenManager());
         //TODO this will show the "allow access dialog"...why doesnt it show up in the adapater?
         EasySeatingGame.importer.getPersonList();
@@ -144,7 +144,7 @@ public class MainScreen extends AbstractLmlView {
 
         EasySeatingGame.batch.setProjectionMatrix(viewport.getCamera().combined);
         EasySeatingGame.batch.begin();
-        EasySeatingGame.batch.draw(tr, 0, 0);
+        photoCarousel.draw();
         EasySeatingGame.batch.end();
 
         getStage().getViewport().apply();
@@ -153,7 +153,7 @@ public class MainScreen extends AbstractLmlView {
 
     @Override
     public void dispose() {
-        tableTexture.dispose();
+        photoCarousel.dispose();
         super.dispose();
     }
 }
