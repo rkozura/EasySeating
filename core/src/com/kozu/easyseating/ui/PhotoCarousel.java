@@ -3,7 +3,9 @@ package com.kozu.easyseating.ui;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Timer;
@@ -18,7 +20,7 @@ import java.util.List;
  */
 
 public class PhotoCarousel implements Disposable {
-    private List<TextureRegion> photos;
+    private List<Sprite> photos;
     private int currentIndex = 0;
     private int previousIndex = -1;
 
@@ -54,10 +56,10 @@ public class PhotoCarousel implements Disposable {
                 }
                 //Resize the viewport so the new texture fits on the screen
                 viewport.setWorldSize(getCurrentTextureRegion().getRegionWidth(), getCurrentTextureRegion().getRegionHeight());
-                int width = Gdx.graphics.getWidth();
-                int height = Gdx.graphics.getHeight();
-                viewport.getCamera().position.set(width/2f, height/2f, 0);
-                viewport.update(width, height);
+                //int width = Gdx.graphics.getWidth();
+                //int height = Gdx.graphics.getHeight();
+                //viewport.getCamera().position.set(width/2f, height/2f, 0);
+                //viewport.update(width, height);
 
 //                Tween.to(viewport.getCamera(), CameraAccessor.POSITION_XY, 20f)
 //                        .target(viewport.getCamera().position.x-100, viewport.getCamera().position.y-100)
@@ -72,21 +74,23 @@ public class PhotoCarousel implements Disposable {
     public void addPhoto(FileHandle fileHandle){
         Texture texture = new Texture(fileHandle);
         texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        photos.add(new TextureRegion(texture));
+        photos.add(new Sprite(texture));
     }
 
     public void draw () {
         if(previousIndex != -1) {
+            getPreviousTextureRegion().setAlpha(.5f);
             EasySeatingGame.batch.draw(getPreviousTextureRegion(), 0, 0);
+
         }
         EasySeatingGame.batch.draw(getCurrentTextureRegion(), 0, 0);
     }
 
-    public TextureRegion getPreviousTextureRegion() {
+    public Sprite getPreviousTextureRegion() {
         return photos.get(previousIndex);
     }
 
-    public TextureRegion getCurrentTextureRegion() {
+    public Sprite getCurrentTextureRegion() {
         return photos.get(currentIndex);
     }
 
