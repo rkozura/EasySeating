@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -24,6 +25,7 @@ import com.kozu.easyseating.resolver.PersonImporter;
 import com.kozu.easyseating.screen.SplashScreen;
 import com.kozu.easyseating.tweenutil.CameraAccessor;
 import com.kozu.easyseating.tweenutil.EntityAccessor;
+import com.kozu.easyseating.tweenutil.SpriteAccessor;
 import com.kozu.easyseating.tweenutil.TweenUtil;
 import com.kozu.easyseating.ui.DialogSize;
 
@@ -83,6 +85,7 @@ public class EasySeatingGame extends LmlApplicationListener {
             Tween.registerAccessor(Camera.class, new CameraAccessor());
             Tween.registerAccessor(Table.class, new EntityAccessor());
             Tween.registerAccessor(Person.class, new EntityAccessor());
+            Tween.registerAccessor(Sprite.class, new SpriteAccessor());
             Tween.setCombinedAttributesLimit(4);
 
             setView(SplashScreen.class);

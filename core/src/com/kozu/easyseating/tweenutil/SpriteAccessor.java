@@ -3,6 +3,7 @@ package com.kozu.easyseating.tweenutil;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import aurelienribon.tweenengine.TweenAccessor;
 
@@ -10,11 +11,12 @@ import aurelienribon.tweenengine.TweenAccessor;
  * Created by Christen on 10/15/2017.
  */
 
-public class SpriteBatchAccessor implements TweenAccessor<Batch> {
+public class SpriteAccessor implements TweenAccessor<Sprite> {
     public static final int ALPHA = 1;
 
     @Override
-    public int getValues(Batch target, int tweenType, float[] returnValues) {
+    public int getValues(Sprite target, int tweenType, float[] returnValues) {
+        System.out.println(target.getColor().a);
         switch (tweenType) {
             case ALPHA: returnValues[0] = target.getColor().a; return 1;
             default: assert false; return -1;
@@ -22,9 +24,9 @@ public class SpriteBatchAccessor implements TweenAccessor<Batch> {
     }
 
     @Override
-    public void setValues(Batch target, int tweenType, float[] newValues) {
+    public void setValues(Sprite target, int tweenType, float[] newValues) {
         switch (tweenType) {
-            case ALPHA: target.getColor().a = newValues[0]; break;
+            case ALPHA: target.setAlpha(newValues[0]); break;
             default: assert false; break;
         }
     }
