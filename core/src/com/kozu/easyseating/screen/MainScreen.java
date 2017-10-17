@@ -41,7 +41,7 @@ public class MainScreen extends AbstractLmlView {
 
     private Viewport viewport;
 
-    PhotoCarousel photoCarousel;
+    private PhotoCarousel photoCarousel;
 
     public MainScreen() {
         super(new Stage(new ScreenViewport()));
@@ -49,10 +49,6 @@ public class MainScreen extends AbstractLmlView {
         viewport = new FillViewport(0, 0);
 
         photoCarousel = new PhotoCarousel(viewport);
-
-        //Set the fillviewport to the size of the background texture
-
-
 
         //Zoom it in so there is enough area to move the camera around without moving
         //the background texture off the screen
@@ -143,6 +139,7 @@ public class MainScreen extends AbstractLmlView {
         viewport.apply();
 
         EasySeatingGame.batch.setProjectionMatrix(viewport.getCamera().combined);
+
         EasySeatingGame.batch.begin();
         photoCarousel.draw();
         EasySeatingGame.batch.end();

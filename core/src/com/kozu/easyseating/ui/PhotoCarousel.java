@@ -3,7 +3,6 @@ package com.kozu.easyseating.ui;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -40,11 +39,26 @@ public class PhotoCarousel implements Disposable {
             dirHandle = Gdx.files.internal("images/backgrounds");
         }
 
-        for (FileHandle entry: dirHandle.list()) {
+        for (FileHandle entry : dirHandle.list()) {
             addPhoto(entry);
         }
 
-        viewport.setWorldSize(getCurrentTextureRegion().getRegionWidth(), getCurrentTextureRegion().getRegionHeight());
+        //Find the smallest photo and set the world size to it
+        Sprite smallestSprite = null;
+        int smallestArea = 0;
+        for(Sprite photo : photos) {
+            if(smallestSprite == null) {
+                smallestSprite = photo;
+                smallestArea = photo.getRegionHeight() * photo.getRegionWidth();
+            } else {
+                int thisArea = photo.getRegionHeight() * photo.getRegionWidth();
+                if(thisArea < smallestArea) {
+                    smallestArea = thisArea;
+                    smallestSprite = photo;
+                }
+            }
+        }
+        viewport.setWorldSize(smallestSprite.getRegionWidth(), smallestSprite.getRegionHeight());
 
         Timer timer = new Timer();
         Timer.Task task = new Timer.Task() {
@@ -59,41 +73,29 @@ public class PhotoCarousel implements Disposable {
                     currentIndex ++;
                 }
                 getCurrentTextureRegion().setAlpha(0);
-                                Tween.to(getCurrentTextureRegion(), SpriteAccessor.ALPHA, 2f)
+                Tween.to(getCurrentTextureRegion(), SpriteAccessor.ALPHA, 3f)
                         .target(1f)
                         .start(TweenUtil.getTweenManager());
-
-                //Resize the viewport so the new texture fits on the screen
-                viewport.setWorldSize(getCurrentTextureRegion().getRegionWidth(), getCurrentTextureRegion().getRegionHeight());
-                int width = Gdx.graphics.getWidth();
-                int height = Gdx.graphics.getHeight();
-                //viewport.getCamera().position.set(width/2f, height/2f, 0);
-                viewport.update(width, height);
-
-//                Tween.to(viewport.getCamera(), CameraAccessor.POSITION_XY, 20f)
-//                        .target(viewport.getCamera().position.x-100, viewport.getCamera().position.y-100)
-//                        .repeatYoyo(-1, 2)
-//                        .start(TweenUtil.getTweenManager());
             }
         };
-        timer.scheduleTask(task, 10, 5);
+        timer.scheduleTask(task, 10, 15);
         timer.start();
     }
 
     public void addPhoto(FileHandle fileHandle){
         Texture texture = new Texture(fileHandle);
         texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        photos.add(new Sprite(texture));
+        Sprite sprite = new Sprite(texture);
+
+        photos.add(sprite);
     }
 
     public void draw () {
         if(previousIndex != -1) {
-            getPreviousTextureRegion().setAlpha(.5f);
-            EasySeatingGame.batch.draw(getPreviousTextureRegion(), 0, 0);
-
+            getPreviousTextureRegion().draw(EasySeatingGame.batch);
         }
 
-        System.out.println(getCurrentTextureRegion().getColor().a);
+        getCurrentTextureRegion().draw(EasySeatingGame.batch);
     }
 
     public Sprite getPreviousTextureRegion() {
