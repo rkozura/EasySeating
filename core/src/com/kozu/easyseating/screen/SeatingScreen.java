@@ -350,7 +350,7 @@ public class SeatingScreen extends AbstractLmlView {
 
     private void centerActorOnStage(Actor actor) {
         actor.setPosition(Math.round((getStage().getWidth() - actor.getWidth()) / 2),
-                Math.round((getStage().getHeight() - actor.getHeight()) / 2));;
+                Math.round((getStage().getHeight() - actor.getHeight()) / 2));
     }
 
     private ToastManager getToastManager(Stage stage) {

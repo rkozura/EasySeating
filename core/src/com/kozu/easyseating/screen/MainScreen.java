@@ -15,6 +15,7 @@ import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
 import com.github.czyzby.lml.scene2d.ui.reflected.ReflectedLmlDialog;
 import com.github.czyzby.lml.util.LmlUtilities;
+import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.util.ToastManager;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextField;
@@ -101,6 +102,8 @@ public class MainScreen extends AbstractLmlView {
 
         createVenueDialog.setPosition(createVenueDialog.getX(), Gdx.graphics.getHeight()-(Gdx.graphics.getPpiX()/2));
 
+        //The following three lines are absolutely needed for correct input on mobile
+        FocusManager.switchFocus(getStage(), venueName);
         getStage().setKeyboardFocus(venueName);
         Gdx.input.setOnscreenKeyboardVisible(true);
     }
@@ -122,7 +125,15 @@ public class MainScreen extends AbstractLmlView {
         viewport.getCamera().position.set(width/2f, height/2f, 0);
         viewport.update(width, height, true);
         getStage().getViewport().update(width, height, true);
+
+        centerActorOnStage(createVenueDialog);
+
         super.resize(width, height, centerCamera);
+    }
+
+    private void centerActorOnStage(Actor actor) {
+        actor.setPosition(Math.round((getStage().getWidth() - actor.getWidth()) / 2),
+                Math.round((getStage().getHeight())));
     }
 
     @Override
