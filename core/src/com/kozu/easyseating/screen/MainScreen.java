@@ -142,7 +142,7 @@ public class MainScreen extends AbstractLmlView {
 
         return Tween.to(viewport.getCamera(), CameraAccessor.POSITION_XY, 15f)
                 .target(viewport.getCamera().position.x + x, viewport.getCamera().position.y + y)
-                .repeatYoyo(1, 2)
+                .repeatYoyo(1, 1)
                 .setCallback(new TweenCallback() {
                     @Override
                     public void onEvent(int i, BaseTween<?> baseTween) {
