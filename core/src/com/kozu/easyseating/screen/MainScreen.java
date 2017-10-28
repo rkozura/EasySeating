@@ -26,7 +26,9 @@ import com.kozu.easyseating.ui.PhotoCarousel;
 
 import org.apache.commons.lang3.StringUtils;
 
+import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
 
 /**
  * Created by Rob on 8/27/2017.
@@ -125,13 +127,28 @@ public class MainScreen extends AbstractLmlView {
 
     @Override
     public void show() {
-        Tween.to(viewport.getCamera(), CameraAccessor.POSITION_XY, 20f)
-                .target(viewport.getCamera().position.x-100, viewport.getCamera().position.y-100)
-                .repeatYoyo(-1, 2)
-                .start(TweenUtil.getTweenManager());
+        createCameraTween().start(TweenUtil.getTweenManager());
+
         //TODO this will show the "allow access dialog"...why doesnt it show up in the adapater?
         EasySeatingGame.importer.getPersonList();
         super.show();
+    }
+
+    private Tween createCameraTween() {
+        //Find a random point to move to
+        float angle = (float)(Math.random()*Math.PI*2);
+        float x = (float)Math.cos(angle)*100;
+        float y = (float)Math.sin(angle)*100;
+
+        return Tween.to(viewport.getCamera(), CameraAccessor.POSITION_XY, 15f)
+                .target(viewport.getCamera().position.x + x, viewport.getCamera().position.y + y)
+                .repeatYoyo(1, 2)
+                .setCallback(new TweenCallback() {
+                    @Override
+                    public void onEvent(int i, BaseTween<?> baseTween) {
+                        createCameraTween().start(TweenUtil.getTweenManager());
+                    }
+                });
     }
 
     @Override
