@@ -58,6 +58,7 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlActor("editPersonDialog") private DialogSize editPersonDialog;
     @LmlActor("confirmDeletePersonDialog") private DialogSize confirmDeletePersonDialog;
     @LmlActor("importContactsDialog") private DialogSize importContactsDialog;
+    @LmlActor("createObjectDialog") private DialogSize createObjectDialog;
 
     @LmlActor("personName") private VisTextField personName;
 
@@ -410,6 +411,30 @@ public class SeatingScreen extends AbstractLmlView {
         importContactsDialog.setVisible(true);
         importContactsDialog.show(getStage());
         importContactsDialog.toFront();
+    }
+
+    public void openCreateObjectDialog() {
+        createObjectDialog.setVisible(true);
+        createObjectDialog.show(getStage());
+        createObjectDialog.toFront();
+    }
+
+    @LmlAction("createRoundTable")
+    public void createRoundTable() {
+        //TODO Create round table
+        System.out.println("Creating round table");
+    }
+
+    @LmlAction("createObject")
+    public void createObject() {
+        //TODO Create round table
+        System.out.println("Creating object");
+    }
+
+    @LmlAction("createSquareTable")
+    public void createSquareTable() {
+        //TODO Create square table
+        System.out.println("Creating square table");
     }
 
     //TODO add space as also acceptable

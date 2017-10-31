@@ -67,3 +67,10 @@ movable="false" visible="false" onecolumn="true">
         height="$dialogHeight" adapter="contactsPersonAdapter" itemlistener="contactsPersonListener"/>
     <textbutton onclick="saveContactsDialog" growx="true" height="{dialogButtonHeight}">Save</textbutton>
 </dialogsize>
+
+<dialogsize id="createObjectDialog" title="Add Object" titlealign="center" style="dialog" movable="false"
+visible="false" onecolumn="true">
+    <textbutton onclick="createRoundTable" width="{buttonWidth}" height="{buttonHeight}">Circle Table</textbutton>
+    <textbutton onclick="createSquareTable" width="{buttonWidth}" height="{buttonHeight}">Square Table</textbutton>
+    <textbutton onclick="createObject" width="{buttonWidth}" height="{buttonHeight}">Venue Object</textbutton>
+</dialogsize>

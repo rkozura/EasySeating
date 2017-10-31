@@ -31,10 +31,7 @@ public class SeatingController implements GestureDetector.GestureListener {
     }
 
     /**
-     * A tap will either:
-     * -Add a new table
-     * -Move a selected table
-     * -Add a person to a table
+     * A tap will open the selected object detail dialog
      *
      * @param x
      * @param y
@@ -49,15 +46,14 @@ public class SeatingController implements GestureDetector.GestureListener {
         Table table = seatingLogic.getTableAtPosition(pos);
         if(table != null) {
             seatingScreen.openTable(table);
+            return true;
         } else {
-            seatingLogic.addTableAtPosition(pos);
+            return false;
         }
-
-        return true;
     }
 
     /**
-     * Long presses selected and deselect tables
+     * Long presses open creation dialog
      *
      * @param x
      * @param y
@@ -65,17 +61,15 @@ public class SeatingController implements GestureDetector.GestureListener {
      */
     @Override
     public boolean longPress(float x, float y) {
-//        Vector3 pos = convertScreenCoordsToWorldCoords(x, y);
-//
-//        Table table = seatingLogic.getTableAtPosition(pos);
-//        if(table != null) {
-//            seatingLogic.removeTable(table);
-//            //seatingLogic.selectedTable = table;
-//        } else {
-//            //seatingLogic.selectedTable = null;
-//        }
+        Vector3 pos = convertScreenCoordsToWorldCoords(x, y);
 
-        return true;
+        Table table = seatingLogic.getTableAtPosition(pos);
+        if(table == null) {
+            seatingScreen.openCreateObjectDialog();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
