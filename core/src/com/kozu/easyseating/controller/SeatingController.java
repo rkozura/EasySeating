@@ -65,7 +65,7 @@ public class SeatingController implements GestureDetector.GestureListener {
 
         Table table = seatingLogic.getTableAtPosition(pos);
         if(table == null) {
-            seatingScreen.openCreateObjectDialog();
+            seatingScreen.openCreateObjectDialog(pos);
             return true;
         } else {
             return false;

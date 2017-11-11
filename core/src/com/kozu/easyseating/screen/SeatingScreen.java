@@ -5,6 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -413,7 +414,10 @@ public class SeatingScreen extends AbstractLmlView {
         importContactsDialog.toFront();
     }
 
-    public void openCreateObjectDialog() {
+    private Vector3 longPressLocation;
+    public void openCreateObjectDialog(Vector3 longPressLocation) {
+        this.longPressLocation = longPressLocation;
+
         createObjectDialog.setVisible(true);
         createObjectDialog.show(getStage());
         createObjectDialog.toFront();
@@ -421,8 +425,8 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlAction("createRoundTable")
     public void createRoundTable() {
-        //TODO Create round table
-        System.out.println("Creating round table");
+        seatingLogic.addTableAtPosition(longPressLocation);
+        createObjectDialog.hide();
     }
 
     @LmlAction("createObject")
