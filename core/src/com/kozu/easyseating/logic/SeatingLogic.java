@@ -8,9 +8,14 @@ import com.kozu.easyseating.object.Table;
 import com.kozu.easyseating.tweenutil.EntityAccessor;
 import com.kozu.easyseating.tweenutil.TweenUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
+import aurelienribon.tweenengine.BaseTween;
+import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
 
 /**
  * SeatingLogic contains all the operations one can do to the conference.  Also contains selected
@@ -31,6 +36,9 @@ public class SeatingLogic {
     public SeatingLogic(String conferenceName) {
         conference = new Conference(conferenceName, CONFERENCE_WIDTH, CONFERENCE_HEIGHT,
                 GRID_COUNT_WIDTH, GRID_COUNT_HEIGHT, GRID_GUTTER_LENGTH);
+
+        //Load the conference object into the state
+        State.load(conference);
 
         //Generate the snap grid
         double currentX = GRID_GUTTER_LENGTH, currentY = GRID_GUTTER_LENGTH;
@@ -84,7 +92,7 @@ public class SeatingLogic {
         }
 
         table.assignedSeats.add(person);
-        setPersonPositions(table, new Vector3(table.bounds.x, table.bounds.y, 0));
+        startTweenAndSaveState(getPersonPositionTweens(table, new Vector3(table.bounds.x, table.bounds.y, 0)));
     }
 
     public void removePersonFromTable(Table table, Person person) {
@@ -93,9 +101,27 @@ public class SeatingLogic {
 
             //If still not empty, set the person positions
             if(!table.assignedSeats.isEmpty()) {
-                setPersonPositions(table, new Vector3(table.bounds.x, table.bounds.y, 0));
+                startTweenAndSaveState(getPersonPositionTweens(table, new Vector3(table.bounds.x, table.bounds.y, 0)));
             }
         }
+    }
+
+    private void startTweenAndSaveState(List<Tween> tweens) {
+        Timeline timeline = Timeline.createParallel();
+
+        //Move the people as well
+        for(Tween tween : tweens) {
+            timeline.push(tween);
+        }
+
+        timeline.setCallbackTriggers(TweenCallback.COMPLETE);
+        timeline.setCallback(new TweenCallback() {
+            @Override
+            public void onEvent(int i, BaseTween<?> baseTween) {
+                State.save();
+            }
+        });
+        timeline.start(TweenUtil.getTweenManager());
     }
 
     public void addTableAtPosition(Vector3 pos) {
@@ -118,6 +144,8 @@ public class SeatingLogic {
             conference.getTables().add(table);
             table.tableIdentifier = String.valueOf(conference.getTables().size());
         }
+
+        State.save();
     }
 
     public void removeTable(Table table) {
@@ -138,14 +166,15 @@ public class SeatingLogic {
     }
 
     public void moveTableToPosition(Table table, Vector3 pos) {
-        Tween.to(table, EntityAccessor.POSITION_XY, .2f).target(pos.x,pos.y)
-                .start(TweenUtil.getTweenManager());
+        List<Tween> tweens = getPersonPositionTweens(table, new Vector3(table.bounds.x, table.bounds.y, 0));
+        tweens.add(Tween.to(table, EntityAccessor.POSITION_XY, .2f).target(pos.x,pos.y));
 
-        //Re-position the people as well
-        setPersonPositions(table, pos);
+        startTweenAndSaveState(tweens);
     }
 
-    private void setPersonPositions(Table table, Vector3 pos) {
+    private List<Tween> getPersonPositionTweens(Table table, Vector3 pos) {
+        List<Tween> returnList = new ArrayList<Tween>();
+
         double angleBetweenSeats = 360 / table.assignedSeats.size();
 
         double nextSeatAngle = 0;
@@ -155,12 +184,13 @@ public class SeatingLogic {
             float y = (float) (table.getRadius() * Math.sin(nextSeatRadians)) + pos.y;
 
             //Delay the movement of people for effect
-            Tween.to(person, EntityAccessor.POSITION_XY, .2f).target(x,y)
-                    .delay(new Random().nextFloat() * (.3f - .05f) + .05f) //Delay .05 to .3 seconds
-                    .start(TweenUtil.getTweenManager());
+            returnList.add(Tween.to(person, EntityAccessor.POSITION_XY, .2f).target(x,y)
+                    .delay(new Random().nextFloat() * (.3f - .05f) + .05f)); //Delay .05 to .3 sec
 
             nextSeatAngle += angleBetweenSeats;
         }
+
+        return returnList;
     }
 
     public Table getAssignedTable(Person person) {

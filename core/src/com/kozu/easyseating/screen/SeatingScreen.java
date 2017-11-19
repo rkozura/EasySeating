@@ -4,11 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -136,6 +139,15 @@ public class SeatingScreen extends AbstractLmlView {
         tableDialog.setVisible(true);
         tableDialog.show(getStage());
         tableDialog.toFront();
+
+        //TODO Move to asset manager
+        Texture tableTexture = new Texture(Gdx.files.internal("lightpaperfibers.png"));
+        TextureRegion tr = new TextureRegion(tableTexture);
+        TiledDrawable tableTile = new TiledDrawable(tr);
+
+        //TODO BUG when method is called again, the background resizes the content table
+        tableDialog.getContentTable().setBackground(tableTile);
+        tableDialog.getContentTable().pack();
 
         setPersonSelection();
     }
