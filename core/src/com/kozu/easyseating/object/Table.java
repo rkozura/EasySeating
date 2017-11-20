@@ -18,6 +18,8 @@ public class Table implements Model {
     public List<Person> assignedSeats;
     public Vector2 position;
 
+    public Table() {}
+
     public Table(Vector2 position) {
         this.position = position;
         bounds = new Circle();

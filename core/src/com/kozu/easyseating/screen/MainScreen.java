@@ -18,8 +18,10 @@ import com.github.czyzby.lml.util.LmlUtilities;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.util.ToastManager;
 import com.kotcrab.vis.ui.widget.VisTable;
+import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kozu.easyseating.EasySeatingGame;
+import com.kozu.easyseating.logic.State;
 import com.kozu.easyseating.tweenutil.CameraAccessor;
 import com.kozu.easyseating.tweenutil.TweenUtil;
 import com.kozu.easyseating.ui.DialogSize;
@@ -39,6 +41,8 @@ public class MainScreen extends AbstractLmlView {
     @LmlActor("createVenueDialog") private DialogSize createVenueDialog;
 
     @LmlActor("venueName") private VisTextField venueName;
+
+    @LmlActor("continueButton") private VisTextButton continueButton;
 
     private ToastManager toastManager;
 
@@ -108,6 +112,19 @@ public class MainScreen extends AbstractLmlView {
         Gdx.input.setOnscreenKeyboardVisible(true);
     }
 
+    @LmlAction("openContinueVenue")
+    public void openContinueVenue() {
+        EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
+        SeatingScreen seatingScreen = new SeatingScreen();
+        seatingScreen.setConference(State.loadLast());
+
+        Array<Actor> seatingView = core.getParser().createView(seatingScreen, seatingScreen.getTemplateFile());
+
+        core.setView(seatingScreen);
+        LmlUtilities.appendActorsToStage(seatingScreen.getStage(), seatingView);
+
+    }
+
     private ToastManager getToastManager(Stage stage) {
         if (toastManager == null) {
             toastManager = new ToastManager(stage);
@@ -139,6 +156,10 @@ public class MainScreen extends AbstractLmlView {
     @Override
     public void show() {
         createCameraTween().start(TweenUtil.getTweenManager());
+
+        if(State.hasContinue()) {
+            continueButton.setDisabled(false);
+        }
 
         //TODO this will show the "allow access dialog"...why doesnt it show up in the adapater?
         EasySeatingGame.importer.getPersonList();

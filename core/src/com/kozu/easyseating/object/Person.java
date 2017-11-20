@@ -12,6 +12,8 @@ public class Person implements Model {
 
     public Vector2 position = new Vector2();
 
+    public Person() {}
+
     public Person(String name) {
         setName(name);
     }

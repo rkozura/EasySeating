@@ -33,10 +33,12 @@ public class SeatingLogic {
 
     public Conference conference;
 
-    public SeatingLogic(String conferenceName) {
-        conference = new Conference(conferenceName, CONFERENCE_WIDTH, CONFERENCE_HEIGHT,
-                GRID_COUNT_WIDTH, GRID_COUNT_HEIGHT, GRID_GUTTER_LENGTH);
+    public SeatingLogic(Conference conference) {
+        this.conference = conference;
+        init();
+    }
 
+    private void init() {
         //Load the conference object into the state
         State.load(conference);
 
@@ -50,6 +52,12 @@ public class SeatingLogic {
             currentY = GRID_GUTTER_LENGTH;
             currentX += GRID_GUTTER_LENGTH;
         }
+    }
+
+    public SeatingLogic(String conferenceName) {
+        conference = new Conference(conferenceName, CONFERENCE_WIDTH, CONFERENCE_HEIGHT,
+                GRID_COUNT_WIDTH, GRID_COUNT_HEIGHT, GRID_GUTTER_LENGTH);
+        init();
     }
 
     public Table getTableAtPosition(Vector3 pos) {

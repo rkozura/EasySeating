@@ -17,6 +17,19 @@ public class State {
         currentConference = conference;
     }
 
+    public static Conference loadLast() {
+        Preferences prefs = Gdx.app.getPreferences("SeatingChart");
+        FileHandle file = Gdx.files.absolute(prefs.getString("lastSavedFile"));
+
+        Json json = new Json();
+        json.setUsePrototypes(false);
+        Conference conference = json.fromJson(Conference.class, file);
+
+        State.load(conference);
+
+        return conference;
+    }
+
     public static void save() {
         System.out.println("Saving");
 
@@ -36,5 +49,14 @@ public class State {
         prefs.putString("lastSavedFile", file.path());
         prefs.putString(currentConference.conferenceName, fileSystemNameOfConference);
         prefs.flush();
+    }
+
+    public static boolean hasContinue() {
+        Preferences prefs = Gdx.app.getPreferences("SeatingChart");
+        if(prefs.contains("lastSavedFile")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

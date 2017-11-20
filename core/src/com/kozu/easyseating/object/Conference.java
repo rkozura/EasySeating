@@ -23,24 +23,29 @@ public class Conference {
     public long gridCountHeight;
     public double gridGutterLength;
 
-    public Map<Vector2, Table> snapGrid;
+    public transient HashMap<Vector2, Table> snapGrid;
 
-    private List<Table> tables;
+    private ArrayList<Table> tables;
     public Array<Person> persons;
+
+    /**
+     * Needed for deserialization
+     */
+    public Conference() {
+        snapGrid = new HashMap<Vector2, Table>();
+        tables = new ArrayList<Table>();
+        persons = new Array<Person>();
+    }
 
     public Conference(String conferenceName, double conferenceWidth, double conferenceHeight,
                       long gridCountWidth, long gridCountHeight, double gridGutterLength) {
+        this();
         this.conferenceName = conferenceName;
-        this.tables = new ArrayList<Table>();
-        //this.persons = new Array<Person>();
         this.conferenceWidth = conferenceWidth;
         this.conferenceHeight = conferenceHeight;
         this.gridCountWidth = gridCountWidth;
         this.gridCountHeight = gridCountHeight;
         this.gridGutterLength = gridGutterLength;
-
-        snapGrid = new HashMap<>();
-        persons = new Array<Person>();
     }
 
     public List<Table> getTables() {

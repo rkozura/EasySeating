@@ -32,6 +32,7 @@ import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.controller.SeatingController;
 import com.kozu.easyseating.logic.SeatingLogic;
+import com.kozu.easyseating.object.Conference;
 import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
 import com.kozu.easyseating.renderer.SeatingRenderer;
@@ -88,10 +89,18 @@ public class SeatingScreen extends AbstractLmlView {
         return "third";
     }
 
+    public void setConference(Conference conference) {
+        seatingLogic = new SeatingLogic(conference);
+        initConference();
+    }
+
     public void setConferenceName(String conferenceName) {
         //Create the logic class...has methods to modify objects and return them
         seatingLogic = new SeatingLogic(conferenceName);
+        initConference();
+    }
 
+    public void initConference() {
         //Setup the controller, which listens for gestures
         gestureDetector = new GestureDetector(new SeatingController(camera, seatingLogic, this));
 
