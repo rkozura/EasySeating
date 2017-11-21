@@ -3,11 +3,16 @@ package com.kozu.easyseating.controller;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Table;
 import com.kozu.easyseating.screen.SeatingScreen;
+import com.kozu.easyseating.tweenutil.CameraAccessor;
+import com.kozu.easyseating.tweenutil.TweenUtil;
+
+import aurelienribon.tweenengine.Tween;
 
 /**
  * Created by Rob on 8/4/2017.
@@ -99,6 +104,14 @@ public class SeatingController implements GestureDetector.GestureListener {
 
     @Override
     public boolean panStop(float x, float y, int pointer, int button) {
+        float xx = MathUtils.clamp(camera.position.x, 0, (float)seatingLogic.conference.conferenceWidth);
+        float yy = MathUtils.clamp(camera.position.y, 0, (float)seatingLogic.conference.conferenceHeight);
+
+        if(xx != camera.position.x || yy != camera.position.y) {
+            Tween.to(camera, CameraAccessor.POSITION_XY, .3f).target(xx, yy)
+                    .start(TweenUtil.getTweenManager());
+        }
+
         return false;
     }
 
