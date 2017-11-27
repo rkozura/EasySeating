@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.czyzby.kiwi.util.gdx.GdxUtilities;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
+import com.github.czyzby.lml.parser.LmlView;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
 import com.github.czyzby.lml.util.LmlUtilities;
 import com.kotcrab.vis.ui.VisUI;
@@ -130,8 +131,12 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlAction("openOptions")
     public void openOptions() {
-        optionsDialog.setVisible(true);
-        optionsDialog.show(getStage());
+        EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
+        LmlView optionsView = new OptionsDialogView(getStage());
+        core.getParser().createView(optionsView, Gdx.files.internal("views/OptionsView.lml"));
+
+        //optionsDialog.setVisible(true);
+        //optionsDialog.show(getStage());
     }
 
     @LmlAction("openVenue")
