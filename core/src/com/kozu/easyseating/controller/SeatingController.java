@@ -66,6 +66,7 @@ public class SeatingController implements GestureDetector.GestureListener {
      */
     @Override
     public boolean longPress(float x, float y) {
+        //TODO Only make long press work if it is within the world bounds!
         Vector3 pos = convertScreenCoordsToWorldCoords(x, y);
 
         Table table = seatingLogic.getTableAtPosition(pos);
@@ -73,7 +74,8 @@ public class SeatingController implements GestureDetector.GestureListener {
             seatingScreen.openCreateObjectDialog(pos);
             return true;
         } else {
-            return false;
+            seatingScreen.enableMoveTable(table);
+            return true;
         }
     }
 

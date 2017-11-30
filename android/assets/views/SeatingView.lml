@@ -7,11 +7,18 @@
 
 <:assign key="dialogWidth" value="{=2 * $ppi}"/>
 
-<table id="seatingViewButtons" fillparent="true">
-    <textbutton onclick="openVenue" width="{buttonWidth}" height="{buttonHeight}" expand="true"
-        style="blue" align="TOPLEFT">Venue</textbutton>
-    <textbutton onclick="openOptions" width="{buttonWidth}" height="{buttonHeight}" style="blue"
-        align="TOPRIGHT">Options</textbutton>
+<table debugrecursively="true" id="seatingViewButtons" fillparent="true">
+    <table grow="true">
+        <textbutton onclick="openVenue" width="{buttonWidth}" height="{buttonHeight}" expand="true"
+            style="blue" align="TOPLEFT">Venue</textbutton>
+        <textbutton onclick="openOptions" width="{buttonWidth}" height="{buttonHeight}" style="blue"
+            align="TOPRIGHT">Options</textbutton>
+    </table>
+    <:tablerow></:tablerow>
+    <table>
+        <textbutton visible="false" id="deleteTableButton" width="{buttonWidth}" height="{buttonHeight}" style="blue" onclick="deleteTable">Delete</textbutton>
+        <textbutton visible="false" id="doneMovingTableButton" width="{buttonWidth}" height="{buttonHeight}" style="blue" onclick="doneMovingTable">Done</textbutton>
+    </table>
 </table>
 
 <dialogsize id="optionsDialog" title="Options" titlealign="center" style="dialog" movable="false"

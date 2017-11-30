@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -71,6 +72,9 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlActor("venueListView") private ListView.ListViewTable venueListView;
     @LmlActor("tableListView") private ListView.ListViewTable tableListView;
     @LmlActor("contactsListView") private ListView.ListViewTable contactsListView;
+
+    @LmlActor("deleteTableButton") private TextButton deleteTableButton;
+    @LmlActor("doneMovingTableButton") private TextButton doneMovingTableButton;
 
     public SeatingScreen() {
         super(new Stage(new ScreenViewport()));
@@ -164,6 +168,27 @@ public class SeatingScreen extends AbstractLmlView {
         tableDialog.getContentTable().pack();
 
         setPersonSelection();
+    }
+
+    private Table moveTable;
+    public void enableMoveTable(Table table) {
+        moveTable = table;
+        doneMovingTableButton.setVisible(true);
+        deleteTableButton.setVisible(true);
+    }
+
+    @LmlAction("doneMovingTable")
+    public void doneMovingTable(TextButton textButton) {
+        moveTable = null;
+        doneMovingTableButton.setVisible(false);
+        deleteTableButton.setVisible(false);
+    }
+
+    @LmlAction("deleteTable")
+    public void deleteTable(TextButton textButton) {
+        seatingLogic.removeTable(moveTable);
+        //TODO add confirmation dialog before deleting!!!
+        doneMovingTable(textButton);
     }
 
     @LmlAction("export")
