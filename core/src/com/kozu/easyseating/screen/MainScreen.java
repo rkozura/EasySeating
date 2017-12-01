@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -86,13 +85,10 @@ public class MainScreen extends AbstractLmlView {
 
         } else {
             EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
-            SeatingScreen seatingScreen = new SeatingScreen();
-            seatingScreen.setConferenceName(venueName);
-
-            Array<Actor> seatingView = core.getParser().createView(seatingScreen, seatingScreen.getTemplateFile());
+            SeatingScreen seatingScreen = new SeatingScreen(venueName);
+            core.getParser().createView(seatingScreen, seatingScreen.getTemplateFile());
 
             core.setView(seatingScreen);
-            LmlUtilities.appendActorsToStage(seatingScreen.getStage(), seatingView);
 
             return ReflectedLmlDialog.HIDE;
         }
@@ -115,14 +111,11 @@ public class MainScreen extends AbstractLmlView {
     @LmlAction("openContinueVenue")
     public void openContinueVenue() {
         EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
-        SeatingScreen seatingScreen = new SeatingScreen();
-        seatingScreen.setConference(State.loadLast());
+        SeatingScreen seatingScreen = new SeatingScreen(State.loadLast());
 
-        Array<Actor> seatingView = core.getParser().createView(seatingScreen, seatingScreen.getTemplateFile());
+        core.getParser().createView(seatingScreen, seatingScreen.getTemplateFile());
 
         core.setView(seatingScreen);
-        LmlUtilities.appendActorsToStage(seatingScreen.getStage(), seatingView);
-
     }
 
     private ToastManager getToastManager(Stage stage) {

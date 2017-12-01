@@ -76,12 +76,18 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlActor("deleteTableButton") private TextButton deleteTableButton;
     @LmlActor("doneMovingTableButton") private TextButton doneMovingTableButton;
 
-    public SeatingScreen() {
+    public SeatingScreen(Conference conference) {
         super(new Stage(new ScreenViewport()));
-        //Create the camera and apply a viewport
-        camera = new OrthographicCamera();
-        viewport = new ScreenViewport(camera);
-        camera.zoom = 3f;
+
+        seatingLogic = new SeatingLogic(conference);
+        initConference();
+    }
+
+    public SeatingScreen(String venueName) {
+        super(new Stage(new ScreenViewport()));
+
+        seatingLogic = new SeatingLogic(venueName);
+        initConference();
     }
 
     @Override
@@ -94,18 +100,11 @@ public class SeatingScreen extends AbstractLmlView {
         return "third";
     }
 
-    public void setConference(Conference conference) {
-        seatingLogic = new SeatingLogic(conference);
-        initConference();
-    }
-
-    public void setConferenceName(String conferenceName) {
-        //Create the logic class...has methods to modify objects and return them
-        seatingLogic = new SeatingLogic(conferenceName);
-        initConference();
-    }
-
     public void initConference() {
+        camera = new OrthographicCamera();
+        viewport = new ScreenViewport(camera);
+        camera.zoom = 3f;
+
         //Setup the controller, which listens for gestures
         gestureDetector = new GestureDetector(new SeatingController(camera, seatingLogic, this));
 
