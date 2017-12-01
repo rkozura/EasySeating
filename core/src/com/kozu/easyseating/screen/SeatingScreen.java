@@ -76,6 +76,11 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlActor("deleteTableButton") private TextButton deleteTableButton;
     @LmlActor("doneMovingTableButton") private TextButton doneMovingTableButton;
 
+    @LmlActor("openVenueButton") private TextButton openVenueButton;
+    @LmlActor("openOptionsButton") private TextButton openOptionsButton;
+
+    public boolean movingTable = false;
+
     public SeatingScreen(Conference conference) {
         super(new Stage(new ScreenViewport()));
 
@@ -169,11 +174,13 @@ public class SeatingScreen extends AbstractLmlView {
         setPersonSelection();
     }
 
-    private Table moveTable;
+    public Table moveTable;
     public void enableMoveTable(Table table) {
         moveTable = table;
         doneMovingTableButton.setVisible(true);
         deleteTableButton.setVisible(true);
+        openVenueButton.setVisible(false);
+        openOptionsButton.setVisible(false);
     }
 
     @LmlAction("doneMovingTable")
@@ -181,6 +188,8 @@ public class SeatingScreen extends AbstractLmlView {
         moveTable = null;
         doneMovingTableButton.setVisible(false);
         deleteTableButton.setVisible(false);
+        openVenueButton.setVisible(true);
+        openOptionsButton.setVisible(true);
     }
 
     @LmlAction("deleteTable")

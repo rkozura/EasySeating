@@ -48,12 +48,18 @@ public class SeatingController implements GestureDetector.GestureListener {
     public boolean tap(float x, float y, int count, int button) {
         Vector3 pos = convertScreenCoordsToWorldCoords(x, y);
 
-        Table table = seatingLogic.getTableAtPosition(pos);
-        if(table != null) {
-            seatingScreen.openTable(table);
+        if(seatingScreen.moveTable != null) {
+            seatingLogic.moveTableToPosition(seatingScreen.moveTable, pos);
+
             return true;
         } else {
-            return false;
+            Table table = seatingLogic.getTableAtPosition(pos);
+            if (table != null) {
+                seatingScreen.openTable(table);
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 

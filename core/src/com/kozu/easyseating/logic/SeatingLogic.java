@@ -174,7 +174,7 @@ public class SeatingLogic {
     }
 
     public void moveTableToPosition(Table table, Vector3 pos) {
-        List<Tween> tweens = getPersonPositionTweens(table, new Vector3(table.bounds.x, table.bounds.y, 0));
+        List<Tween> tweens = getPersonPositionTweens(table, pos);
         tweens.add(Tween.to(table, EntityAccessor.POSITION_XY, .2f).target(pos.x,pos.y));
 
         startTweenAndSaveState(tweens);
@@ -183,19 +183,21 @@ public class SeatingLogic {
     private List<Tween> getPersonPositionTweens(Table table, Vector3 pos) {
         List<Tween> returnList = new ArrayList<Tween>();
 
-        double angleBetweenSeats = 360 / table.assignedSeats.size();
+        if(table.assignedSeats.size() != 0) {
+            double angleBetweenSeats = 360 / table.assignedSeats.size();
 
-        double nextSeatAngle = 0;
-        for (Person person : table.assignedSeats) {
-            double nextSeatRadians = Math.toRadians(nextSeatAngle);
-            float x = (float) (table.getRadius() * Math.cos(nextSeatRadians)) + pos.x;
-            float y = (float) (table.getRadius() * Math.sin(nextSeatRadians)) + pos.y;
+            double nextSeatAngle = 0;
+            for (Person person : table.assignedSeats) {
+                double nextSeatRadians = Math.toRadians(nextSeatAngle);
+                float x = (float) (table.getRadius() * Math.cos(nextSeatRadians)) + pos.x;
+                float y = (float) (table.getRadius() * Math.sin(nextSeatRadians)) + pos.y;
 
-            //Delay the movement of people for effect
-            returnList.add(Tween.to(person, EntityAccessor.POSITION_XY, .2f).target(x,y)
-                    .delay(new Random().nextFloat() * (.3f - .05f) + .05f)); //Delay .05 to .3 sec
+                //Delay the movement of people for effect
+                returnList.add(Tween.to(person, EntityAccessor.POSITION_XY, .2f).target(x, y)
+                        .delay(new Random().nextFloat() * (.3f - .05f) + .05f)); //Delay .05 to .3 sec
 
-            nextSeatAngle += angleBetweenSeats;
+                nextSeatAngle += angleBetweenSeats;
+            }
         }
 
         return returnList;
