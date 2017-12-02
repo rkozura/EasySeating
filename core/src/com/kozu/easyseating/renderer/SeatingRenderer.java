@@ -88,8 +88,8 @@ public class SeatingRenderer implements Disposable{
             //Draw the table identifier text
             EasySeatingGame.batch.begin();
             for (Table table : seatingLogic.conference.getTables()) {
-                glyphLayout.setText(uiSkin.getFont("largetext"), table.tableIdentifier);
                 uiSkin.getFont("largetext").setColor(Color.BLACK);
+                glyphLayout.setText(uiSkin.getFont("largetext"), table.tableIdentifier);
                 //Now draw the table identifier
                 uiSkin.getFont("largetext").draw(EasySeatingGame.batch, glyphLayout,
                         table.bounds.x - glyphLayout.width/2, table.bounds.y + glyphLayout.height/2);
