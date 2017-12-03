@@ -119,6 +119,10 @@ public class SeatingScreen extends AbstractLmlView {
 
     @Override
     public void show() {
+        //Center the camera to the center of the game world
+        camera.position.set((float)seatingLogic.conference.conferenceWidth/2, (float)seatingLogic.conference.conferenceHeight/2f, 0);
+        camera.update();
+
         //Zoom the camera in from high to low.  Gives the user an overview of the seating
         Tween.to(camera, CameraAccessor.ZOOM, 1.9f).target(1f)
                 .start(TweenUtil.getTweenManager());
