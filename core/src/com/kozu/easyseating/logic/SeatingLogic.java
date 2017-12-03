@@ -1,6 +1,5 @@
 package com.kozu.easyseating.logic;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.kozu.easyseating.object.Conference;
 import com.kozu.easyseating.object.Person;
@@ -10,6 +9,7 @@ import com.kozu.easyseating.tweenutil.TweenUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import aurelienribon.tweenengine.BaseTween;
@@ -46,7 +46,7 @@ public class SeatingLogic {
         double currentX = GRID_GUTTER_LENGTH, currentY = GRID_GUTTER_LENGTH;
         for(int i=0; i<GRID_COUNT_WIDTH-1; i++) {
             for(int j=0; j<GRID_COUNT_HEIGHT-1; j++) {
-                conference.snapGrid.put(new Vector2((float)currentX, (float)currentY), null);
+                conference.snapGrid.put(new Vector3((float)currentX, (float)currentY, 0), null);
                 currentY += GRID_GUTTER_LENGTH;
             }
             currentY = GRID_GUTTER_LENGTH;
@@ -134,9 +134,9 @@ public class SeatingLogic {
 
     public void addTableAtPosition(Vector3 pos) {
         //Add table to the closest mark
-        Vector2 closestXY = null;
+        Vector3 closestXY = null;
         double closestDistance = 0;
-        for(Vector2 key : conference.snapGrid.keySet()) {
+        for(Vector3 key : conference.snapGrid.keySet()) {
             double distance = Math.hypot(pos.x - key.x, pos.y - key.y);
             if(distance == 0 || closestDistance == 0 || distance < closestDistance) {
                 if(conference.snapGrid.get(key) == null) {
@@ -157,6 +157,7 @@ public class SeatingLogic {
     }
 
     public void removeTable(Table table) {
+        //TODO rethink the snap grid...do I really need to store the table in the map?
         conference.snapGrid.put(table.position, null); //Clear the snap position
         conference.getTables().remove(table); //remove the table from the conference
 
@@ -166,18 +167,29 @@ public class SeatingLogic {
     }
 
     public boolean isPersonAtTable(Table table, Person person) {
-        if(table.assignedSeats.contains(person)) {
-            return true;
-        } else {
-            return false;
-        }
+        return table.assignedSeats.contains(person);
     }
 
     public void moveTableToPosition(Table table, Vector3 pos) {
-        List<Tween> tweens = getPersonPositionTweens(table, pos);
-        tweens.add(Tween.to(table, EntityAccessor.POSITION_XY, .2f).target(pos.x,pos.y));
+        float closestDistance = -1;
+        Map.Entry<Vector3, Table> closestEntry = null;
+        //Find a snap location for the table
+        for(Map.Entry<Vector3, Table> entry : conference.snapGrid.entrySet()) {
+            Vector3 point = entry.getKey();
+            float distance = point.dst(pos);
+            if(closestDistance == -1 || distance < closestDistance) {
+                closestDistance = distance;
+                closestEntry = entry;
+            }
+        }
 
-        startTweenAndSaveState(tweens);
+        if(closestEntry != null) {
+            closestEntry.setValue(table);
+            List<Tween> tweens = getPersonPositionTweens(table, closestEntry.getKey());
+            tweens.add(Tween.to(table, EntityAccessor.POSITION_XY, .2f).target(closestEntry.getKey().x, closestEntry.getKey().y));
+
+            startTweenAndSaveState(tweens);
+        }
     }
 
     private List<Tween> getPersonPositionTweens(Table table, Vector3 pos) {

@@ -1,12 +1,11 @@
 package com.kozu.easyseating.object;
 
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Rob on 8/3/2017.
@@ -23,7 +22,7 @@ public class Conference {
     public long gridCountHeight;
     public double gridGutterLength;
 
-    public transient HashMap<Vector2, Table> snapGrid;
+    public transient HashMap<Vector3, Table> snapGrid;
 
     private ArrayList<Table> tables;
     public Array<Person> persons;
@@ -32,7 +31,7 @@ public class Conference {
      * Needed for deserialization
      */
     public Conference() {
-        snapGrid = new HashMap<Vector2, Table>();
+        snapGrid = new HashMap<Vector3, Table>();
         tables = new ArrayList<Table>();
         persons = new Array<Person>();
     }

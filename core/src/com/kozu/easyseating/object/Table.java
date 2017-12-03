@@ -1,7 +1,7 @@
 package com.kozu.easyseating.object;
 
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +16,11 @@ public class Table implements Model {
     public String tableIdentifier;
     public Circle bounds;
     public List<Person> assignedSeats;
-    public Vector2 position;
+    public Vector3 position;
 
     public Table() {}
 
-    public Table(Vector2 position) {
+    public Table(Vector3 position) {
         this.position = position;
         bounds = new Circle();
         bounds.set(position.x, position.y, INIT_TABLE_RADIUS);
