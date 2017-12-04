@@ -112,7 +112,7 @@ public class SeatingRenderer implements Disposable{
         shapeRenderer.end();
         EasySeatingGame.batch.begin();
         for(Person person : table.assignedSeats) {
-            glyphLayout.setText(uiSkin.getFont("smalltext"), person.getInitials());
+            glyphLayout.setText(uiSkin.getFont("smalltext"), person.getTruncatedName());
             uiSkin.getFont("smalltext").setColor(Color.BLACK);
             //Now draw the table identifier
             uiSkin.getFont("smalltext").draw(EasySeatingGame.batch, glyphLayout,

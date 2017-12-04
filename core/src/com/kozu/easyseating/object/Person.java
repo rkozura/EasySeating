@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Person implements Model {
     private String name;
     private String initials = "";
+    private String truncatedName = ""; //Used when display close up
 
     public Vector2 position = new Vector2();
 
@@ -29,6 +30,11 @@ public class Person implements Model {
         String[] names = name.split(" ");
         for(String oneName : names) {
             initials += oneName.charAt(0);
+        }
+
+        truncatedName = names[0];
+        if(names.length > 1) {
+            truncatedName += "." + names[1].charAt(0);
         }
     }
 
@@ -63,5 +69,9 @@ public class Person implements Model {
 
     public String getInitials() {
         return initials;
+    }
+
+    public String getTruncatedName() {
+        return truncatedName;
     }
 }

@@ -531,9 +531,8 @@ public class SeatingScreen extends AbstractLmlView {
         System.out.println("Creating square table");
     }
 
-    //TODO add space as also acceptable
     public boolean isAlpha(String s){
-        String pattern= "^[a-zA-Z]*$";
+        String pattern= "^[a-zA-Z ]*$";
         return s.matches(pattern);
     }
 
