@@ -98,6 +98,19 @@ public class SeatingScreen extends AbstractLmlView {
         initConference();
     }
 
+    private void initConference() {
+        camera = new OrthographicCamera();
+        viewport = new ScreenViewport(camera);
+        camera.zoom = 3f;
+
+        //Setup the controller, which listens for gestures
+        gestureDetector = new GestureDetector(new SeatingController(camera, seatingLogic, this));
+        gestureDetector.setLongPressSeconds(.5f);
+
+        //Create the renderer.  Renderer needs to see the logic to know what to render
+        renderer = new SeatingRenderer(seatingLogic);
+    }
+
     public void editTable(Table table) {
         selectedTable = table;
         addPersonToTableButton.setVisible(true);
@@ -130,19 +143,6 @@ public class SeatingScreen extends AbstractLmlView {
     @Override
     public String getViewId() {
         return "third";
-    }
-
-    public void initConference() {
-        camera = new OrthographicCamera();
-        viewport = new ScreenViewport(camera);
-        camera.zoom = 3f;
-
-        //Setup the controller, which listens for gestures
-        gestureDetector = new GestureDetector(new SeatingController(camera, seatingLogic, this));
-        gestureDetector.setLongPressSeconds(.5f);
-
-        //Create the renderer.  Renderer needs to see the logic to know what to render
-        renderer = new SeatingRenderer(seatingLogic);
     }
 
     @Override
