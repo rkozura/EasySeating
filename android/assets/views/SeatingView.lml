@@ -7,7 +7,7 @@
 
 <:assign key="dialogWidth" value="{=2 * $ppi}"/>
 
-<table debugrecursively="true" id="seatingViewButtons" fillparent="true">
+<table fillparent="true">
     <table grow="true">
         <textbutton id="openVenueButton" onclick="openVenue" width="{buttonWidth}" height="{buttonHeight}" expand="true"
             style="blue" align="TOPLEFT">Venue</textbutton>
@@ -19,6 +19,11 @@
         <textbutton visible="false" id="deleteTableButton" width="{buttonWidth}" height="{buttonHeight}" style="blue" onclick="deleteTable">Delete</textbutton>
         <textbutton visible="false" id="doneMovingTableButton" width="{buttonWidth}" height="{buttonHeight}" style="blue" onclick="doneMovingTable">Done</textbutton>
     </table>
+</table>
+
+<table fillparent="true">
+    <textbutton id="addPersonToTableButton" visible="false" align="BOTTOMRIGHT" width="{buttonWidth}" height="{buttonHeight}" style="blue" expandy="true" onclick="openAddPersonToTableDialog">Add</textbutton>
+    <textbutton id="doneEditingTableButton" visible="false" align="BOTTOMRIGHT" width="{buttonWidth}" height="{buttonHeight}" style="blue" expandy="true" onclick="doneEditingTable">Done</textbutton>
 </table>
 
 <dialogsize id="optionsDialog" title="Options" titlealign="center" style="dialog" movable="false"

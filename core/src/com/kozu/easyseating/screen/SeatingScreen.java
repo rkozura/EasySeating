@@ -79,6 +79,9 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlActor("openVenueButton") private TextButton openVenueButton;
     @LmlActor("openOptionsButton") private TextButton openOptionsButton;
 
+    @LmlActor("addPersonToTableButton") private TextButton addPersonToTableButton;
+    @LmlActor("doneEditingTableButton") private TextButton doneEditingTableButton;
+
     public boolean movingTable = false;
 
     public SeatingScreen(Conference conference) {
@@ -93,6 +96,30 @@ public class SeatingScreen extends AbstractLmlView {
 
         seatingLogic = new SeatingLogic(venueName);
         initConference();
+    }
+
+    public void editTable(Table table) {
+        selectedTable = table;
+        addPersonToTableButton.setVisible(true);
+        doneEditingTableButton.setVisible(true);
+        openVenueButton.setVisible(false);
+        openOptionsButton.setVisible(false);
+    }
+
+    @LmlAction("openAddPersonToTableDialog")
+    public void openAddPersonToTableDialog() {
+        openTable(selectedTable);
+    }
+
+    @LmlAction("doneEditingTable")
+    public void doneEditingTable() {
+        selectedTable = null;
+        addPersonToTableButton.setVisible(false);
+        doneEditingTableButton.setVisible(false);
+        openVenueButton.setVisible(true);
+        openOptionsButton.setVisible(true);
+        Tween.to(camera, CameraAccessor.ZOOM, .3f).target(1f)
+                .start(TweenUtil.getTweenManager());
     }
 
     @Override
@@ -112,6 +139,7 @@ public class SeatingScreen extends AbstractLmlView {
 
         //Setup the controller, which listens for gestures
         gestureDetector = new GestureDetector(new SeatingController(camera, seatingLogic, this));
+        gestureDetector.setLongPressSeconds(.5f);
 
         //Create the renderer.  Renderer needs to see the logic to know what to render
         renderer = new SeatingRenderer(seatingLogic);
@@ -177,11 +205,13 @@ public class SeatingScreen extends AbstractLmlView {
 
     public Table moveTable;
     public void enableMoveTable(Table table) {
-        moveTable = table;
-        doneMovingTableButton.setVisible(true);
-        deleteTableButton.setVisible(true);
-        openVenueButton.setVisible(false);
-        openOptionsButton.setVisible(false);
+        if (selectedTable == null) {
+            moveTable = table;
+            doneMovingTableButton.setVisible(true);
+            deleteTableButton.setVisible(true);
+            openVenueButton.setVisible(false);
+            openOptionsButton.setVisible(false);
+        }
     }
 
     @LmlAction("doneMovingTable")
