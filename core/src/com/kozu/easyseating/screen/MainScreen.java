@@ -119,6 +119,7 @@ public class MainScreen extends AbstractLmlView {
             core.getParser().createView(seatingScreen, seatingScreen.getTemplateFile());
             core.setView(seatingScreen);
         } catch(Exception e) {
+            //TODO Show confirmation message that the data is corrupt and want to remove
             e.printStackTrace();
             //If there was an exception loading the conference, disable to the continue button
             continueButton.setDisabled(true);
