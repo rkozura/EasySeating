@@ -107,7 +107,7 @@ public class SeatingRenderer implements Disposable{
         shapeRenderer.setColor(Color.CYAN);
         for(Person person : table.assignedSeats) {
             //If projection matrices are not set, objects will not be drawn relative to the tables
-            shapeRenderer.circle(person.position.x, person.position.y, 30);
+            shapeRenderer.circle(person.bounds.x, person.bounds.y, person.bounds.radius);
         }
         shapeRenderer.end();
         EasySeatingGame.batch.begin();
@@ -116,7 +116,7 @@ public class SeatingRenderer implements Disposable{
             uiSkin.getFont("smalltext").setColor(Color.BLACK);
             //Now draw the table identifier
             uiSkin.getFont("smalltext").draw(EasySeatingGame.batch, glyphLayout,
-                    person.position.x - glyphLayout.width/2, person.position.y + glyphLayout.height/2);
+                    person.bounds.x - glyphLayout.width/2, person.bounds.y + glyphLayout.height/2);
         }
         EasySeatingGame.batch.end();
     }

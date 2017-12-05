@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.kozu.easyseating.logic.SeatingLogic;
+import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
 import com.kozu.easyseating.screen.SeatingScreen;
 import com.kozu.easyseating.tweenutil.CameraAccessor;
@@ -30,10 +31,22 @@ public class SeatingController implements GestureDetector.GestureListener {
         this.seatingScreen = seatingScreen;
     }
 
+    Person draggedPerson;
     @Override
     public boolean touchDown(float x, float y, int pointer, int button) {
-
-        return false;
+        Table table = seatingScreen.getEditTable();
+        if(table != null) {
+            Vector3 pos = convertScreenCoordsToWorldCoords(x, y);
+            for(Person person : table.assignedSeats) {
+                if(person.bounds.contains(pos.x, pos.y)) {
+                    draggedPerson = person;
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -107,17 +120,24 @@ public class SeatingController implements GestureDetector.GestureListener {
      */
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
-        camera.position.add(
-                camera.unproject(new Vector3(0, 0, 0))
-                        .add(camera.unproject(new Vector3(deltaX, deltaY, 0)).scl(-1f))
-        );
-        camera.update();
+        Vector3 vec = camera.unproject(new Vector3(0, 0, 0))
+                .add(camera.unproject(new Vector3(deltaX, deltaY, 0)).scl(-1f));
+
+        if(draggedPerson != null) {
+            draggedPerson.bounds.x -= vec.x;
+            draggedPerson.bounds.y -= vec.y;
+        } else {
+            camera.position.add(vec);
+            camera.update();
+        }
 
         return true;
     }
 
     @Override
     public boolean panStop(float x, float y, int pointer, int button) {
+        draggedPerson = null;
+
         float xx = MathUtils.clamp(camera.position.x, 0, (float)seatingLogic.conference.conferenceWidth);
         float yy = MathUtils.clamp(camera.position.y, 0, (float)seatingLogic.conference.conferenceHeight);
 

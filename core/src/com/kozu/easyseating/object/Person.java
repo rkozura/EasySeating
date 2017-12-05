@@ -1,7 +1,6 @@
 package com.kozu.easyseating.object;
 
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by Rob on 8/2/2017.
@@ -15,15 +14,13 @@ public class Person implements Model {
     private String truncatedName = ""; //Used when display close up
 
     public Circle bounds;
-    public Vector2 position = new Vector2();
 
     public Person() {}
 
     public Person(String name) {
         setName(name);
 
-        bounds = new Circle();
-        bounds.set(position.x, position.y, PERSON_RADIUS);
+        bounds = new Circle(0, 0, PERSON_RADIUS);
     }
 
     public String getName() {
@@ -49,22 +46,22 @@ public class Person implements Model {
 
     @Override
     public float getX() {
-        return position.x;
+        return bounds.x;
     }
 
     @Override
     public float getY() {
-        return position.y;
+        return bounds.y;
     }
 
     @Override
     public void setX(float x) {
-        position.x = x;
+        bounds.x = x;
     }
 
     @Override
     public void setY(float y) {
-        position.y = y;
+        bounds.y = y;
     }
 
     @Override
