@@ -506,11 +506,13 @@ public class SeatingScreen extends AbstractLmlView {
 
     private Vector3 longPressLocation;
     public void openCreateObjectDialog(Vector3 longPressLocation) {
-        this.longPressLocation = longPressLocation;
+        if (selectedTable == null) {
+            this.longPressLocation = longPressLocation;
 
-        createObjectDialog.setVisible(true);
-        createObjectDialog.show(getStage());
-        createObjectDialog.toFront();
+            createObjectDialog.setVisible(true);
+            createObjectDialog.show(getStage());
+            createObjectDialog.toFront();
+        }
     }
 
     @LmlAction("createRoundTable")
