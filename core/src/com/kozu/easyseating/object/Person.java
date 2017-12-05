@@ -24,6 +24,8 @@ public class Person implements Model {
     }
 
     public void setName(String name) {
+        name = name.trim();
+        name = name.replaceAll("[ ]+", " ");
         this.name = name;
 
         initials = "";
