@@ -54,7 +54,14 @@ public class State {
     public static boolean hasContinue() {
         Preferences prefs = Gdx.app.getPreferences("SeatingChart");
         if(prefs.contains("lastSavedFile")) {
-            return true;
+            FileHandle file = Gdx.files.absolute(prefs.getString("lastSavedFile"));
+            if(!file.exists()) {
+                //Delete entry in preferences file if file does not exist
+                prefs.clear();
+                return false;
+            } else {
+                return true;
+            }
         } else {
             return false;
         }

@@ -158,7 +158,7 @@ public class SeatingLogic {
 
     public void removeTable(Table table) {
         //TODO rethink the snap grid...do I really need to store the table in the map?
-        conference.snapGrid.put(table.position, null); //Clear the snap position
+        //conference.snapGrid.put(new Vector3(table.bounds.x, table.bounds.y, 0), null); //Clear the snap position
         conference.getTables().remove(table); //remove the table from the conference
 
         for(int i = 0; i<conference.getTables().size(); i++) {

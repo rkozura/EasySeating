@@ -6,7 +6,7 @@
 
 <table fillparent="true" onecolumn="true" defaultpad="10">
     <textbutton onclick="openCreateVenueDialog" style="blue" width="{buttonWidth}" height="{buttonHeight}">New</textbutton>
-    <textbutton id="continueButton" onclick="openContinueVenue" disabled="true" width="{buttonWidth}" height="{buttonHeight}">Continue</textbutton>
+    <textbutton id="continueButton" onclick="openContinueVenue" touchable="disabled" disabled="true" width="{buttonWidth}" height="{buttonHeight}">Continue</textbutton>
     <textbutton disabled="true" width="{buttonWidth}" height="{buttonHeight}">Load</textbutton>
 </table>
 

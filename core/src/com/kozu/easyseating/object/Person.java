@@ -1,5 +1,6 @@
 package com.kozu.easyseating.object;
 
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -7,16 +8,22 @@ import com.badlogic.gdx.math.Vector2;
  */
 
 public class Person implements Model {
+    private final int PERSON_RADIUS = 30;
+
     private String name;
     private String initials = "";
     private String truncatedName = ""; //Used when display close up
 
+    public Circle bounds;
     public Vector2 position = new Vector2();
 
     public Person() {}
 
     public Person(String name) {
         setName(name);
+
+        bounds = new Circle();
+        bounds.set(position.x, position.y, PERSON_RADIUS);
     }
 
     public String getName() {

@@ -5,6 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -152,6 +153,7 @@ public class MainScreen extends AbstractLmlView {
 
         if(State.hasContinue()) {
             continueButton.setDisabled(false);
+            continueButton.setTouchable(Touchable.enabled);
         }
 
         //TODO this will show the "allow access dialog"...why doesnt it show up in the adapater?

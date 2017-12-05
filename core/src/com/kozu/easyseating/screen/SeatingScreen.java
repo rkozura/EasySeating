@@ -119,6 +119,10 @@ public class SeatingScreen extends AbstractLmlView {
         openOptionsButton.setVisible(false);
     }
 
+    public boolean isEditingTable() {
+        return selectedTable != null;
+    }
+
     @LmlAction("openAddPersonToTableDialog")
     public void openAddPersonToTableDialog() {
         openTable(selectedTable);

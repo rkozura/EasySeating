@@ -16,12 +16,10 @@ public class Table implements Model {
     public String tableIdentifier;
     public Circle bounds;
     public List<Person> assignedSeats;
-    public Vector3 position;
 
     public Table() {}
 
     public Table(Vector3 position) {
-        this.position = position;
         bounds = new Circle();
         bounds.set(position.x, position.y, INIT_TABLE_RADIUS);
         assignedSeats = new ArrayList<>();
