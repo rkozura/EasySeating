@@ -112,11 +112,18 @@ public class MainScreen extends AbstractLmlView {
     @LmlAction("openContinueVenue")
     public void openContinueVenue() {
         EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
-        SeatingScreen seatingScreen = new SeatingScreen(State.loadLast());
 
-        core.getParser().createView(seatingScreen, seatingScreen.getTemplateFile());
+        try {
+            SeatingScreen seatingScreen = new SeatingScreen(State.loadLast());
 
-        core.setView(seatingScreen);
+            core.getParser().createView(seatingScreen, seatingScreen.getTemplateFile());
+            core.setView(seatingScreen);
+        } catch(Exception e) {
+            e.printStackTrace();
+            //If there was an exception loading the conference, disable to the continue button
+            continueButton.setDisabled(true);
+            continueButton.setTouchable(Touchable.disabled);
+        }
     }
 
     private ToastManager getToastManager(Stage stage) {

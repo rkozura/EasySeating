@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.SerializationException;
 import com.kozu.easyseating.object.Conference;
 
 /**
@@ -17,15 +18,22 @@ public class State {
         currentConference = conference;
     }
 
-    public static Conference loadLast() {
+    public static Conference loadLast() throws Exception {
         Preferences prefs = Gdx.app.getPreferences("SeatingChart");
         FileHandle file = Gdx.files.absolute(prefs.getString("lastSavedFile"));
 
         Json json = new Json();
         json.setUsePrototypes(false);
-        Conference conference = json.fromJson(Conference.class, file);
 
-        State.load(conference);
+        Conference conference;
+        try {
+            conference = json.fromJson(Conference.class, file);
+            State.load(conference);
+        } catch(SerializationException rte) {
+            prefs.clear();
+            file.delete();
+            throw new Exception("Unable to parse conference file.  Deleting prefs.", rte);
+        }
 
         return conference;
     }
