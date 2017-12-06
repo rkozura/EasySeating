@@ -192,6 +192,11 @@ public class SeatingLogic {
         }
     }
 
+    public void resetTable(Table table) {
+        List<Tween> tweens = getPersonPositionTweens(table, new Vector3(table.bounds.x, table.bounds.y, 0));
+        startTweenAndSaveState(tweens);
+    }
+
     private List<Tween> getPersonPositionTweens(Table table, Vector3 pos) {
         List<Tween> returnList = new ArrayList<Tween>();
 

@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -53,7 +52,7 @@ public class SeatingScreen extends AbstractLmlView {
     private OrthographicCamera camera;
     private Viewport viewport;
     private SeatingRenderer renderer;
-    private GestureDetector gestureDetector;
+    private SeatingController gestureDetector;
     private SeatingLogic seatingLogic;
 
     private ToastManager toastManager;
@@ -104,8 +103,7 @@ public class SeatingScreen extends AbstractLmlView {
         camera.zoom = 3f;
 
         //Setup the controller, which listens for gestures
-        gestureDetector = new GestureDetector(new SeatingController(camera, seatingLogic, this));
-        gestureDetector.setLongPressSeconds(.5f);
+        gestureDetector = new SeatingController(camera, seatingLogic, this);
 
         //Create the renderer.  Renderer needs to see the logic to know what to render
         renderer = new SeatingRenderer(seatingLogic);
@@ -166,6 +164,8 @@ public class SeatingScreen extends AbstractLmlView {
     public void render(float delta) {
         batch.setProjectionMatrix(camera.combined);
 
+        //TODO Is this really the solution to pan the screen?
+        gestureDetector.personPan();
         viewport.apply();
         renderer.render();
         getStage().getViewport().apply();

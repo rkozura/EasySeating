@@ -1,5 +1,6 @@
 package com.kozu.easyseating.controller;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
@@ -19,19 +20,68 @@ import aurelienribon.tweenengine.Tween;
  * Created by Rob on 8/4/2017.
  */
 
-public class SeatingController implements GestureDetector.GestureListener {
+public class SeatingController extends GestureDetector {
+    private float LONG_PRESS_SECONDS = .5f;
+    private Camera camera;
+
+    public SeatingController(Camera camera, SeatingLogic seatingLogic, SeatingScreen seatingScreen){
+        super(new SeatingControllerListener(camera, seatingLogic, seatingScreen));
+        setLongPressSeconds(LONG_PRESS_SECONDS);
+        this.camera = camera;
+    }
+
+    /**
+     * Pans the screen when dragging a person.  This method should be called in the render method of
+     * the screen.
+     */
+    public void personPan() {
+        if(SeatingControllerListener.draggedPerson != null) {
+            float touchX = Gdx.input.getX();
+            float touchY = Gdx.input.getY();
+
+            float width = Gdx.app.getGraphics().getWidth();
+            float height = Gdx.app.getGraphics().getHeight();
+            float space = Gdx.graphics.getPpiX()*.4f;
+
+            boolean panned = false;
+            if(touchX >= width-space) {
+                camera.position.add(space*.1f, 0, 0);
+                panned = true;
+            } else if(touchX <= space) {
+                camera.position.sub(space*.1f, 0, 0);
+                panned = true;
+            }
+
+            if(touchY >= height-space) {
+                camera.position.sub(0, space*.1f, 0);
+                panned = true;
+            } else if(touchY <= space) {
+                camera.position.add(0, space*.1f, 0);
+                panned = true;
+            }
+
+            if(panned) {
+                Vector3 pos = camera.unproject(new Vector3(touchX, touchY, 0));
+                SeatingControllerListener.draggedPerson.bounds.x = pos.x;
+                SeatingControllerListener.draggedPerson.bounds.y = pos.y;
+            }
+        }
+    }
+}
+
+class SeatingControllerListener implements GestureDetector.GestureListener {
 
     private Camera camera;
     private SeatingLogic seatingLogic;
     private SeatingScreen seatingScreen;
 
-    public SeatingController(Camera camera, SeatingLogic seatingLogic, SeatingScreen seatingScreen) {
+    public SeatingControllerListener(Camera camera, SeatingLogic seatingLogic, SeatingScreen seatingScreen) {
         this.camera = camera;
         this.seatingLogic = seatingLogic;
         this.seatingScreen = seatingScreen;
     }
 
-    Person draggedPerson;
+    static Person draggedPerson;
     @Override
     public boolean touchDown(float x, float y, int pointer, int button) {
         Table table = seatingScreen.getEditTable();
@@ -123,9 +173,10 @@ public class SeatingController implements GestureDetector.GestureListener {
         Vector3 vec = camera.unproject(new Vector3(0, 0, 0))
                 .add(camera.unproject(new Vector3(deltaX, deltaY, 0)).scl(-1f));
 
+        Vector3 vec2 = camera.unproject(new Vector3(x, y, 0));
         if(draggedPerson != null) {
-            draggedPerson.bounds.x -= vec.x;
-            draggedPerson.bounds.y -= vec.y;
+            draggedPerson.bounds.x = vec2.x;
+            draggedPerson.bounds.y = vec2.y;
         } else {
             camera.position.add(vec);
             camera.update();
@@ -136,17 +187,33 @@ public class SeatingController implements GestureDetector.GestureListener {
 
     @Override
     public boolean panStop(float x, float y, int pointer, int button) {
-        draggedPerson = null;
+        if(draggedPerson != null) {
+            boolean switchedPersonTable = false;
+            for(Table table : seatingLogic.conference.getTables()) {
+                if(!table.assignedSeats.contains(draggedPerson)) {
+                    if (table.bounds.overlaps(draggedPerson.bounds)) {
+                        seatingLogic.addPersonToTable(table, draggedPerson);
+                        switchedPersonTable = true;
+                    }
+                }
+            }
 
-        float xx = MathUtils.clamp(camera.position.x, 0, (float)seatingLogic.conference.conferenceWidth);
-        float yy = MathUtils.clamp(camera.position.y, 0, (float)seatingLogic.conference.conferenceHeight);
+            if(!switchedPersonTable) {
+                seatingLogic.resetTable(seatingScreen.getEditTable());
+            }
 
-        if(xx != camera.position.x || yy != camera.position.y) {
-            Tween.to(camera, CameraAccessor.POSITION_XY, .3f).target(xx, yy)
-                    .start(TweenUtil.getTweenManager());
+            draggedPerson = null;
+        } else {
+            float xx = MathUtils.clamp(camera.position.x, 0, (float) seatingLogic.conference.conferenceWidth);
+            float yy = MathUtils.clamp(camera.position.y, 0, (float) seatingLogic.conference.conferenceHeight);
+
+            if (xx != camera.position.x || yy != camera.position.y) {
+                Tween.to(camera, CameraAccessor.POSITION_XY, .3f).target(xx, yy)
+                        .start(TweenUtil.getTweenManager());
+            }
         }
 
-        return false;
+        return true;
     }
 
     @Override
