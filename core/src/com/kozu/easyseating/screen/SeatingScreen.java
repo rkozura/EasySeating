@@ -123,11 +123,15 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlAction("openAddPersonToTableDialog")
     public void openAddPersonToTableDialog() {
+        seatingLogic.resetTable(selectedTable);
+        gestureDetector.cancelDragPerson();
         openTable(selectedTable);
     }
 
     @LmlAction("doneEditingTable")
     public void doneEditingTable() {
+        seatingLogic.resetTable(selectedTable);
+        gestureDetector.cancelDragPerson();
         selectedTable = null;
         addPersonToTableButton.setVisible(false);
         doneEditingTableButton.setVisible(false);

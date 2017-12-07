@@ -67,6 +67,10 @@ public class SeatingController extends GestureDetector {
             }
         }
     }
+
+    public void cancelDragPerson() {
+        SeatingControllerListener.draggedPerson = null;
+    }
 }
 
 class SeatingControllerListener implements GestureDetector.GestureListener {

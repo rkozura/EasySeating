@@ -22,6 +22,7 @@ import static com.kozu.easyseating.EasySeatingGame.uiSkin;
 
 public class SeatingRenderer implements Disposable{
     private TiledDrawable tableTile;
+    private TiledDrawable floorTile;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     private SeatingLogic seatingLogic;
@@ -30,11 +31,14 @@ public class SeatingRenderer implements Disposable{
     private static GlyphLayout glyphLayout = new GlyphLayout();
 
     //TODO move to assett manager
-    Texture tableTexture = new Texture(Gdx.files.internal("lightpaperfibers.png"));
+    Texture tableTexture = new Texture(Gdx.files.internal("images/game/lightpaperfibers.png"));
+
+    //Texture floorTexture = new Texture(Gdx.files.internal("images/game/washi.png"));
+    Texture floorTexture = new Texture(Gdx.files.internal("images/game/O5GLLH0.jpg"));
 
     public SeatingRenderer(SeatingLogic seatingLogic) {
-        TextureRegion tr = new TextureRegion(tableTexture);
-        tableTile = new TiledDrawable(tr);
+        tableTile = new TiledDrawable(new TextureRegion(tableTexture));
+        floorTile = new TiledDrawable(new TextureRegion(floorTexture));
 
         this.seatingLogic = seatingLogic;
     }
@@ -42,6 +46,7 @@ public class SeatingRenderer implements Disposable{
     @Override
     public void dispose() {
         tableTexture.dispose();
+        floorTexture.dispose();
         shapeRenderer.dispose();
     }
 
@@ -122,10 +127,15 @@ public class SeatingRenderer implements Disposable{
     }
 
     private void renderFloor() {
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.WHITE);
-        shapeRenderer.rect(0, 0, (float)seatingLogic.conference.conferenceWidth, (float)seatingLogic.conference.conferenceHeight);
-        shapeRenderer.end();
+        EasySeatingGame.batch.begin();
+        floorTile.draw(EasySeatingGame.batch, 0, 0, (float)seatingLogic.conference.conferenceWidth,
+                (float)seatingLogic.conference.conferenceHeight);
+        EasySeatingGame.batch.end();
+
+//        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+//        shapeRenderer.setColor(Color.WHITE);
+//        shapeRenderer.rect(0, 0, (float)seatingLogic.conference.conferenceWidth, (float)seatingLogic.conference.conferenceHeight);
+//        shapeRenderer.end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.GRAY);
