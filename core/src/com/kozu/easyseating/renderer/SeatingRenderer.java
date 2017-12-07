@@ -34,7 +34,7 @@ public class SeatingRenderer implements Disposable{
     Texture tableTexture = new Texture(Gdx.files.internal("images/game/lightpaperfibers.png"));
 
     //Texture floorTexture = new Texture(Gdx.files.internal("images/game/washi.png"));
-    Texture floorTexture = new Texture(Gdx.files.internal("images/game/O5GLLH0.jpg"));
+    Texture floorTexture = new Texture(Gdx.files.internal("images/game/floor.jpg"));
 
     public SeatingRenderer(SeatingLogic seatingLogic) {
         tableTile = new TiledDrawable(new TextureRegion(tableTexture));

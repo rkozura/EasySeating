@@ -9,8 +9,8 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.samples = 1; //Samples adds anti-aliasing, needed for round tables
-        config.width = 800;
-        config.height = 480;
+        config.width = 1080;
+        config.height = 1920;
 		new LwjglApplication(new EasySeatingGame(new DesktopPersonImporter()), config);
 	}
 }
