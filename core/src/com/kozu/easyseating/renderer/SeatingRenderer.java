@@ -124,6 +124,17 @@ public class SeatingRenderer implements Disposable{
                     person.bounds.x - glyphLayout.width/2, person.bounds.y + glyphLayout.height/2);
         }
         EasySeatingGame.batch.end();
+
+        if(seatingLogic.isOverTable()) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(Color.GOLD);
+            float tableX = seatingLogic.table.getX();
+            float tableY = seatingLogic.table.getY();
+            float personX = seatingLogic.person.getX();
+            float personY = seatingLogic.person.getY();
+            shapeRenderer.rectLine(tableX, tableY, personX, personY, 20);
+            shapeRenderer.end();
+        }
     }
 
     private void renderFloor() {

@@ -200,7 +200,7 @@ public class SeatingScreen extends AbstractLmlView {
         tableDialog.toFront();
 
         //TODO Move to asset manager
-        Texture tableTexture = new Texture(Gdx.files.internal("lightpaperfibers.png"));
+        Texture tableTexture = new Texture(Gdx.files.internal("images/game/lightpaperfibers.png"));
         TextureRegion tr = new TextureRegion(tableTexture);
         TiledDrawable tableTile = new TiledDrawable(tr);
 

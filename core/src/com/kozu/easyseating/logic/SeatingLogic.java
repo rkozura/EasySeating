@@ -232,4 +232,17 @@ public class SeatingLogic {
 
         return returnTable;
     }
+
+    private boolean overTable;
+    public Table table;
+    public Person person;
+    public void setOverTable(boolean b, Table table, Person person) {
+        this.table = table;
+        this.person = person;
+        overTable = b;
+    }
+
+    public boolean isOverTable() {
+        return overTable;
+    }
 }

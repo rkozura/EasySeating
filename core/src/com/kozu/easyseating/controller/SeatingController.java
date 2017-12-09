@@ -86,6 +86,7 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
     }
 
     static Person draggedPerson;
+    private Table table;
     @Override
     public boolean touchDown(float x, float y, int pointer, int button) {
         Table table = seatingScreen.getEditTable();
@@ -94,6 +95,7 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
             for(Person person : table.assignedSeats) {
                 if(person.bounds.contains(pos.x, pos.y)) {
                     draggedPerson = person;
+                    this.table = table;
                     return true;
                 }
             }
@@ -181,6 +183,19 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
         if(draggedPerson != null) {
             draggedPerson.bounds.x = vec2.x;
             draggedPerson.bounds.y = vec2.y;
+
+            boolean foundTable = false;
+            for(Table table : seatingLogic.conference.getTables()) {
+                if(!table.assignedSeats.contains(draggedPerson)) {
+                    if (table.bounds.overlaps(draggedPerson.bounds)) {
+                        seatingLogic.setOverTable(true, this.table, draggedPerson);
+                        foundTable = true;
+                    }
+                }
+            }
+            if(!foundTable) {
+                seatingLogic.setOverTable(false, null, null);
+            }
         } else {
             camera.position.add(vec);
             camera.update();
@@ -216,6 +231,8 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
                         .start(TweenUtil.getTweenManager());
             }
         }
+
+        seatingLogic.setOverTable(false, null, null);
 
         return true;
     }
