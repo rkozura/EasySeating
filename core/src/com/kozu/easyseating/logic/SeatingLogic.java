@@ -245,4 +245,13 @@ public class SeatingLogic {
     public boolean isOverTable() {
         return overTable;
     }
+
+    private boolean movingTable;
+    public boolean isMovingTable() {
+        return movingTable;
+    }
+
+    public void setMovingTable(boolean isMovingTable){
+        movingTable = isMovingTable;
+    }
 }

@@ -13,6 +13,7 @@ import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
+import com.kozu.easyseating.screen.SeatingScreen;
 
 import static com.kozu.easyseating.EasySeatingGame.uiSkin;
 
@@ -34,7 +35,7 @@ public class SeatingRenderer implements Disposable{
     Texture tableTexture = new Texture(Gdx.files.internal("images/game/lightpaperfibers.png"));
 
     //Texture floorTexture = new Texture(Gdx.files.internal("images/game/washi.png"));
-    Texture floorTexture = new Texture(Gdx.files.internal("images/game/floor.jpg"));
+    Texture floorTexture = new Texture(Gdx.files.internal("images/game/floor.png"));
 
     public SeatingRenderer(SeatingLogic seatingLogic) {
         tableTile = new TiledDrawable(new TextureRegion(tableTexture));
@@ -143,36 +144,22 @@ public class SeatingRenderer implements Disposable{
                 (float)seatingLogic.conference.conferenceHeight);
         EasySeatingGame.batch.end();
 
-//        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-//        shapeRenderer.setColor(Color.WHITE);
-//        shapeRenderer.rect(0, 0, (float)seatingLogic.conference.conferenceWidth, (float)seatingLogic.conference.conferenceHeight);
-//        shapeRenderer.end();
+        if(SeatingScreen.moveTable != null) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setColor(Color.GRAY);
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.GRAY);
-
-        float currentX = 0;
-        for(double i=0; i<=seatingLogic.conference.gridCountWidth; i++) {
-            shapeRenderer.line(currentX, 0, currentX, (float)seatingLogic.conference.conferenceHeight);
-            currentX+=seatingLogic.conference.gridGutterLength;
+            float currentX = 0;
+            for (double i = 0; i <= seatingLogic.conference.gridCountWidth; i++) {
+                shapeRenderer.line(currentX, 0, currentX, (float) seatingLogic.conference.conferenceHeight);
+                currentX += seatingLogic.conference.gridGutterLength;
+            }
+            float currentY = 0;
+            for (double i = 0; i <= seatingLogic.conference.gridCountHeight; i++) {
+                shapeRenderer.line(0, currentY, (float) seatingLogic.conference.conferenceWidth, currentY);
+                currentY += seatingLogic.conference.gridGutterLength;
+            }
         }
-
-        float currentY = 0;
-        for(double i=0; i<=seatingLogic.conference.gridCountHeight; i++) {
-            shapeRenderer.line(0, currentY, (float)seatingLogic.conference.conferenceWidth, currentY);
-            currentY+=seatingLogic.conference.gridGutterLength;
-        }
-
-        shapeRenderer.setColor(Color.BLUE);
-        shapeRenderer.rect(0, 0, (float)seatingLogic.conference.conferenceWidth, (float)seatingLogic.conference.conferenceHeight);
 
         shapeRenderer.end();
-
-//        shapeRenderer.begin(ShapeRenderer.ShapeType.Point);
-//        shapeRenderer.setColor(Color.RED);
-//        for(Vector2 point : seatingLogic.conference.snapGrid.keySet()) {
-//            shapeRenderer.point(point.x, point.y, 0);
-//        }
-//        shapeRenderer.end();
     }
 }

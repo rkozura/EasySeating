@@ -81,8 +81,6 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlActor("addPersonToTableButton") private TextButton addPersonToTableButton;
     @LmlActor("doneEditingTableButton") private TextButton doneEditingTableButton;
 
-    public boolean movingTable = false;
-
     public SeatingScreen(Conference conference) {
         super(new Stage(new ScreenViewport()));
 
@@ -211,7 +209,7 @@ public class SeatingScreen extends AbstractLmlView {
         setPersonSelection();
     }
 
-    public Table moveTable;
+    public static Table moveTable;
     public void enableMoveTable(Table table) {
         if (selectedTable == null) {
             moveTable = table;
