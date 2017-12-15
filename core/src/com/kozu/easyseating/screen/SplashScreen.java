@@ -53,12 +53,12 @@ public class SplashScreen extends AbstractLmlView {
         manager.load("smallfont.ttf", BitmapFont.class, smallFont);
 
         FreetypeFontLoader.FreeTypeFontLoaderParameter normalFont = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        normalFont.fontFileName = "EraserRegular.ttf";
+        normalFont.fontFileName = "OpenSans-Regular.ttf";
         normalFont.fontParameters.size = (int)(32*Gdx.graphics.getDensity());
         manager.load("font.ttf", BitmapFont.class, normalFont);
 
         FreetypeFontLoader.FreeTypeFontLoaderParameter largeFont = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        largeFont.fontFileName = "EraserRegular.ttf";
+        largeFont.fontFileName = "OpenSans-Regular.ttf";
         largeFont.fontParameters.size = (int)(58*Gdx.graphics.getDensity());
         manager.load("largefont.ttf", BitmapFont.class, largeFont);
     }

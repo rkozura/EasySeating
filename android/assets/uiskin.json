@@ -9,7 +9,8 @@
   vis-blue: {a: 1, b: 0.886, g: 0.631, r: 0.105 },
   vis-red: {a: 1, b: 0.047, g: 0, r: 0.862 },
   menuitem: {a: 1, b: 0.65, g: 0.65, r: 0.65 },
-  link-label: {a: 1, b: 0.886, g: 0.631, r: 0.105 }
+  link-label: {a: 1, b: 0.886, g: 0.631, r: 0.105 },
+  main-screen-color: {a: 1, b: 0.980, g: 0.902, r:0.902}
 },
   com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
   dialogDim: {name: white, color: {r: 0, g: 0, b: 0, a: 0.85} }
@@ -63,7 +64,8 @@
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
   default: {font: default-font, fontColor: white },
   link-label: {fontColor: link-label, font: default-font },
-  menuitem-shortcut: {font: default-font, fontColor: menuitem }
+  menuitem-shortcut: {font: default-font, fontColor: menuitem },
+  main-screen: {font: main-screen-font, fontColor: main-screen-color }
 },
   com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
   default: {font: default-font, fontColor: white, disabledFontColor: grey, selection: selection, background: textfield, cursor: cursor, messageFont: default-font, messageFontColor: grey },
