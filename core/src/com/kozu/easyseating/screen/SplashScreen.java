@@ -2,17 +2,10 @@ package com.kozu.easyseating.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.FileHandleResolver;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
@@ -35,55 +28,30 @@ public class SplashScreen extends AbstractLmlView {
 
     @Override
     public void show() {
-        //VisUI.load(Gdx.files.internal("visui-style.usl"));
-        //VisUI.load(VisUI.SkinScale.X2);
-
-        manager = new AssetManager();
-
-        //Load the vector tff font file
-        FileHandleResolver resolver = new InternalFileHandleResolver();
-        manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
-        manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
-
-        manager.load("customskin.atlas", TextureAtlas.class);
-
-        FreetypeFontLoader.FreeTypeFontLoaderParameter smallFont = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        smallFont.fontFileName = "EraserRegular.ttf";
-        smallFont.fontParameters.size = (int)(12*Gdx.graphics.getDensity());
-        manager.load("smallfont.ttf", BitmapFont.class, smallFont);
-
-        FreetypeFontLoader.FreeTypeFontLoaderParameter normalFont = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        normalFont.fontFileName = "OpenSans-Regular.ttf";
-        normalFont.fontParameters.size = (int)(32*Gdx.graphics.getDensity());
-        manager.load("font.ttf", BitmapFont.class, normalFont);
-
-        FreetypeFontLoader.FreeTypeFontLoaderParameter largeFont = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        largeFont.fontFileName = "OpenSans-Regular.ttf";
-        largeFont.fontParameters.size = (int)(58*Gdx.graphics.getDensity());
-        manager.load("largefont.ttf", BitmapFont.class, largeFont);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
 
-        if (manager.update()) {
-            atlas = manager.get("customskin.atlas", TextureAtlas.class);
-
-            Skin skin = new Skin();
-            skin.add("normaltext", manager.get("font.ttf", BitmapFont.class), BitmapFont.class);
-            skin.add("smalltext", manager.get("smallfont.ttf", BitmapFont.class), BitmapFont.class);
-            skin.add("largetext", manager.get("largefont.ttf", BitmapFont.class), BitmapFont.class);
-
-            skin.addRegions(atlas);
-            skin.load(Gdx.files.internal("customskin.json"));
-
-            EasySeatingGame.uiSkin = skin;
-
-            loadingBar.setValue(manager.getProgress());
-        } else {
-            loadingBar.setValue(manager.getProgress());
-        }
+        loaded();
+//        if (manager.update()) {
+//            atlas = manager.get("customskin.atlas", TextureAtlas.class);
+//
+//            Skin skin = new Skin();
+//            skin.add("normaltext", manager.get("font.ttf", BitmapFont.class), BitmapFont.class);
+//            skin.add("smalltext", manager.get("smallfont.ttf", BitmapFont.class), BitmapFont.class);
+//            skin.add("largetext", manager.get("largefont.ttf", BitmapFont.class), BitmapFont.class);
+//
+//            skin.addRegions(atlas);
+//            skin.load(Gdx.files.internal("customskin.json"));
+//
+//            EasySeatingGame.uiSkin = skin;
+//
+//            loadingBar.setValue(manager.getProgress());
+//        } else {
+//            loadingBar.setValue(manager.getProgress());
+//        }
     }
 
     @LmlAction("loaded")

@@ -3,13 +3,11 @@ package com.kozu.easyseating;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.github.czyzby.lml.parser.LmlParser;
@@ -23,7 +21,7 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
 import com.kozu.easyseating.resolver.PersonImporter;
-import com.kozu.easyseating.screen.SplashScreen;
+import com.kozu.easyseating.screen.MainScreen;
 import com.kozu.easyseating.tweenutil.CameraAccessor;
 import com.kozu.easyseating.tweenutil.EntityAccessor;
 import com.kozu.easyseating.tweenutil.SpriteAccessor;
@@ -40,6 +38,8 @@ public class EasySeatingGame extends LmlApplicationListener {
 
     public static Skin visSkin;
 
+    public Assets assets;
+
     public EasySeatingGame(PersonImporter importer) {
         this.importer = importer;
     }
@@ -53,35 +53,23 @@ public class EasySeatingGame extends LmlApplicationListener {
 
     @Override
     public void create() {
-        FreeTypeFontGenerator buttonFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("OpenSans-Regular.ttf"));
-        FreeTypeFontGenerator dialogTitleFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Pacifico.ttf"));
-        FreeTypeFontGenerator mainScreenTitleFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Courgette-Regular.ttf"));
+        assets = new Assets();
+        assets.load();
+
+        //Block until manager has finished loading..
+        assets.manager.finishLoading();
 
         try {
-            FreeTypeFontGenerator.FreeTypeFontParameter buttonFontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-            buttonFontParameter.size = (int) (25 * Gdx.graphics.getDensity());
-
-
-            FreeTypeFontGenerator.FreeTypeFontParameter dialogTitleFontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-            dialogTitleFontParameter.size = (int) (35 * Gdx.graphics.getDensity());
-
-            FreeTypeFontGenerator.FreeTypeFontParameter mainScreenTitleFontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-            mainScreenTitleFontParameter.size = (int) (55 * Gdx.graphics.getDensity());
-            mainScreenTitleFontParameter.borderWidth = 1f;
-            mainScreenTitleFontParameter.borderColor = Color.BLACK;
-            mainScreenTitleFontParameter.shadowOffsetX = 10;
-            mainScreenTitleFontParameter.shadowOffsetY = 10;
-            mainScreenTitleFontParameter.shadowColor = Color.BLACK;
-
             AssetManager manager = new AssetManager();
             manager.load("uiskin.atlas", TextureAtlas.class);
             manager.finishLoading();
 
             visSkin = new Skin();
             visSkin.addRegions(manager.get("uiskin.atlas", TextureAtlas.class));
-            visSkin.add("default-font", buttonFontGenerator.generateFont(buttonFontParameter), BitmapFont.class);
-            visSkin.add("dialog-font", dialogTitleFontGenerator.generateFont(dialogTitleFontParameter), BitmapFont.class);
-            visSkin.add("main-screen-font", mainScreenTitleFontGenerator.generateFont(mainScreenTitleFontParameter), BitmapFont.class);
+            visSkin.add("default-font", assets.manager.get(assets.buttontext), BitmapFont.class);
+
+            visSkin.add("dialog-font", assets.manager.get(assets.dialogtext), BitmapFont.class);
+            visSkin.add("main-screen-font", assets.manager.get(assets.mainmenutext), BitmapFont.class);
 
             if(!VisUI.isLoaded()) {
                 VisUI.load(visSkin);
@@ -99,10 +87,9 @@ public class EasySeatingGame extends LmlApplicationListener {
             Tween.registerAccessor(Sprite.class, new SpriteAccessor());
             Tween.setCombinedAttributesLimit(4);
 
-            setView(SplashScreen.class);
+            setView(MainScreen.class);
         } finally {
-            buttonFontGenerator.dispose();
-            dialogTitleFontGenerator.dispose();
+            //assets.manager.dispose();
         }
     }
 
@@ -117,6 +104,7 @@ public class EasySeatingGame extends LmlApplicationListener {
     @Override
     public void dispose() {
         batch.dispose();
+        assets.dispose();
     }
 
     private static LmlTagProvider getDialogSizeProvider() {
