@@ -6,6 +6,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -43,12 +44,19 @@ public class Assets {
     //Atlas, json, and packed image
     public static final AssetDescriptor<TextureAtlas> customSkin = new AssetDescriptor<TextureAtlas>("customskin.atlas", TextureAtlas.class);
 
+    //Vis
+    public static final AssetDescriptor<TextureAtlas> visSkin = new AssetDescriptor<TextureAtlas>("uiskin.atlas", TextureAtlas.class);
 
     //Fonts
     public static final AssetDescriptor<BitmapFont> buttontext = new AssetDescriptor<BitmapFont>(buttonFontParameter.fontFileName, BitmapFont.class, buttonFontParameter);
     public static final AssetDescriptor<BitmapFont> dialogtext = new AssetDescriptor<BitmapFont>(dialogTitleFontParameter.fontFileName, BitmapFont.class, dialogTitleFontParameter);
     public static final AssetDescriptor<BitmapFont> mainmenutext = new AssetDescriptor<BitmapFont>(mainScreenTitleFontParameter.fontFileName, BitmapFont.class, mainScreenTitleFontParameter);
 
+    //Textures
+    public static final AssetDescriptor<Texture> tabletexture = new AssetDescriptor<Texture>("images/game/lightpaperfibers.png", Texture.class);
+    public static final AssetDescriptor<Texture> floortexture = new AssetDescriptor<Texture>("images/game/floor.png", Texture.class);
+
+    //TODO load the rest of the skins/atlas/json/etc.
 
     public AssetManager manager;
 
@@ -64,10 +72,14 @@ public class Assets {
     public void load() {
         //Load all the asset descriptors
         manager.load(customSkin);
+        manager.load(visSkin);
 
         manager.load(buttontext);
         manager.load(dialogtext);
         manager.load(mainmenutext);
+
+        manager.load(tabletexture);
+        manager.load(floortexture);
     }
 
     public void dispose() {

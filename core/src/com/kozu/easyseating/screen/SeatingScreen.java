@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -30,6 +29,7 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextField;
+import com.kozu.easyseating.Assets;
 import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.controller.SeatingController;
 import com.kozu.easyseating.logic.SeatingLogic;
@@ -56,6 +56,9 @@ public class SeatingScreen extends AbstractLmlView {
     private SeatingLogic seatingLogic;
 
     private ToastManager toastManager;
+
+    private Assets assets;
+
     @LmlActor("optionsDialog") private DialogSize optionsDialog;
     @LmlActor("venueDialog") private DialogSize venueDialog;
     @LmlActor("tableDialog") private DialogSize tableDialog;
@@ -81,21 +84,21 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlActor("addPersonToTableButton") private TextButton addPersonToTableButton;
     @LmlActor("doneEditingTableButton") private TextButton doneEditingTableButton;
 
-    public SeatingScreen(Conference conference) {
+    public SeatingScreen(Conference conference, Assets assets) {
         super(new Stage(new ScreenViewport()));
 
         seatingLogic = new SeatingLogic(conference);
-        initConference();
+        initConference(assets);
     }
 
-    public SeatingScreen(String venueName) {
+    public SeatingScreen(String venueName, Assets assets) {
         super(new Stage(new ScreenViewport()));
 
         seatingLogic = new SeatingLogic(venueName);
-        initConference();
+        initConference(assets);
     }
 
-    private void initConference() {
+    private void initConference(Assets assets) {
         camera = new OrthographicCamera();
         viewport = new ScreenViewport(camera);
         camera.zoom = 3f;
@@ -104,7 +107,9 @@ public class SeatingScreen extends AbstractLmlView {
         gestureDetector = new SeatingController(camera, seatingLogic, this);
 
         //Create the renderer.  Renderer needs to see the logic to know what to render
-        renderer = new SeatingRenderer(seatingLogic);
+        renderer = new SeatingRenderer(seatingLogic, assets);
+
+        this.assets = assets;
     }
 
     public void editTable(Table table) {
@@ -197,9 +202,7 @@ public class SeatingScreen extends AbstractLmlView {
         tableDialog.show(getStage());
         tableDialog.toFront();
 
-        //TODO Move to asset manager
-        Texture tableTexture = new Texture(Gdx.files.internal("images/game/lightpaperfibers.png"));
-        TextureRegion tr = new TextureRegion(tableTexture);
+        TextureRegion tr = new TextureRegion(assets.manager.get(Assets.tabletexture));
         TiledDrawable tableTile = new TiledDrawable(tr);
 
         //TODO BUG when method is called again, the background resizes the content table

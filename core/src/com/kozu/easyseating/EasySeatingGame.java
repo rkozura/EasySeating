@@ -1,13 +1,11 @@
 package com.kozu.easyseating;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.github.czyzby.lml.parser.LmlParser;
@@ -59,38 +57,33 @@ public class EasySeatingGame extends LmlApplicationListener {
         //Block until manager has finished loading..
         assets.manager.finishLoading();
 
-        try {
-            AssetManager manager = new AssetManager();
-            manager.load("uiskin.atlas", TextureAtlas.class);
-            manager.finishLoading();
+        visSkin = new Skin();
+        visSkin.addRegions(assets.manager.get(assets.visSkin));
+        visSkin.add("default-font", assets.manager.get(assets.buttontext), BitmapFont.class);
 
-            visSkin = new Skin();
-            visSkin.addRegions(manager.get("uiskin.atlas", TextureAtlas.class));
-            visSkin.add("default-font", assets.manager.get(assets.buttontext), BitmapFont.class);
+        visSkin.add("dialog-font", assets.manager.get(assets.dialogtext), BitmapFont.class);
+        visSkin.add("main-screen-font", assets.manager.get(assets.mainmenutext), BitmapFont.class);
 
-            visSkin.add("dialog-font", assets.manager.get(assets.dialogtext), BitmapFont.class);
-            visSkin.add("main-screen-font", assets.manager.get(assets.mainmenutext), BitmapFont.class);
-
-            if(!VisUI.isLoaded()) {
-                VisUI.load(visSkin);
-            }
-
-            visSkin.load(Gdx.files.internal("uiskin.json"));
-            super.create();
-
-            batch = new SpriteBatch();
-            skin = new Skin(Gdx.files.internal("data/uiskin.json")); //TODO Create uiskin.json file!
-
-            Tween.registerAccessor(Camera.class, new CameraAccessor());
-            Tween.registerAccessor(Table.class, new EntityAccessor());
-            Tween.registerAccessor(Person.class, new EntityAccessor());
-            Tween.registerAccessor(Sprite.class, new SpriteAccessor());
-            Tween.setCombinedAttributesLimit(4);
-
-            setView(MainScreen.class);
-        } finally {
-            //assets.manager.dispose();
+        if(!VisUI.isLoaded()) {
+            VisUI.load(visSkin);
         }
+
+        visSkin.load(Gdx.files.internal("uiskin.json"));
+        super.create();
+
+        batch = new SpriteBatch();
+        skin = new Skin(Gdx.files.internal("data/uiskin.json")); //TODO Create uiskin.json file!
+
+        Tween.registerAccessor(Camera.class, new CameraAccessor());
+        Tween.registerAccessor(Table.class, new EntityAccessor());
+        Tween.registerAccessor(Person.class, new EntityAccessor());
+        Tween.registerAccessor(Sprite.class, new SpriteAccessor());
+        Tween.setCombinedAttributesLimit(4);
+
+        MainScreen mainScreen = new MainScreen(assets);
+        getParser().createView(mainScreen, mainScreen.getTemplateFile());
+
+        setView(mainScreen);
     }
 
     @Override

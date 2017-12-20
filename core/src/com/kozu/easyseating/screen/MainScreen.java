@@ -20,6 +20,7 @@ import com.kotcrab.vis.ui.util.ToastManager;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextField;
+import com.kozu.easyseating.Assets;
 import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.logic.State;
 import com.kozu.easyseating.tweenutil.CameraAccessor;
@@ -50,7 +51,9 @@ public class MainScreen extends AbstractLmlView {
 
     private PhotoCarousel photoCarousel;
 
-    public MainScreen() {
+    private Assets assets;
+
+    public MainScreen(Assets assets) {
         super(new Stage(new ScreenViewport()));
 
         viewport = new FillViewport(0, 0);
@@ -60,6 +63,8 @@ public class MainScreen extends AbstractLmlView {
         //Zoom it in so there is enough area to move the camera around without moving
         //the background texture off the screen
         ((OrthographicCamera)viewport.getCamera()).zoom = .8f;
+
+        this.assets = assets;
     }
 
     @Override
@@ -86,7 +91,7 @@ public class MainScreen extends AbstractLmlView {
 
         } else {
             EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
-            SeatingScreen seatingScreen = new SeatingScreen(venueName);
+            SeatingScreen seatingScreen = new SeatingScreen(venueName, assets);
             core.getParser().createView(seatingScreen, seatingScreen.getTemplateFile());
 
             core.setView(seatingScreen);
@@ -114,7 +119,7 @@ public class MainScreen extends AbstractLmlView {
         EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
 
         try {
-            SeatingScreen seatingScreen = new SeatingScreen(State.loadLast());
+            SeatingScreen seatingScreen = new SeatingScreen(State.loadLast(), assets);
 
             core.getParser().createView(seatingScreen, seatingScreen.getTemplateFile());
             core.setView(seatingScreen);

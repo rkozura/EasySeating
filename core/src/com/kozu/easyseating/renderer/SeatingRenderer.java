@@ -3,19 +3,17 @@ package com.kozu.easyseating.renderer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.Disposable;
+import com.kozu.easyseating.Assets;
 import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
 import com.kozu.easyseating.screen.SeatingScreen;
-
-import static com.kozu.easyseating.EasySeatingGame.uiSkin;
 
 /**
  * Created by Rob on 8/2/2017.
@@ -31,23 +29,18 @@ public class SeatingRenderer implements Disposable{
     //Positions the Bitmapfonts
     private static GlyphLayout glyphLayout = new GlyphLayout();
 
-    //TODO move to assett manager
-    Texture tableTexture = new Texture(Gdx.files.internal("images/game/lightpaperfibers.png"));
+    private Assets assets;
 
-    //Texture floorTexture = new Texture(Gdx.files.internal("images/game/washi.png"));
-    Texture floorTexture = new Texture(Gdx.files.internal("images/game/floor.png"));
-
-    public SeatingRenderer(SeatingLogic seatingLogic) {
-        tableTile = new TiledDrawable(new TextureRegion(tableTexture));
-        floorTile = new TiledDrawable(new TextureRegion(floorTexture));
+    public SeatingRenderer(SeatingLogic seatingLogic, Assets assets) {
+        tableTile = new TiledDrawable(new TextureRegion(assets.manager.get(assets.tabletexture)));
+        floorTile = new TiledDrawable(new TextureRegion(assets.manager.get(assets.floortexture)));
 
         this.seatingLogic = seatingLogic;
+        this.assets = assets;
     }
 
     @Override
     public void dispose() {
-        tableTexture.dispose();
-        floorTexture.dispose();
         shapeRenderer.dispose();
     }
 
@@ -94,10 +87,10 @@ public class SeatingRenderer implements Disposable{
             //Draw the table identifier text
             EasySeatingGame.batch.begin();
             for (Table table : seatingLogic.conference.getTables()) {
-                uiSkin.getFont("largetext").setColor(Color.BLACK);
-                glyphLayout.setText(uiSkin.getFont("largetext"), table.tableIdentifier);
+                assets.manager.get(Assets.buttontext).setColor(Color.BLACK);
+                glyphLayout.setText(assets.manager.get(Assets.buttontext), table.tableIdentifier);
                 //Now draw the table identifier
-                uiSkin.getFont("largetext").draw(EasySeatingGame.batch, glyphLayout,
+                assets.manager.get(Assets.buttontext).draw(EasySeatingGame.batch, glyphLayout,
                         table.bounds.x - glyphLayout.width/2, table.bounds.y + glyphLayout.height/2);
             }
             EasySeatingGame.batch.end();
@@ -118,10 +111,10 @@ public class SeatingRenderer implements Disposable{
         shapeRenderer.end();
         EasySeatingGame.batch.begin();
         for(Person person : table.assignedSeats) {
-            glyphLayout.setText(uiSkin.getFont("smalltext"), person.getTruncatedName());
-            uiSkin.getFont("smalltext").setColor(Color.BLACK);
+            glyphLayout.setText(assets.manager.get(Assets.buttontext), person.getTruncatedName());
+            assets.manager.get(Assets.buttontext).setColor(Color.BLACK);
             //Now draw the table identifier
-            uiSkin.getFont("smalltext").draw(EasySeatingGame.batch, glyphLayout,
+            assets.manager.get(Assets.buttontext).draw(EasySeatingGame.batch, glyphLayout,
                     person.bounds.x - glyphLayout.width/2, person.bounds.y + glyphLayout.height/2);
         }
         EasySeatingGame.batch.end();
