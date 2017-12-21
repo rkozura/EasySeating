@@ -1,14 +1,11 @@
 package com.kozu.easyseating.ui;
 
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.kozu.easyseating.Assets;
 import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.tweenutil.SpriteAccessor;
 import com.kozu.easyseating.tweenutil.TweenUtil;
@@ -22,25 +19,16 @@ import aurelienribon.tweenengine.Tween;
  * Created by Rob on 10/5/2017.
  */
 
-public class PhotoCarousel implements Disposable {
+public class PhotoCarousel {
     private List<Sprite> photos;
     private int currentIndex = 0;
     private int previousIndex = -1;
 
-    public PhotoCarousel(final Viewport viewport) {
+    public PhotoCarousel(final Viewport viewport, Assets assets) {
         photos = new ArrayList<>();
 
-        FileHandle dirHandle;
-        if (Gdx.app.getType() == Application.ApplicationType.Android) {
-            dirHandle = Gdx.files.internal("images/backgrounds");
-        } else {
-            //TODO May have to change path for desktop
-            // ApplicationType.Desktop ..
-            dirHandle = Gdx.files.internal("images/backgrounds");
-        }
-
-        for (FileHandle entry : dirHandle.list()) {
-            addPhoto(entry);
+        for (AssetDescriptor<Texture> entry : Assets.backgroundtextures) {
+            addPhoto(assets.manager.get(entry));
         }
 
         //Find the smallest photo and set the world size to it
@@ -82,8 +70,7 @@ public class PhotoCarousel implements Disposable {
         timer.start();
     }
 
-    public void addPhoto(FileHandle fileHandle){
-        Texture texture = new Texture(fileHandle);
+    public void addPhoto(Texture texture){
         texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         Sprite sprite = new Sprite(texture);
 
@@ -104,12 +91,5 @@ public class PhotoCarousel implements Disposable {
 
     public Sprite getCurrentTextureRegion() {
         return photos.get(currentIndex);
-    }
-
-    @Override
-    public void dispose() {
-        for(TextureRegion region : photos) {
-            region.getTexture().dispose();
-        }
     }
 }

@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
-import com.kozu.easyseating.EasySeatingGame;
 
 /**
  * Loads assets and renders a loading bar.  When all assets are loaded, set screen to seating screen
@@ -56,9 +55,9 @@ public class SplashScreen extends AbstractLmlView {
 
     @LmlAction("loaded")
     public void loaded() {
-        EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
-        core.getParser().getData().addSkin("custom", EasySeatingGame.uiSkin);
-        core.setView(MainScreen.class);
+//        EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
+//        core.getParser().getData().addSkin("custom", EasySeatingGame.uiSkin);
+//        core.setView(MainScreen.class);
     }
 
     @Override

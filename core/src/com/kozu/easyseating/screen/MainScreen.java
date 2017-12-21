@@ -58,7 +58,7 @@ public class MainScreen extends AbstractLmlView {
 
         viewport = new FillViewport(0, 0);
 
-        photoCarousel = new PhotoCarousel(viewport);
+        photoCarousel = new PhotoCarousel(viewport, assets);
 
         //Zoom it in so there is enough area to move the camera around without moving
         //the background texture off the screen
@@ -203,11 +203,5 @@ public class MainScreen extends AbstractLmlView {
 
         getStage().getViewport().apply();
         super.render(delta);
-    }
-
-    @Override
-    public void dispose() {
-        photoCarousel.dispose();
-        super.dispose();
     }
 }

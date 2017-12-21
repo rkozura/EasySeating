@@ -45,8 +45,7 @@ public class State {
         json.setUsePrototypes(false);
 
         String fileSystemNameOfConference = currentConference.conferenceName.toLowerCase();
-        //TODO Make the file location happy with all devices
-        //C:\Users\Rob\AndroidStudioProjects\EasySeating\android\assets\EasySeatingSaves
+
         FileHandle file = Gdx.files.absolute(Gdx.files.getLocalStoragePath()+"\\EasySeatingSaves\\"+fileSystemNameOfConference+".txt");
 
         file.writeString(json.toJson(currentConference), false);

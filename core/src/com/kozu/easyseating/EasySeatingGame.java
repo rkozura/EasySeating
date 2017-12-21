@@ -3,7 +3,6 @@ package com.kozu.easyseating;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -31,10 +30,6 @@ import aurelienribon.tweenengine.Tween;
 public class EasySeatingGame extends LmlApplicationListener {
     public static PersonImporter importer;
     public static Batch batch;
-    public static Skin skin;
-    public static Skin uiSkin;
-
-    public static Skin visSkin;
 
     public Assets assets;
 
@@ -53,26 +48,18 @@ public class EasySeatingGame extends LmlApplicationListener {
     public void create() {
         assets = new Assets();
         assets.load();
-
         //Block until manager has finished loading..
         assets.manager.finishLoading();
 
-        visSkin = new Skin();
-        visSkin.addRegions(assets.manager.get(assets.visSkin));
-        visSkin.add("default-font", assets.manager.get(assets.buttontext), BitmapFont.class);
-
-        visSkin.add("dialog-font", assets.manager.get(assets.dialogtext), BitmapFont.class);
-        visSkin.add("main-screen-font", assets.manager.get(assets.mainmenutext), BitmapFont.class);
+        Skin visSkin = assets.manager.get(Assets.uiSkin);
 
         if(!VisUI.isLoaded()) {
             VisUI.load(visSkin);
         }
 
-        visSkin.load(Gdx.files.internal("uiskin.json"));
         super.create();
 
         batch = new SpriteBatch();
-        skin = new Skin(Gdx.files.internal("data/uiskin.json")); //TODO Create uiskin.json file!
 
         Tween.registerAccessor(Camera.class, new CameraAccessor());
         Tween.registerAccessor(Table.class, new EntityAccessor());
