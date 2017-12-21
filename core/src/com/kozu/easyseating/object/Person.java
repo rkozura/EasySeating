@@ -15,6 +15,8 @@ public class Person implements Model {
 
     public Circle bounds;
 
+    private transient boolean flaggedForRemoval;
+
     public Person() {}
 
     public Person(String name) {
@@ -79,5 +81,13 @@ public class Person implements Model {
 
     public String getTruncatedName() {
         return truncatedName;
+    }
+
+    public boolean isFlaggedForRemoval() {
+        return flaggedForRemoval;
+    }
+
+    public void setFlaggedForRemoval(boolean flaggedForRemoval) {
+        this.flaggedForRemoval = flaggedForRemoval;
     }
 }

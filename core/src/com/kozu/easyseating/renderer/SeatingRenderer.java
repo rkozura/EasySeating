@@ -103,8 +103,12 @@ public class SeatingRenderer implements Disposable{
 
     public void renderAssignedSeats(Table table) {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.CYAN);
         for(Person person : table.assignedSeats) {
+            if (!person.isFlaggedForRemoval()) {
+                shapeRenderer.setColor(Color.CYAN);
+            } else {
+                shapeRenderer.setColor(Color.RED);
+            }
             //If projection matrices are not set, objects will not be drawn relative to the tables
             shapeRenderer.circle(person.bounds.x, person.bounds.y, person.bounds.radius);
         }

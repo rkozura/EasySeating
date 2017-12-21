@@ -44,6 +44,9 @@ import com.kozu.easyseating.ui.PeopleListAdapter;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import aurelienribon.tweenengine.Tween;
 
 import static com.kozu.easyseating.EasySeatingGame.batch;
@@ -133,6 +136,19 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlAction("doneEditingTable")
     public void doneEditingTable() {
+        Table table = getEditTable();
+        //Find all the people at the table that where marked to be removed and remove them
+        //Have to use two collections or else concurrent modification error will happen
+        List<Person> people = new ArrayList<Person>();
+        for(Person person : table.assignedSeats) {
+            if(person.isFlaggedForRemoval()) {
+                people.add(person);
+            }
+        }
+        for(Person person : people) {
+            seatingLogic.removePersonFromTable(table, person);
+        }
+
         seatingLogic.resetTable(selectedTable);
         gestureDetector.cancelDragPerson();
         selectedTable = null;

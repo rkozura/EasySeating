@@ -73,6 +73,19 @@ public class SeatingLogic {
         return returnTable;
     }
 
+    public Person getPersonAtPosition(Vector3 pos, Table table) {
+        Person returnPerson = null;
+
+        for(Person person : table.assignedSeats) {
+            if(person.bounds.contains(pos.x, pos.y)) {
+                returnPerson = person;
+                break;
+            }
+        }
+
+        return returnPerson;
+    }
+
     public Person createPerson(String name) {
         Person person = new Person(name);
         conference.persons.add(person);
