@@ -2,6 +2,7 @@ package com.kozu.easyseating;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -20,6 +21,7 @@ import com.kozu.easyseating.object.Table;
 import com.kozu.easyseating.resolver.PersonImporter;
 import com.kozu.easyseating.screen.MainScreen;
 import com.kozu.easyseating.tweenutil.CameraAccessor;
+import com.kozu.easyseating.tweenutil.ColorAccessor;
 import com.kozu.easyseating.tweenutil.EntityAccessor;
 import com.kozu.easyseating.tweenutil.SpriteAccessor;
 import com.kozu.easyseating.tweenutil.TweenUtil;
@@ -65,6 +67,7 @@ public class EasySeatingGame extends LmlApplicationListener {
         Tween.registerAccessor(Table.class, new EntityAccessor());
         Tween.registerAccessor(Person.class, new EntityAccessor());
         Tween.registerAccessor(Sprite.class, new SpriteAccessor());
+        Tween.registerAccessor(Color.class, new ColorAccessor());
         Tween.setCombinedAttributesLimit(4);
 
         MainScreen mainScreen = new MainScreen(assets);

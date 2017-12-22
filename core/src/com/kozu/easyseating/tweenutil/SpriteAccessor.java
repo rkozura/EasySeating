@@ -1,8 +1,5 @@
 package com.kozu.easyseating.tweenutil;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import aurelienribon.tweenengine.TweenAccessor;
@@ -16,7 +13,6 @@ public class SpriteAccessor implements TweenAccessor<Sprite> {
 
     @Override
     public int getValues(Sprite target, int tweenType, float[] returnValues) {
-        System.out.println(target.getColor().a);
         switch (tweenType) {
             case ALPHA: returnValues[0] = target.getColor().a; return 1;
             default: assert false; return -1;

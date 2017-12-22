@@ -1,5 +1,6 @@
 package com.kozu.easyseating.logic;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
 import com.kozu.easyseating.object.Conference;
 import com.kozu.easyseating.object.Person;
@@ -32,6 +33,16 @@ public class SeatingLogic {
     private final double CONFERENCE_HEIGHT = GRID_GUTTER_LENGTH*GRID_COUNT_HEIGHT;;
 
     public Conference conference;
+
+    private Color backgroundTint = new Color(1, 1, 1, 1);
+
+    public Color getBackgroundTint() {
+        return backgroundTint;
+    }
+
+    public void setBackgroundTint(Color backgroundTint) {
+        this.backgroundTint = backgroundTint;
+    }
 
     public SeatingLogic(Conference conference) {
         this.conference = conference;

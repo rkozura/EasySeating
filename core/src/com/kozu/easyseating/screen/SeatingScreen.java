@@ -38,6 +38,7 @@ import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
 import com.kozu.easyseating.renderer.SeatingRenderer;
 import com.kozu.easyseating.tweenutil.CameraAccessor;
+import com.kozu.easyseating.tweenutil.ColorAccessor;
 import com.kozu.easyseating.tweenutil.TweenUtil;
 import com.kozu.easyseating.ui.DialogSize;
 import com.kozu.easyseating.ui.PeopleListAdapter;
@@ -116,6 +117,9 @@ public class SeatingScreen extends AbstractLmlView {
     }
 
     public void editTable(Table table) {
+        Tween.to(seatingLogic.getBackgroundTint(), ColorAccessor.ALPHA, .3f).target(.20f)
+                .start(TweenUtil.getTweenManager());
+
         selectedTable = table;
         addPersonToTableButton.setVisible(true);
         doneEditingTableButton.setVisible(true);
@@ -136,6 +140,9 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlAction("doneEditingTable")
     public void doneEditingTable() {
+        Tween.to(seatingLogic.getBackgroundTint(), ColorAccessor.ALPHA, .3f).target(1)
+                .start(TweenUtil.getTweenManager());
+
         Table table = getEditTable();
         //Find all the people at the table that where marked to be removed and remove them
         //Have to use two collections or else concurrent modification error will happen

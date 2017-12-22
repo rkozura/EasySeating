@@ -137,8 +137,11 @@ public class SeatingRenderer implements Disposable{
 
     private void renderFloor() {
         EasySeatingGame.batch.begin();
+        //Set a tint based on if a table is being viewed or not
+        EasySeatingGame.batch.setColor(seatingLogic.getBackgroundTint());
         floorTile.draw(EasySeatingGame.batch, 0, 0, (float)seatingLogic.conference.conferenceWidth,
                 (float)seatingLogic.conference.conferenceHeight);
+        EasySeatingGame.batch.setColor(1, 1, 1, 1);
         EasySeatingGame.batch.end();
 
         if(SeatingScreen.moveTable != null) {
