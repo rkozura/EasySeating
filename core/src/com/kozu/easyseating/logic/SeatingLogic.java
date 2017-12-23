@@ -114,7 +114,7 @@ public class SeatingLogic {
         }
     }
 
-    public void addPersonToTable(Table table, Person person) {
+    public Timeline addPersonToTable(Table table, Person person) {
         //Find the person in an existing table and remove
         for(Table allTable : conference.getTables()) {
             if(allTable.assignedSeats.contains(person)) {
@@ -124,7 +124,7 @@ public class SeatingLogic {
         }
 
         table.assignedSeats.add(person);
-        startTweenAndSaveState(getPersonPositionTweens(table, new Vector3(table.bounds.x, table.bounds.y, 0)));
+        return startTweenAndSaveState(getPersonPositionTweens(table, new Vector3(table.bounds.x, table.bounds.y, 0)));
     }
 
     public void removePersonFromTable(Table table, Person person) {
@@ -138,9 +138,8 @@ public class SeatingLogic {
         }
     }
 
-    private void startTweenAndSaveState(List<Tween> tweens) {
+    private Timeline startTweenAndSaveState(List<Tween> tweens) {
         Timeline timeline = Timeline.createParallel();
-
         //Move the people as well
         for(Tween tween : tweens) {
             timeline.push(tween);
@@ -154,6 +153,8 @@ public class SeatingLogic {
             }
         });
         timeline.start(TweenUtil.getTweenManager());
+
+        return timeline;
     }
 
     public void addTableAtPosition(Vector3 pos) {
