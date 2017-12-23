@@ -185,9 +185,6 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
      */
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
-        Vector3 vec = camera.unproject(new Vector3(0, 0, 0))
-                .add(camera.unproject(new Vector3(deltaX, deltaY, 0)).scl(-1f));
-
         Vector3 vec2 = camera.unproject(new Vector3(x, y, 0));
         if(draggedPerson != null) {
             draggedPerson.bounds.x = vec2.x;
@@ -206,6 +203,9 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
                 seatingLogic.setOverTable(false, null, null);
             }
         } else {
+            Vector3 vec = camera.unproject(new Vector3(0, 0, 0))
+                    .add(camera.unproject(new Vector3(deltaX, deltaY, 0)).scl(-1f));
+
             camera.position.add(vec);
             camera.update();
         }
@@ -231,6 +231,10 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
             }
 
             draggedPerson = null;
+        } if(seatingScreen.getEditTable() != null) {
+            Table table = seatingScreen.getEditTable();
+            Tween.to(camera, CameraAccessor.POSITION_XY, .3f).target(table.bounds.x, table.bounds.y)
+                    .start(TweenUtil.getTweenManager());
         } else {
             float xx = MathUtils.clamp(camera.position.x, 0, (float) seatingLogic.conference.conferenceWidth);
             float yy = MathUtils.clamp(camera.position.y, 0, (float) seatingLogic.conference.conferenceHeight);
