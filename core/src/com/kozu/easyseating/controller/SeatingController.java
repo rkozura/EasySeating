@@ -235,8 +235,10 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
                                             .start(TweenUtil.getTweenManager()));
                                     timeline.pushPause(2l);
                                     Table table = seatingScreen.getEditTable();
-                                    timeline.push(Tween.to(camera, CameraAccessor.POSITION_XY, .9f).target(table.bounds.x, table.bounds.y)
-                                            .start(TweenUtil.getTweenManager()));
+                                    if(table != null) {
+                                        timeline.push(Tween.to(camera, CameraAccessor.POSITION_XY, .9f).target(table.bounds.x, table.bounds.y)
+                                                .start(TweenUtil.getTweenManager()));
+                                    }
                                     timeline.start(TweenUtil.getTweenManager());
                                 }
                             });

@@ -140,8 +140,7 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlAction("doneEditingTable")
     public void doneEditingTable() {
-        Tween.to(seatingLogic.getBackgroundTint(), ColorAccessor.ALPHA, .3f).target(1)
-                .start(TweenUtil.getTweenManager());
+        //TweenUtil.getTweenManager().killTarget(camera);
 
         Table table = getEditTable();
         //Find all the people at the table that where marked to be removed and remove them
@@ -163,6 +162,9 @@ public class SeatingScreen extends AbstractLmlView {
         doneEditingTableButton.setVisible(false);
         openVenueButton.setVisible(true);
         openOptionsButton.setVisible(true);
+
+        Tween.to(seatingLogic.getBackgroundTint(), ColorAccessor.ALPHA, .3f).target(1)
+                .start(TweenUtil.getTweenManager());
         Tween.to(camera, CameraAccessor.ZOOM, .3f).target(1f)
                 .start(TweenUtil.getTweenManager());
     }
