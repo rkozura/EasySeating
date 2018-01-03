@@ -69,9 +69,9 @@ public class State {
         prefs.flush();
     }
 
-    public static void rename(Conference conference) {
+    public static void rename(String name) {
         delete();
-        load(conference);
+        currentConference.conferenceName = name;
         save();
     }
 

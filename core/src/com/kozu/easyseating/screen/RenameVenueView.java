@@ -41,8 +41,7 @@ public class RenameVenueView extends AbstractLmlView {
     public boolean checkForInvalidVenueName(final DialogSize dialog) {
         String venueNameString = venueName.getText();
         if(!StringUtils.isBlank(venueNameString)) {
-            seatingLogic.conference.conferenceName = venueNameString;
-            State.rename(seatingLogic.conference);
+            State.rename(venueNameString);
 
             return ReflectedLmlDialog.HIDE;
         } else {
