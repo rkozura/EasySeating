@@ -5,20 +5,19 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
 import com.kozu.easyseating.EasySeatingGame;
+import com.kozu.easyseating.logic.SeatingLogic;
 
 /**
  * Created by Rob on 11/22/2017.
  */
 
 public class OptionsDialogView extends AbstractLmlView {
-    private Stage stage;
-    public OptionsDialogView(Stage stage) {
+    private SeatingLogic seatingLogic;
+
+
+    public OptionsDialogView(Stage stage, SeatingLogic seatingLogic) {
         super(stage);
-        this.stage = stage;
-    }
-    @Override
-    public Stage getStage() {
-        return stage;
+        this.seatingLogic = seatingLogic;
     }
 
     @Override
@@ -29,5 +28,13 @@ public class OptionsDialogView extends AbstractLmlView {
     @LmlAction("navigateToMainMenu")
     public void navigateToMainMenu() {
         ((EasySeatingGame) Gdx.app.getApplicationListener()).navigateToMainMenu();
+    }
+
+    @LmlAction("openRenameVenueDialog")
+    public void openRenameVenueDialog() {
+        EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
+        RenameVenueView renameVenueView = new RenameVenueView(getStage(), seatingLogic);
+        core.getParser().createView(renameVenueView, Gdx.files.internal("views/RenameVenueView.lml"));
+        renameVenueView.setTextFieldString(seatingLogic.conference.conferenceName);
     }
 }

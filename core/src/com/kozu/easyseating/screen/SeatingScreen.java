@@ -209,7 +209,7 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlAction("openOptions")
     public void openOptions() {
         EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
-        LmlView optionsView = new OptionsDialogView(getStage());
+        LmlView optionsView = new OptionsDialogView(getStage(), seatingLogic);
         core.getParser().createView(optionsView, Gdx.files.internal("views/OptionsView.lml"));
     }
 

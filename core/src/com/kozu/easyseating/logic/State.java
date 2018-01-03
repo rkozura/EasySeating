@@ -58,6 +58,23 @@ public class State {
         prefs.flush();
     }
 
+    public static void delete() {
+        String fileSystemNameOfConference = currentConference.conferenceName.toLowerCase();
+        FileHandle file = Gdx.files.absolute(Gdx.files.getLocalStoragePath()+"\\EasySeatingSaves\\"+fileSystemNameOfConference+".txt");
+        file.delete();
+
+        Preferences prefs = Gdx.app.getPreferences("SeatingChart");
+        prefs.remove("lastSavedFile");
+        prefs.remove(currentConference.conferenceName);
+        prefs.flush();
+    }
+
+    public static void rename(Conference conference) {
+        delete();
+        load(conference);
+        save();
+    }
+
     public static boolean hasContinue() {
         Preferences prefs = Gdx.app.getPreferences("SeatingChart");
         if(prefs.contains("lastSavedFile")) {
