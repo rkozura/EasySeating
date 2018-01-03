@@ -35,6 +35,8 @@ public class EasySeatingGame extends LmlApplicationListener {
 
     public Assets assets;
 
+    private MainScreen mainScreen;
+
     public EasySeatingGame(PersonImporter importer) {
         this.importer = importer;
     }
@@ -70,7 +72,7 @@ public class EasySeatingGame extends LmlApplicationListener {
         Tween.registerAccessor(Color.class, new ColorAccessor());
         Tween.setCombinedAttributesLimit(4);
 
-        MainScreen mainScreen = new MainScreen(assets);
+        mainScreen = new MainScreen(assets);
         getParser().createView(mainScreen, mainScreen.getTemplateFile());
 
         setView(mainScreen);
@@ -102,5 +104,9 @@ public class EasySeatingGame extends LmlApplicationListener {
                 };
             }
         };
+    }
+
+    public void navigateToMainMenu() {
+        setView(mainScreen);
     }
 }

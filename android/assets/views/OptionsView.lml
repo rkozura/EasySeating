@@ -5,5 +5,5 @@
     <textbutton width="{buttonWidth}" height="{buttonHeight}">Export</textbutton>
     <textbutton width="{buttonWidth}" height="{buttonHeight}">Rename</textbutton>
     <textbutton width="{buttonWidth}" height="{buttonHeight}">Help</textbutton>
-    <textbutton width="{buttonWidth}" height="{buttonHeight}">Main Menu</textbutton>
+    <textbutton onclick="navigateToMainMenu" width="{buttonWidth}" height="{buttonHeight}">Main Menu</textbutton>
 </dialogsize>

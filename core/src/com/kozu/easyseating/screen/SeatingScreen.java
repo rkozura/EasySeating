@@ -63,7 +63,6 @@ public class SeatingScreen extends AbstractLmlView {
 
     private Assets assets;
 
-    @LmlActor("optionsDialog") private DialogSize optionsDialog;
     @LmlActor("venueDialog") private DialogSize venueDialog;
     @LmlActor("tableDialog") private DialogSize tableDialog;
     @LmlActor("createPersonDialog") private DialogSize createPersonDialog;
@@ -463,7 +462,6 @@ public class SeatingScreen extends AbstractLmlView {
         importContactsDialog.invalidate();
         importContactsDialog.pack();
 
-        centerActorOnStage(optionsDialog);
         centerActorOnStage(venueDialog);
         centerActorOnStage(tableDialog);
         centerActorOnStage(createPersonDialog);
