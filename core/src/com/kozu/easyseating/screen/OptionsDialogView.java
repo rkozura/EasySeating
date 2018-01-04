@@ -37,4 +37,11 @@ public class OptionsDialogView extends AbstractLmlView {
         core.getParser().createView(renameVenueView, Gdx.files.internal("views/RenameVenueView.lml"));
         renameVenueView.setTextFieldString(seatingLogic.conference.conferenceName);
     }
+
+    @LmlAction("openHelpDialog")
+    public void openHelpDialog() {
+        EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
+        HelpDialogView renameVenueView = new HelpDialogView(getStage());
+        core.getParser().createView(renameVenueView, renameVenueView.getTemplateFile());
+    }
 }
