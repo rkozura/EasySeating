@@ -48,14 +48,14 @@ visible="false" onecolumn="true">
 
 <dialogsize id="customPersonDialog" title="Custom Person" titlealign="center" style="dialog" movable="false"
 visible="false" onecolumn="true">
-    <textfield oninit="initTextField" id="personName" width="{buttonWidth}" height="{buttonHeight}"></textfield>
-    <textbutton onclick="createCustomPerson" width="{buttonWidth}" height="{buttonHeight}">Create</textbutton>
+    <textfield growx="true" oninit="initTextField" id="personName"></textfield>
+    <textbutton padleft="250" padright="250" onclick="createCustomPerson" width="{buttonWidth}" height="{buttonHeight}">Create</textbutton>
 </dialogsize>
 
 <dialogsize id="editPersonDialog" titlealign="center" style="dialog" movable="false" visible="false"
 onecolumn="true">
-    <textfield oninit="initTextField" id="editPersonName" width="{buttonWidth}" height="{buttonHeight}"></textfield>
-    <textbutton onclick="openConfirmDeletePersonDialog" width="{buttonWidth}" height="{buttonHeight}">Delete</textbutton>
+    <textfield growx="true" oninit="initTextField" id="editPersonName"></textfield>
+    <textbutton padleft="250" padright="250" onclick="openConfirmDeletePersonDialog" width="{buttonWidth}" height="{buttonHeight}">Delete</textbutton>
     <textbutton onclick="confirmEditPerson" width="{buttonWidth}" height="{buttonHeight}">Save</textbutton>
 </dialogsize>
 
