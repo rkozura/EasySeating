@@ -87,6 +87,11 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlActor("addPersonToTableButton") private TextButton addPersonToTableButton;
     @LmlActor("doneEditingTableButton") private TextButton doneEditingTableButton;
 
+    @LmlActor("addRemoveTablesTable") private com.badlogic.gdx.scenes.scene2d.ui.Table addRemoveTablesTable;
+
+    @LmlActor("toggleAddRemoveButton") private TextButton toggleAddRemoveButton;
+    @LmlActor("toggleAddRemoveLabel") private Label toggleAddRemoveLabel;
+
     public SeatingScreen(Conference conference, Assets assets) {
         super(new Stage(new ScreenViewport()));
 
@@ -236,33 +241,6 @@ public class SeatingScreen extends AbstractLmlView {
         tableDialog.getContentTable().pack();
 
         setPersonSelection();
-    }
-
-    public static Table moveTable;
-    public void enableMoveTable(Table table) {
-        if (selectedTable == null) {
-            moveTable = table;
-            doneMovingTableButton.setVisible(true);
-            deleteTableButton.setVisible(true);
-            openVenueButton.setVisible(false);
-            openOptionsButton.setVisible(false);
-        }
-    }
-
-    @LmlAction("doneMovingTable")
-    public void doneMovingTable(TextButton textButton) {
-        moveTable = null;
-        doneMovingTableButton.setVisible(false);
-        deleteTableButton.setVisible(false);
-        openVenueButton.setVisible(true);
-        openOptionsButton.setVisible(true);
-    }
-
-    @LmlAction("deleteTable")
-    public void deleteTable(TextButton textButton) {
-        seatingLogic.removeTable(moveTable);
-        //TODO add confirmation dialog before deleting!!!
-        doneMovingTable(textButton);
     }
 
     @LmlAction("export")
@@ -547,6 +525,38 @@ public class SeatingScreen extends AbstractLmlView {
             createObjectDialog.show(getStage());
             createObjectDialog.toFront();
         }
+    }
+
+    public static boolean addRemoveTable;
+    public static boolean removeTable;
+    public void showAddRemoveTablesTable() {
+        removeTable = false;
+        addRemoveTable = true;
+        toggleAddRemoveButton.setText("Remove");
+        toggleAddRemoveLabel.setText("Tap to add table");
+        addRemoveTablesTable.setVisible(true);
+        openVenueButton.setVisible(false);
+        openOptionsButton.setVisible(false);
+    }
+
+    @LmlAction("toggleAddRemove")
+    public void toggleAddRemove() {
+        removeTable = !removeTable;
+        if(removeTable) {
+            toggleAddRemoveButton.setText("Add");
+            toggleAddRemoveLabel.setText("Tap to remove table");
+        } else {
+            toggleAddRemoveButton.setText("Remove");
+            toggleAddRemoveLabel.setText("Tap to add table");
+        }
+    }
+
+    @LmlAction("doneAddRemoveTablesTable")
+    public void doneAddRemoveTablesTable() {
+        addRemoveTable = false;
+        addRemoveTablesTable.setVisible(false);
+        openVenueButton.setVisible(true);
+        openOptionsButton.setVisible(true);
     }
 
     @LmlAction("createRoundTable")

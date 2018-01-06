@@ -89,22 +89,33 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
     }
 
     static Person draggedPerson;
+    static Table draggedTable;
     private Table table;
     @Override
     public boolean touchDown(float x, float y, int pointer, int button) {
-        Table table = seatingScreen.getEditTable();
-        if(table != null) {
-            Vector3 pos = convertScreenCoordsToWorldCoords(x, y);
-            for(Person person : table.assignedSeats) {
-                if(person.bounds.contains(pos.x, pos.y)) {
-                    draggedPerson = person;
-                    this.table = table;
-                    return true;
-                }
+        Vector3 pos = convertScreenCoordsToWorldCoords(x, y);
+        if(SeatingScreen.addRemoveTable) {
+            Table table = seatingLogic.getTableAtPosition(pos);
+            if(table != null) {
+                draggedTable = table;
+                return true;
+            } else {
+                return false;
             }
-            return false;
         } else {
-            return false;
+            Table table = seatingScreen.getEditTable();
+            if (table != null) {
+                for (Person person : table.assignedSeats) {
+                    if (person.bounds.contains(pos.x, pos.y)) {
+                        draggedPerson = person;
+                        this.table = table;
+                        return true;
+                    }
+                }
+                return false;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -121,8 +132,17 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
     public boolean tap(float x, float y, int count, int button) {
         Vector3 pos = convertScreenCoordsToWorldCoords(x, y);
 
-        if(seatingScreen.moveTable != null) {
-            seatingLogic.moveTableToPosition(seatingScreen.moveTable, pos);
+        if(seatingScreen.addRemoveTable) {
+            if(seatingScreen.removeTable) {
+                Table table = seatingLogic.getTableAtPosition(pos);
+                if(table != null) {
+                    seatingLogic.removeTable(table);
+                } else {
+                    return false;
+                }
+            } else {
+                seatingLogic.addTableAtPosition(pos);
+            }
 
             return true;
         } else if(seatingScreen.getEditTable() != null) {
@@ -159,17 +179,8 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
      */
     @Override
     public boolean longPress(float x, float y) {
-        //TODO Only make long press work if it is within the world bounds!
-        Vector3 pos = convertScreenCoordsToWorldCoords(x, y);
-
-        Table table = seatingLogic.getTableAtPosition(pos);
-        if(table == null) {
-            seatingScreen.openCreateObjectDialog(pos);
-            return true;
-        } else {
-            seatingScreen.enableMoveTable(table);
-            return true;
-        }
+        seatingScreen.showAddRemoveTablesTable();
+        return true;
     }
 
     @Override
@@ -205,6 +216,8 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
             if(!foundTable) {
                 seatingLogic.setOverTable(false, null, null);
             }
+        } else if(draggedTable != null) {
+            seatingLogic.moveTableToPosition(draggedTable, vec2);
         } else {
             Vector3 vec = camera.unproject(new Vector3(0, 0, 0))
                     .add(camera.unproject(new Vector3(deltaX, deltaY, 0)).scl(-1f));
@@ -218,6 +231,8 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
 
     @Override
     public boolean panStop(float x, float y, int pointer, int button) {
+        draggedTable = null;
+
         if(draggedPerson != null) {
             boolean switchedPersonTable = false;
             for(Table table : seatingLogic.conference.getTables()) {
@@ -282,6 +297,9 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
     private float oldScale;
     @Override
     public boolean pinch (Vector2 initialFirstPointer, Vector2 initialSecondPointer, Vector2 firstPointer, Vector2 secondPointer){
+        draggedTable = null;
+        draggedPerson = null;
+
         if(!(initialFirstPointer.equals(oldInitialFirstPointer)&&initialSecondPointer.equals(oldInitialSecondPointer))){
             oldInitialFirstPointer = initialFirstPointer.cpy();
             oldInitialSecondPointer = initialSecondPointer.cpy();

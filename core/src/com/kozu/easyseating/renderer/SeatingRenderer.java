@@ -144,22 +144,31 @@ public class SeatingRenderer implements Disposable{
         EasySeatingGame.batch.setColor(1, 1, 1, 1);
         EasySeatingGame.batch.end();
 
-        if(SeatingScreen.moveTable != null) {
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.setColor(Color.GRAY);
+        float gridAlpha;
+        if(SeatingScreen.addRemoveTable) {
+            gridAlpha = 1f;
+        } else {
+            gridAlpha = .1f;
+        }
 
-            float currentX = 0;
-            for (double i = 0; i <= seatingLogic.conference.gridCountWidth; i++) {
-                shapeRenderer.line(currentX, 0, currentX, (float) seatingLogic.conference.conferenceHeight);
-                currentX += seatingLogic.conference.gridGutterLength;
-            }
-            float currentY = 0;
-            for (double i = 0; i <= seatingLogic.conference.gridCountHeight; i++) {
-                shapeRenderer.line(0, currentY, (float) seatingLogic.conference.conferenceWidth, currentY);
-                currentY += seatingLogic.conference.gridGutterLength;
-            }
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.GRAY);
+        shapeRenderer.getColor().a = gridAlpha;
+
+        float currentX = 0;
+        for (double i = 0; i <= seatingLogic.conference.gridCountWidth; i++) {
+            shapeRenderer.line(currentX, 0, currentX, (float) seatingLogic.conference.conferenceHeight);
+            currentX += seatingLogic.conference.gridGutterLength;
+        }
+        float currentY = 0;
+        for (double i = 0; i <= seatingLogic.conference.gridCountHeight; i++) {
+            shapeRenderer.line(0, currentY, (float) seatingLogic.conference.conferenceWidth, currentY);
+            currentY += seatingLogic.conference.gridGutterLength;
         }
 
         shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 }
