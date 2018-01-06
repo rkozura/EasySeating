@@ -5,7 +5,7 @@
 <:assign key="buttonHeight" value="{=.35 * $ppi}"/>
 <:assign key="dialogButtonHeight" value="{=.25 * $ppi}"/>
 
-<:assign key="dialogWidth" value="{=2 * $ppi}"/>
+<:assign key="dialogWidth" value="{=1.8 * $ppi}"/>
 
 <table fillparent="true">
     <table grow="true">

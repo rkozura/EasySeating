@@ -494,7 +494,7 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlAction("dialogHeight")
     public float getDialogHeight(final VisTable container) {
         //Allow .5 inches of clickable space above and below the dialog
-        return Gdx.graphics.getHeight()-Gdx.graphics.getPpiX();
+        return Gdx.graphics.getHeight()-Gdx.graphics.getPpiX()*1.2f;
     }
 
     @LmlAction("initTextField")
