@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.kozu.easyseating.logic.SeatingLogic;
+import com.kozu.easyseating.logic.State;
 import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
 import com.kozu.easyseating.screen.SeatingScreen;
@@ -231,8 +232,6 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
 
     @Override
     public boolean panStop(float x, float y, int pointer, int button) {
-        draggedTable = null;
-
         if(draggedPerson != null) {
             boolean switchedPersonTable = false;
             for(Table table : seatingLogic.conference.getTables()) {
@@ -269,6 +268,10 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
             }
 
             draggedPerson = null;
+        }  else if(draggedTable != null) {
+            State.save();
+            draggedTable = null;
+
         } else if(seatingScreen.getEditTable() != null) {
             Table table = seatingScreen.getEditTable();
             Tween.to(camera, CameraAccessor.POSITION_XY, .3f).target(table.bounds.x, table.bounds.y)

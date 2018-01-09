@@ -4,13 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -25,7 +23,7 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ToastManager;
 import com.kotcrab.vis.ui.util.adapter.ListAdapter;
 import com.kotcrab.vis.ui.widget.ListView;
-import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisSplitPane;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextField;
@@ -233,14 +231,12 @@ public class SeatingScreen extends AbstractLmlView {
         tableDialog.show(getStage());
         tableDialog.toFront();
 
-        TextureRegion tr = new TextureRegion(assets.manager.get(Assets.tabletexture));
-        TiledDrawable tableTile = new TiledDrawable(tr);
-
-        //TODO BUG when method is called again, the background resizes the content table
-        tableDialog.getContentTable().setBackground(tableTile);
-        tableDialog.getContentTable().pack();
-
-        setPersonSelection();
+//        TextureRegion tr = new TextureRegion(assets.manager.get(Assets.tabletexture));
+//        TiledDrawable tableTile = new TiledDrawable(tr);
+//
+//        //TODO BUG when method is called again, the background resizes the content table
+//        tableDialog.getContentTable().setBackground(tableTile);
+//        tableDialog.getContentTable().pack();
     }
 
     @LmlAction("export")
@@ -284,9 +280,6 @@ public class SeatingScreen extends AbstractLmlView {
             seatingLogic.createPerson(personName);
 
             venuePeopleListAdapter.itemsChanged();
-            tablePeopleListAdapter.itemsChanged();
-
-            setPersonSelection();
 
             customPersonDialog.hide();
         }
@@ -347,14 +340,15 @@ public class SeatingScreen extends AbstractLmlView {
     public void tablePersonListener(final Person selectedItem) {
         VisTable view = tablePeopleListAdapter.getView(selectedItem);
 
-        if(seatingLogic.isPersonAtTable(selectedTable, selectedItem)) {
-            seatingLogic.removePersonFromTable(selectedTable, selectedItem);
-            view.getChildren().get(0).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
-        } else {
-            seatingLogic.addPersonToTable(selectedTable, selectedItem);
-            view.getChildren().get(0).setColor(Color.CYAN);
-            ((VisLabel)view.getChildren().get(1)).setText("");
-        }
+        System.out.println("TODO - X out the person when clicked on");
+//        if(seatingLogic.isPersonAtTable(selectedTable, selectedItem)) {
+//            seatingLogic.removePersonFromTable(selectedTable, selectedItem);
+//            view.getChildren().get(0).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
+//        } else {
+//            seatingLogic.addPersonToTable(selectedTable, selectedItem);
+//            view.getChildren().get(0).setColor(Color.CYAN);
+//            ((VisLabel)view.getChildren().get(1)).setText("");
+//        }
     }
 
     //Create two adapters for each list view of people
@@ -398,26 +392,26 @@ public class SeatingScreen extends AbstractLmlView {
     /**
      * Sets the person selection
      */
-    private void setPersonSelection() {
-        if(selectedTable != null) {
-            for (Person person : tablePeopleListAdapter.iterable()) {
-                VisTable view = tablePeopleListAdapter.getView(person);
-                if (seatingLogic.isPersonAtTable(selectedTable, person)) {
-                    (view.getChildren().get(0)).setColor(Color.CYAN);
-                    ((VisLabel)view.getChildren().get(1)).setText("");
-                } else {
-                    (view.getChildren().get(0)).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
-                    Table assignedTable = seatingLogic.getAssignedTable(person);
-                    if(assignedTable != null) {
-                        ((VisLabel) view.getChildren().get(1)).setText(assignedTable.tableIdentifier);
-                    }
-                }
-            }
-        }
-
-        //This will resort the array based on what is selected
-        tablePeopleListAdapter.itemsDataChanged();
-    }
+//    private void setPersonSelection() {
+//        if(selectedTable != null) {
+//            for (Person person : tablePeopleListAdapter.iterable()) {
+//                VisTable view = tablePeopleListAdapter.getView(person);
+//                if (seatingLogic.isPersonAtTable(selectedTable, person)) {
+//                    (view.getChildren().get(0)).setColor(Color.CYAN);
+//                    ((VisLabel)view.getChildren().get(1)).setText("");
+//                } else {
+//                    (view.getChildren().get(0)).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
+//                    Table assignedTable = seatingLogic.getAssignedTable(person);
+//                    if(assignedTable != null) {
+//                        ((VisLabel) view.getChildren().get(1)).setText(assignedTable.tableIdentifier);
+//                    }
+//                }
+//            }
+//        }
+//
+//        //This will resort the array based on what is selected
+//        tablePeopleListAdapter.itemsDataChanged();
+//    }
 
     @Override
     public void resize(int width, int height, boolean centerCamera) {
@@ -427,7 +421,7 @@ public class SeatingScreen extends AbstractLmlView {
         venueDialog.getContentTable().getCell(venueListView).height(getDialogHeight(null));
         venuePeopleListAdapter.itemsChanged();
 
-        tableDialog.getContentTable().getCell(tableListView).height(getDialogHeight(null));
+        //tableDialog.getContentTable().getCell(tableListView).height(getDialogHeight(null));
         tablePeopleListAdapter.itemsChanged();
 
         importContactsDialog.getContentTable().getCell(contactsListView).height(getDialogHeight(null));
@@ -473,6 +467,18 @@ public class SeatingScreen extends AbstractLmlView {
     public float getDialogHeight(final VisTable container) {
         //Allow .5 inches of clickable space above and below the dialog
         return Gdx.graphics.getHeight()-Gdx.graphics.getPpiX()*1.2f;
+    }
+
+    @LmlAction("splitDialogHeight")
+    public float getSplitDialogHeight(final VisSplitPane container) {
+        //Allow .5 inches of clickable space above and below the dialog
+        return Gdx.graphics.getHeight()-Gdx.graphics.getPpiX()*1.2f;
+    }
+
+    @LmlAction("tableDialogHeight")
+    public float getTableDialogHeight(final VisTable container) {
+        //Allow .5 inches of clickable space above and below the dialog
+        return Gdx.graphics.getHeight()-Gdx.graphics.getPpiX()*1.2f/2;
     }
 
     @LmlAction("initTextField")

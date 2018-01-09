@@ -35,10 +35,13 @@
 </dialogsize>
 
 <dialogsize id="tableDialog" titlealign="center" style="dialog" movable="false" visible="false">
-    <listview id="tableListView" flickscroll="true" colspan="2" row="true" width="{dialogWidth}" height="$dialogHeight"
+    <splitpane touchable="childrenOnly" vertical="true" row="true" width="{dialogWidth}" height="$splitDialogHeight">
+        <listview id="tableListView" flickscroll="true"
         adapter="tablePersonAdapter" itemlistener="tablePersonListener"/>
-    <textbutton onclick="openCreatePersonDialog" growx="true" height="{dialogButtonHeight}">Add</textbutton>
-    <textbutton growx="true" height="{dialogButtonHeight}">Sort</textbutton>
+        <listview id="venueListViewTable" flickscroll="true" width="{dialogWidth}"
+            itemlistener="venuePersonListener"/>
+    </splitpane>
+    <textbutton growx="true" height="{dialogButtonHeight}">Done</textbutton>
 </dialogsize>
 
 <dialogsize id="createPersonDialog" title="Create Person" titlealign="center" style="dialog" movable="false"

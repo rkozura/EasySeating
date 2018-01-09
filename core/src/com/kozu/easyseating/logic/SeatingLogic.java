@@ -210,16 +210,35 @@ public class SeatingLogic {
 
         if(closestEntry != null) {
             closestEntry.setValue(table);
-            List<Tween> tweens = getPersonPositionTweens(table, closestEntry.getKey());
-            tweens.add(Tween.to(table, EntityAccessor.POSITION_XY, .2f).target(closestEntry.getKey().x, closestEntry.getKey().y));
-
-            startTweenAndSaveState(tweens);
+            setPersonPositions(table, closestEntry.getKey());
+            table.setX(closestEntry.getKey().x);
+            table.setY(closestEntry.getKey().y);
         }
     }
 
     public void resetTable(Table table) {
         List<Tween> tweens = getPersonPositionTweens(table, new Vector3(table.bounds.x, table.bounds.y, 0));
         startTweenAndSaveState(tweens);
+    }
+
+    private void setPersonPositions(Table table, Vector3 pos) {
+        List<Tween> returnList = new ArrayList<Tween>();
+
+        if(table.assignedSeats.size() != 0) {
+            double angleBetweenSeats = 360 / table.assignedSeats.size();
+
+            double nextSeatAngle = 0;
+            for (Person person : table.assignedSeats) {
+                double nextSeatRadians = Math.toRadians(nextSeatAngle);
+                float x = (float) (table.getRadius() * Math.cos(nextSeatRadians)) + pos.x;
+                float y = (float) (table.getRadius() * Math.sin(nextSeatRadians)) + pos.y;
+
+                person.setX(x);
+                person.setY(y);
+
+                nextSeatAngle += angleBetweenSeats;
+            }
+        }
     }
 
     private List<Tween> getPersonPositionTweens(Table table, Vector3 pos) {
