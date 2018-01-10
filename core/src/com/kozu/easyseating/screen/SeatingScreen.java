@@ -122,6 +122,9 @@ public class SeatingScreen extends AbstractLmlView {
         Tween.to(seatingLogic.getBackgroundTint(), ColorAccessor.ALPHA, .3f).target(.20f)
                 .start(TweenUtil.getTweenManager());
 
+        tableList.clear();
+        tableList.addAll(table.assignedSeats);
+        tablePeopleListAdapter.itemsChanged();
         selectedTable = table;
         addPersonToTableButton.setVisible(true);
         doneEditingTableButton.setVisible(true);
@@ -299,6 +302,13 @@ public class SeatingScreen extends AbstractLmlView {
         editPersonDialog.toFront();
     }
 
+    @LmlAction("tableVenuePersonListener")
+    public void tableVenuePersonListener(final Person selectedItem) {
+        tableList.add(selectedItem);
+        tablePeopleListAdapter.itemsChanged();
+        seatingLogic.addPersonToTable(selectedTable, selectedItem);
+    }
+
     @LmlAction("openConfirmDeletePersonDialog")
     public void openConfirmDeletePersonDialog() {
         confirmDeletePersonDialog.setVisible(true);
@@ -351,11 +361,12 @@ public class SeatingScreen extends AbstractLmlView {
 //        }
     }
 
+    Array<Person> tableList = new Array<Person>();
     //Create two adapters for each list view of people
     private PeopleListAdapter<Person> tablePeopleListAdapter;
     @LmlAction("tablePersonAdapter")
     public ListAdapter<?> tablePersonAdapter() {
-        tablePeopleListAdapter = new PeopleListAdapter<Person>(seatingLogic.conference.persons);
+        tablePeopleListAdapter = new PeopleListAdapter<Person>(tableList);
         return tablePeopleListAdapter;
     }
 

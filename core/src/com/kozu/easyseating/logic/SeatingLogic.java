@@ -107,8 +107,8 @@ public class SeatingLogic {
     public void removePerson(Person person) {
         conference.persons.removeValue(person, false);
         for(Table table : conference.getTables()) {
-            if(table.assignedSeats.contains(person)) {
-                table.assignedSeats.remove(person);
+            if(table.assignedSeats.contains(person, true)) {
+                table.assignedSeats.removeValue(person, true);
                 break;
             }
         }
@@ -117,7 +117,7 @@ public class SeatingLogic {
     public Timeline addPersonToTable(Table table, Person person) {
         //Find the person in an existing table and remove
         for(Table allTable : conference.getTables()) {
-            if(allTable.assignedSeats.contains(person)) {
+            if(allTable.assignedSeats.contains(person, true)) {
                 removePersonFromTable(allTable, person);
                 break;
             }
@@ -128,11 +128,11 @@ public class SeatingLogic {
     }
 
     public void removePersonFromTable(Table table, Person person) {
-        if(!table.assignedSeats.isEmpty()) {
-            table.assignedSeats.remove(person);
+        if(table.assignedSeats.size != 0) {
+            table.assignedSeats.removeValue(person, true);
 
             //If still not empty, set the person positions
-            if(!table.assignedSeats.isEmpty()) {
+            if(table.assignedSeats.size != 0) {
                 startTweenAndSaveState(getPersonPositionTweens(table, new Vector3(table.bounds.x, table.bounds.y, 0)));
             }
         }
@@ -192,7 +192,7 @@ public class SeatingLogic {
     }
 
     public boolean isPersonAtTable(Table table, Person person) {
-        return table.assignedSeats.contains(person);
+        return table.assignedSeats.contains(person, true);
     }
 
     public void moveTableToPosition(Table table, Vector3 pos) {
@@ -224,8 +224,8 @@ public class SeatingLogic {
     private void setPersonPositions(Table table, Vector3 pos) {
         List<Tween> returnList = new ArrayList<Tween>();
 
-        if(table.assignedSeats.size() != 0) {
-            double angleBetweenSeats = 360 / table.assignedSeats.size();
+        if(table.assignedSeats.size != 0) {
+            double angleBetweenSeats = 360 / table.assignedSeats.size;
 
             double nextSeatAngle = 0;
             for (Person person : table.assignedSeats) {
@@ -244,8 +244,8 @@ public class SeatingLogic {
     private List<Tween> getPersonPositionTweens(Table table, Vector3 pos) {
         List<Tween> returnList = new ArrayList<Tween>();
 
-        if(table.assignedSeats.size() != 0) {
-            double angleBetweenSeats = 360 / table.assignedSeats.size();
+        if(table.assignedSeats.size != 0) {
+            double angleBetweenSeats = 360 / table.assignedSeats.size;
 
             double nextSeatAngle = 0;
             for (Person person : table.assignedSeats) {
@@ -268,7 +268,7 @@ public class SeatingLogic {
         Table returnTable = null;
 
         for(Table table : conference.getTables()) {
-            if(table.assignedSeats.contains(person)) {
+            if(table.assignedSeats.contains(person, true)) {
                 returnTable = table;
                 break;
             }

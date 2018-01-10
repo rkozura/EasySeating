@@ -2,9 +2,7 @@ package com.kozu.easyseating.object;
 
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector3;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * Created by Rob on 8/1/2017.
@@ -15,14 +13,14 @@ public class Table implements Model {
 
     public String tableIdentifier;
     public Circle bounds;
-    public List<Person> assignedSeats;
+    public Array<Person> assignedSeats;
 
     public Table() {}
 
     public Table(Vector3 position) {
         bounds = new Circle();
         bounds.set(position.x, position.y, INIT_TABLE_RADIUS);
-        assignedSeats = new ArrayList<>();
+        assignedSeats = new Array<>();
     }
 
     @Override

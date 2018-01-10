@@ -42,14 +42,6 @@ public class PeopleListAdapter<ItemT> extends ArrayAdapter<ItemT, VisTable> {
                 Person personTwo = (Person)t1;
 
                 int returnValue = personOne.getName().compareTo(personTwo.getName());
-                VisTable personOneTable = getView(itemT);
-                VisTable personTwoTable = getView(t1);
-
-                if((personOneTable.getChildren().get(0)).getColor().equals(Color.CYAN) && !(personTwoTable.getChildren().get(0)).getColor().equals(Color.CYAN)){
-                    returnValue = -1;
-                } else if(!(personOneTable.getChildren().get(0)).getColor().equals(Color.CYAN) && (personTwoTable.getChildren().get(0)).getColor().equals(Color.CYAN)) {
-                    returnValue = 1;
-                }
 
                 return returnValue;
             }
@@ -59,7 +51,7 @@ public class PeopleListAdapter<ItemT> extends ArrayAdapter<ItemT, VisTable> {
     @Override
     protected VisTable createView(ItemT item) {
         Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
-        pm1.setColor(Color.DARK_GRAY);
+        pm1.setColor(Color.LIGHT_GRAY);
         pm1.fill();
 
         Person person = (Person)item;

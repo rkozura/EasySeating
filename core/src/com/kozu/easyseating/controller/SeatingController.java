@@ -207,7 +207,7 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
 
             boolean foundTable = false;
             for(Table table : seatingLogic.conference.getTables()) {
-                if(!table.assignedSeats.contains(draggedPerson)) {
+                if(!table.assignedSeats.contains(draggedPerson, true)) {
                     if (table.bounds.overlaps(draggedPerson.bounds)) {
                         seatingLogic.setOverTable(true, this.table, draggedPerson);
                         foundTable = true;
@@ -235,7 +235,7 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
         if(draggedPerson != null) {
             boolean switchedPersonTable = false;
             for(Table table : seatingLogic.conference.getTables()) {
-                if(!table.assignedSeats.contains(draggedPerson)) {
+                if(!table.assignedSeats.contains(draggedPerson, true)) {
                     if (table.bounds.overlaps(draggedPerson.bounds)) {
                         Timeline timeline = seatingLogic.addPersonToTable(table, draggedPerson);
                         if(seatingScreen.getEditTable() != null) {

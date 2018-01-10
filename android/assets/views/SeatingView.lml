@@ -39,7 +39,7 @@
         <listview id="tableListView" flickscroll="true"
         adapter="tablePersonAdapter" itemlistener="tablePersonListener"/>
         <listview id="venueListViewTable" flickscroll="true" width="{dialogWidth}"
-            itemlistener="venuePersonListener"/>
+            adapter="venuePersonAdapter" itemlistener="tableVenuePersonListener"/>
     </splitpane>
     <textbutton growx="true" height="{dialogButtonHeight}">Done</textbutton>
 </dialogsize>
