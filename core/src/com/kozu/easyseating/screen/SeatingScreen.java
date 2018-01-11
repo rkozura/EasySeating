@@ -229,17 +229,16 @@ public class SeatingScreen extends AbstractLmlView {
     private Table selectedTable;
     public void openTable(Table table) {
         selectedTable = table;
+
+        for(Person person : tableList) {
+            VisTable view = tablePeopleListAdapter.getView(person);
+            view.getChildren().get(0).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
+        }
+
         tableDialog.getTitleLabel().setText("Table "+table.tableIdentifier);
         tableDialog.setVisible(true);
         tableDialog.show(getStage());
         tableDialog.toFront();
-
-//        TextureRegion tr = new TextureRegion(assets.manager.get(Assets.tabletexture));
-//        TiledDrawable tableTile = new TiledDrawable(tr);
-//
-//        //TODO BUG when method is called again, the background resizes the content table
-//        tableDialog.getContentTable().setBackground(tableTile);
-//        tableDialog.getContentTable().pack();
     }
 
     @LmlAction("export")
@@ -309,6 +308,22 @@ public class SeatingScreen extends AbstractLmlView {
         seatingLogic.addPersonToTable(selectedTable, selectedItem);
     }
 
+    Array<Person> editTableRemovePeopleList = new Array<Person>();
+    @LmlAction("confirmEditTable")
+    public void confirmEditTable() {
+        Table table = getEditTable();
+        for(Person person : editTableRemovePeopleList) {
+            seatingLogic.removePersonFromTable(table, person);
+            tableList.removeValue(person, true);
+        }
+
+        editTableRemovePeopleList.clear();
+
+        tablePeopleListAdapter.itemsChanged();
+
+        tableDialog.hide();
+    }
+
     @LmlAction("openConfirmDeletePersonDialog")
     public void openConfirmDeletePersonDialog() {
         confirmDeletePersonDialog.setVisible(true);
@@ -350,15 +365,13 @@ public class SeatingScreen extends AbstractLmlView {
     public void tablePersonListener(final Person selectedItem) {
         VisTable view = tablePeopleListAdapter.getView(selectedItem);
 
-        System.out.println("TODO - X out the person when clicked on");
-//        if(seatingLogic.isPersonAtTable(selectedTable, selectedItem)) {
-//            seatingLogic.removePersonFromTable(selectedTable, selectedItem);
-//            view.getChildren().get(0).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
-//        } else {
-//            seatingLogic.addPersonToTable(selectedTable, selectedItem);
-//            view.getChildren().get(0).setColor(Color.CYAN);
-//            ((VisLabel)view.getChildren().get(1)).setText("");
-//        }
+        if(editTableRemovePeopleList.contains(selectedItem, true)) {
+            view.getChildren().get(0).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
+            editTableRemovePeopleList.removeValue(selectedItem, true);
+        } else {
+            view.getChildren().get(0).setColor(Color.RED);
+            editTableRemovePeopleList.add(selectedItem);
+        }
     }
 
     Array<Person> tableList = new Array<Person>();
@@ -387,7 +400,6 @@ public class SeatingScreen extends AbstractLmlView {
     private Array<Person> selectedContacts = new Array<Person>();
     @LmlAction("contactsPersonListener")
     public void contactsPersonListener(final Person selectedItem) {
-        System.out.println(selectedItem);
         VisTable view = contactsPeopleListAdapter.getView(selectedItem);
 
         if(!selectedContacts.contains(selectedItem, true)) {
