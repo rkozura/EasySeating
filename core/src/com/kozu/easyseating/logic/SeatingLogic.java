@@ -11,7 +11,6 @@ import com.kozu.easyseating.tweenutil.TweenUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Timeline;
@@ -131,7 +130,7 @@ public class SeatingLogic {
         if(table.assignedSeats.size != 0) {
             table.assignedSeats.removeValue(person, true);
 
-            //If still not empty, set the person positions
+            //If not empty, set the person positions
             if(table.assignedSeats.size != 0) {
                 startTweenAndSaveState(getPersonPositionTweens(table, new Vector3(table.bounds.x, table.bounds.y, 0)));
             }
@@ -253,9 +252,7 @@ public class SeatingLogic {
                 float x = (float) (table.getRadius() * Math.cos(nextSeatRadians)) + pos.x;
                 float y = (float) (table.getRadius() * Math.sin(nextSeatRadians)) + pos.y;
 
-                //Delay the movement of people for effect
-                returnList.add(Tween.to(person, EntityAccessor.POSITION_XY, .2f).target(x, y)
-                        .delay(new Random().nextFloat() * (.3f - .05f) + .05f)); //Delay .05 to .3 sec
+                returnList.add(Tween.to(person, EntityAccessor.POSITION_XY, .2f).target(x, y));
 
                 nextSeatAngle += angleBetweenSeats;
             }

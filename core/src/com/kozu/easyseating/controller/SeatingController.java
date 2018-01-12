@@ -28,6 +28,7 @@ public class SeatingController extends GestureDetector {
     private float LONG_PRESS_SECONDS = .5f;
     private Camera camera;
 
+    SeatingControllerListener listener;
     public SeatingController(Camera camera, SeatingLogic seatingLogic, SeatingScreen seatingScreen){
         super(new SeatingControllerListener(camera, seatingLogic, seatingScreen));
         setLongPressSeconds(LONG_PRESS_SECONDS);
@@ -39,7 +40,7 @@ public class SeatingController extends GestureDetector {
      * the screen.
      */
     public void personPan() {
-        if(SeatingControllerListener.draggedPerson != null) {
+        if(SeatingControllerListener.draggedPerson != null && isPanning()) {
             float touchX = Gdx.input.getX();
             float touchY = Gdx.input.getY();
 
@@ -96,6 +97,7 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
     public boolean touchDown(float x, float y, int pointer, int button) {
         Vector3 pos = convertScreenCoordsToWorldCoords(x, y);
         if(SeatingScreen.addRemoveTable) {
+            //If adding or removing tables, drag table
             Table table = seatingLogic.getTableAtPosition(pos);
             if(table != null) {
                 draggedTable = table;
@@ -104,6 +106,7 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
                 return false;
             }
         } else {
+            //Else, try and get a draggable person
             Table table = seatingScreen.getEditTable();
             if (table != null) {
                 for (Person person : table.assignedSeats) {
@@ -202,6 +205,7 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
     public boolean pan(float x, float y, float deltaX, float deltaY) {
         Vector3 vec2 = camera.unproject(new Vector3(x, y, 0));
         if(draggedPerson != null) {
+            draggedPerson.setFlaggedForRemoval(false);
             draggedPerson.bounds.x = vec2.x;
             draggedPerson.bounds.y = vec2.y;
 
@@ -265,6 +269,10 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
 
             if(!switchedPersonTable) {
                 seatingLogic.resetTable(seatingScreen.getEditTable());
+
+                Table table = seatingScreen.getEditTable();
+                Tween.to(camera, CameraAccessor.POSITION_XY, .3f).target(table.bounds.x, table.bounds.y)
+                        .start(TweenUtil.getTweenManager());
             }
 
             draggedPerson = null;
