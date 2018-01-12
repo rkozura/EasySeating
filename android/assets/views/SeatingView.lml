@@ -39,7 +39,7 @@
         <listview id="tableListView" flickscroll="true"
         adapter="tablePersonAdapter" itemlistener="tablePersonListener"/>
         <listview id="venueListViewTable" flickscroll="true" width="{dialogWidth}"
-            adapter="venuePersonAdapter" itemlistener="tableVenuePersonListener"/>
+            adapter="venuePersonTableAdapter" itemlistener="tableVenuePersonListener"/>
     </splitpane>
     <textbutton growx="true" height="{dialogButtonHeight}" onclick="confirmEditTable">Confirm</textbutton>
 </dialogsize>

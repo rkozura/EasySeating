@@ -282,6 +282,7 @@ public class SeatingScreen extends AbstractLmlView {
             seatingLogic.createPerson(personName);
 
             venuePeopleListAdapter.itemsChanged();
+            venuePersonTableAdapter.itemsChanged();
 
             customPersonDialog.hide();
         }
@@ -305,6 +306,7 @@ public class SeatingScreen extends AbstractLmlView {
     public void tableVenuePersonListener(final Person selectedItem) {
         tableList.add(selectedItem);
         tablePeopleListAdapter.itemsChanged();
+        venuePersonTableAdapter.itemsChanged();
         seatingLogic.addPersonToTable(selectedTable, selectedItem);
     }
 
@@ -320,6 +322,7 @@ public class SeatingScreen extends AbstractLmlView {
         editTableRemovePeopleList.clear();
 
         tablePeopleListAdapter.itemsChanged();
+        venuePersonTableAdapter.itemsChanged();
 
         tableDialog.hide();
     }
@@ -336,6 +339,7 @@ public class SeatingScreen extends AbstractLmlView {
         seatingLogic.removePerson(selectedPerson);
         venuePeopleListAdapter.itemsChanged();
         tablePeopleListAdapter.itemsChanged();
+        venuePersonTableAdapter.itemsChanged();
         editPersonDialog.hide();
         confirmDeletePersonDialog.hide();
     }
@@ -347,6 +351,7 @@ public class SeatingScreen extends AbstractLmlView {
             selectedPerson.setName(renamePersonTextField.getText());
             venuePeopleListAdapter.itemsChanged();
             tablePeopleListAdapter.itemsChanged();
+            venuePersonTableAdapter.itemsChanged();
         }
         editPersonDialog.hide();
     }
@@ -357,6 +362,7 @@ public class SeatingScreen extends AbstractLmlView {
         selectedContacts.clear();
         venuePeopleListAdapter.itemsChanged();
         tablePeopleListAdapter.itemsChanged();
+        venuePersonTableAdapter.itemsChanged();
 
         importContactsDialog.hide();
     }
@@ -388,6 +394,13 @@ public class SeatingScreen extends AbstractLmlView {
     public ListAdapter<?> venuePersonAdapter() {
         venuePeopleListAdapter = new PeopleListAdapter<Person>(seatingLogic.conference.persons);
         return venuePeopleListAdapter;
+    }
+
+    private PeopleListAdapter<Person> venuePersonTableAdapter;
+    @LmlAction("venuePersonTableAdapter")
+    public ListAdapter<?> venuePersonTableAdapter() {
+        venuePersonTableAdapter = new PeopleListAdapter<Person>(seatingLogic.conference.persons);
+        return venuePersonTableAdapter;
     }
 
     private PeopleListAdapter<Person> contactsPeopleListAdapter;

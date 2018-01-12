@@ -27,12 +27,14 @@ import aurelienribon.tweenengine.TweenCallback;
 public class SeatingController extends GestureDetector {
     private float LONG_PRESS_SECONDS = .5f;
     private Camera camera;
+    private SeatingLogic seatingLogic;
 
     SeatingControllerListener listener;
     public SeatingController(Camera camera, SeatingLogic seatingLogic, SeatingScreen seatingScreen){
         super(new SeatingControllerListener(camera, seatingLogic, seatingScreen));
         setLongPressSeconds(LONG_PRESS_SECONDS);
         this.camera = camera;
+        this.seatingLogic = seatingLogic;
     }
 
     /**
@@ -46,7 +48,7 @@ public class SeatingController extends GestureDetector {
 
             float width = Gdx.app.getGraphics().getWidth();
             float height = Gdx.app.getGraphics().getHeight();
-            float space = Gdx.graphics.getPpiX()*.4f;
+            float space = Gdx.graphics.getPpiX()*.4f; //How much to detect a space between the edges of the screen
 
             boolean panned = false;
             if(touchX >= width-space) {
@@ -66,6 +68,9 @@ public class SeatingController extends GestureDetector {
             }
 
             if(panned) {
+                camera.position.x = MathUtils.clamp(camera.position.x, 0, (float) seatingLogic.conference.conferenceWidth);
+                camera.position.y = MathUtils.clamp(camera.position.y, 0, (float) seatingLogic.conference.conferenceHeight);
+
                 Vector3 pos = camera.unproject(new Vector3(touchX, touchY, 0));
                 SeatingControllerListener.draggedPerson.bounds.x = pos.x;
                 SeatingControllerListener.draggedPerson.bounds.y = pos.y;
