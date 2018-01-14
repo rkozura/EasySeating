@@ -2,7 +2,7 @@
 <:assign key="buttonHeight" value="{=.35 * 200}"/>
 
 <dialogsize id="optionsDialog" title="Options" titlealign="center" style="dialog" movable="false" onecolumn="true">
-    <textbutton width="{buttonWidth}" height="{buttonHeight}">Export</textbutton>
+    <textbutton onclick="export" width="{buttonWidth}" height="{buttonHeight}">Export</textbutton>
     <textbutton onclick="openRenameVenueDialog" width="{buttonWidth}" height="{buttonHeight}">Rename</textbutton>
     <textbutton onclick="openHelpDialog" width="{buttonWidth}" height="{buttonHeight}">Help</textbutton>
     <textbutton onclick="navigateToMainMenu" width="{buttonWidth}" height="{buttonHeight}">Main Menu</textbutton>

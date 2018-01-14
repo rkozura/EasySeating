@@ -1,7 +1,8 @@
-package com.kozu.easyseating.pdf;
+package com.kozu.easyseating.desktop.resolver;
 
-import com.kozu.easyseating.logic.SeatingLogic;
+import com.kozu.easyseating.object.Conference;
 import com.kozu.easyseating.object.Table;
+import com.kozu.easyseating.resolver.PDFGenerator;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -14,11 +15,14 @@ import java.awt.Color;
 import java.io.IOException;
 
 /**
- * Created by Rob on 8/14/2017.
+ * Created by Rob on 1/13/2018.
  */
 
-public class PDFGenerator {
-    public static void generatePDF(SeatingLogic seatingLogic) {
+public class DesktopPDFGenerator implements PDFGenerator {
+    @Override
+    public void generatePDF(Conference conference) {
+        System.out.println("Desktop saving PDF");
+
         int line = 0;
 
         String outputFileName = "C://Users//Rob//Desktop//Simple.pdf";
@@ -37,9 +41,9 @@ public class PDFGenerator {
         try {
             cos = new PDPageContentStream(document, page1);
 
-            double ratio = rect.getWidth()/seatingLogic.conference.conferenceWidth;
+            double ratio = rect.getWidth()/conference.conferenceWidth;
 
-            for(Table table : seatingLogic.conference.getTables()) {
+            for(Table table : conference.getTables()) {
                 drawCircle(cos, (float)(table.getX()*ratio), (float)(table.getY()*ratio), (float)(70*ratio), Color.GRAY);
 
                 cos.beginText();

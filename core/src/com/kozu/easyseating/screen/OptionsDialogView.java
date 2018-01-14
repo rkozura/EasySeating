@@ -44,4 +44,9 @@ public class OptionsDialogView extends AbstractLmlView {
         HelpDialogView renameVenueView = new HelpDialogView(getStage());
         core.getParser().createView(renameVenueView, renameVenueView.getTemplateFile());
     }
+
+    @LmlAction("export")
+    public void export() {
+        EasySeatingGame.pdfGenerator.generatePDF(seatingLogic.conference);
+    }
 }

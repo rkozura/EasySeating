@@ -8,18 +8,21 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
+import com.kozu.easyseating.resolver.AndroidPDFGenerator;
 import com.kozu.easyseating.resolver.AndroidPersonImporter;
 
 public class AndroidLauncher extends AndroidApplication {
 	public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 4;
 
     AndroidPersonImporter importer;
+    AndroidPDFGenerator pdfGenerator;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
         importer = new AndroidPersonImporter(this, getContext());
+        pdfGenerator = new AndroidPDFGenerator(getContext());
 		// Create the layout
 		RelativeLayout layout = new RelativeLayout(this);
 
@@ -30,7 +33,7 @@ public class AndroidLauncher extends AndroidApplication {
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
 		// Create the libgdx View
-		EasySeatingGame seatingChart = new EasySeatingGame(importer);
+		EasySeatingGame seatingChart = new EasySeatingGame(importer, pdfGenerator);
 		View gameView = initializeForView(seatingChart);
 
 		// Add the libgdx view

@@ -18,6 +18,7 @@ import com.github.czyzby.lml.vis.util.VisLml;
 import com.kotcrab.vis.ui.VisUI;
 import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
+import com.kozu.easyseating.resolver.PDFGenerator;
 import com.kozu.easyseating.resolver.PersonImporter;
 import com.kozu.easyseating.screen.MainScreen;
 import com.kozu.easyseating.tweenutil.CameraAccessor;
@@ -31,14 +32,16 @@ import aurelienribon.tweenengine.Tween;
 
 public class EasySeatingGame extends LmlApplicationListener {
     public static PersonImporter importer;
+    public static PDFGenerator pdfGenerator;
     public static Batch batch;
 
     public Assets assets;
 
     private MainScreen mainScreen;
 
-    public EasySeatingGame(PersonImporter importer) {
+    public EasySeatingGame(PersonImporter importer, PDFGenerator pdfGenerator) {
         this.importer = importer;
+        this.pdfGenerator = pdfGenerator;
     }
 
     @Override
