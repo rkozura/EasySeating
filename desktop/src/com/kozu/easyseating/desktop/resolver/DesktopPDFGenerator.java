@@ -31,7 +31,7 @@ public class DesktopPDFGenerator implements PDFGenerator {
         PDPage page1 = new PDPage(PDRectangle.A4);
         // PDPage.PAGE_SIZE_LETTER is also possible
         PDRectangle rect = page1.getMediaBox();
-        System.out.println(rect);
+
         // rect can be used to get the page width and height
         document.addPage(page1);
 
