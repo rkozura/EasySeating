@@ -116,8 +116,6 @@ public class AndroidPDFGenerator implements PDFGenerator {
         float rows = 20;
         int numberOfPages = (int)Math.ceil(conference.persons.size/rows);
         float gutterHeight = (bottom-top)/rows;
-        System.out.println(conference.persons.size);
-        System.out.println(numberOfPages);
 
         Iterator<Person> jj = conference.persons.iterator();
         int i = 0;

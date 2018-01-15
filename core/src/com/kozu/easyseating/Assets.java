@@ -46,6 +46,8 @@ public class Assets {
     public static final List<AssetDescriptor<Texture>> backgroundtextures = new ArrayList<AssetDescriptor<Texture>>();
 
     public void init() {
+        FreeTypeFontGenerator.setMaxTextureSize(2048);
+
         FreetypeFontLoader.FreeTypeFontLoaderParameter buttonFontParameter = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         buttonFontParameter.fontParameters.size = (int) (BUTTON_FONT_SIZE * Gdx.graphics.getDensity());
         buttonFontParameter.fontFileName = "fonts/OpenSans-Regular.ttf";
