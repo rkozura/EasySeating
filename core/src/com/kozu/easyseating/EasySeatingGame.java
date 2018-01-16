@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.github.czyzby.lml.parser.LmlParser;
+import com.github.czyzby.lml.parser.action.ActorConsumer;
 import com.github.czyzby.lml.parser.impl.tag.actor.DialogLmlTag;
 import com.github.czyzby.lml.parser.impl.tag.builder.TextLmlActorBuilder;
 import com.github.czyzby.lml.parser.tag.LmlTag;
@@ -16,6 +17,7 @@ import com.github.czyzby.lml.parser.tag.LmlTagProvider;
 import com.github.czyzby.lml.util.LmlApplicationListener;
 import com.github.czyzby.lml.vis.util.VisLml;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisTable;
 import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
 import com.kozu.easyseating.resolver.PDFGenerator;
@@ -46,8 +48,15 @@ public class EasySeatingGame extends LmlApplicationListener {
 
     @Override
     protected LmlParser createParser() {
+
         return VisLml.parser()
                 .tag(getDialogSizeProvider(), "dialogsize")
+                .action("ppi", new ActorConsumer<String, VisTable>() {
+                    @Override
+                    public String consume(VisTable actor) {
+                        return String.valueOf(Gdx.graphics.getPpiX());
+                    }
+                })
                 .build();
     }
 

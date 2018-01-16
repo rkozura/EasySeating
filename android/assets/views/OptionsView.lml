@@ -1,5 +1,5 @@
-<:assign key="buttonWidth" value="{=.8 * 200}"/>
-<:assign key="buttonHeight" value="{=.35 * 200}"/>
+<:assign key="buttonWidth" value="{=.8 * $ppi}"/>
+<:assign key="buttonHeight" value="{=.35 * $ppi}"/>
 
 <dialogsize id="optionsDialog" title="Options" titlealign="center" style="dialog" movable="false" onecolumn="true">
     <textbutton onclick="export" width="{buttonWidth}" height="{buttonHeight}">Export</textbutton>
