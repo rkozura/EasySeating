@@ -36,6 +36,7 @@ public class OptionsDialogView extends AbstractLmlView {
         RenameVenueView renameVenueView = new RenameVenueView(getStage(), seatingLogic);
         core.getParser().createView(renameVenueView, Gdx.files.internal("views/RenameVenueView.lml"));
         renameVenueView.setTextFieldString(seatingLogic.conference.conferenceName);
+        renameVenueView.moveToTop(renameVenueView.getDialog());
     }
 
     @LmlAction("openHelpDialog")
