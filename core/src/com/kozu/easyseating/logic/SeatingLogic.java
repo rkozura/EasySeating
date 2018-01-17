@@ -221,6 +221,7 @@ public class SeatingLogic {
     }
 
     private void setPersonPositions(Table table, Vector3 pos) {
+        float personTableRadius = table.getRadius() + 40;
         List<Tween> returnList = new ArrayList<Tween>();
 
         if(table.assignedSeats.size != 0) {
@@ -229,8 +230,8 @@ public class SeatingLogic {
             double nextSeatAngle = 0;
             for (Person person : table.assignedSeats) {
                 double nextSeatRadians = Math.toRadians(nextSeatAngle);
-                float x = (float) (table.getRadius() * Math.cos(nextSeatRadians)) + pos.x;
-                float y = (float) (table.getRadius() * Math.sin(nextSeatRadians)) + pos.y;
+                float x = (float) (personTableRadius * Math.cos(nextSeatRadians)) + pos.x;
+                float y = (float) (personTableRadius * Math.sin(nextSeatRadians)) + pos.y;
 
                 person.setX(x);
                 person.setY(y);
@@ -241,6 +242,7 @@ public class SeatingLogic {
     }
 
     private List<Tween> getPersonPositionTweens(Table table, Vector3 pos) {
+        float personTableRadius = table.getRadius() + 40;
         List<Tween> returnList = new ArrayList<Tween>();
 
         if(table.assignedSeats.size != 0) {
@@ -249,8 +251,8 @@ public class SeatingLogic {
             double nextSeatAngle = 0;
             for (Person person : table.assignedSeats) {
                 double nextSeatRadians = Math.toRadians(nextSeatAngle);
-                float x = (float) (table.getRadius() * Math.cos(nextSeatRadians)) + pos.x;
-                float y = (float) (table.getRadius() * Math.sin(nextSeatRadians)) + pos.y;
+                float x = (float) (personTableRadius * Math.cos(nextSeatRadians)) + pos.x;
+                float y = (float) (personTableRadius * Math.sin(nextSeatRadians)) + pos.y;
 
                 returnList.add(Tween.to(person, EntityAccessor.POSITION_XY, .2f).target(x, y));
 

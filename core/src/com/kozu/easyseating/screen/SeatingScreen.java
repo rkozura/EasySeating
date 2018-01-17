@@ -494,11 +494,6 @@ public class SeatingScreen extends AbstractLmlView {
         return toastManager;
     }
 
-    @LmlAction("ppi")
-    public float getPPI(final VisTable container) {
-        return Gdx.graphics.getPpiX();
-    }
-
     @LmlAction("dialogHeight")
     public float getDialogHeight(final VisTable container) {
         //Allow .5 inches of clickable space above and below the dialog

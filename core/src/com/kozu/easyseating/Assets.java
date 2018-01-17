@@ -27,6 +27,7 @@ public class Assets {
     private static final int BUTTON_FONT_SIZE = 25;
     private static final int DIALOG_FONT_SIZE = 35;
     private static final int MAIN_SCREEN_FONT_SIZE = 55;
+    private static final int PERSON_FONT_SIZE = 10;
 
     public AssetManager manager;
 
@@ -37,6 +38,7 @@ public class Assets {
     public static AssetDescriptor<BitmapFont> buttontext;
     public static AssetDescriptor<BitmapFont> dialogtext;
     public static AssetDescriptor<BitmapFont> mainmenutext;
+    public static AssetDescriptor<BitmapFont> persontext;
 
     //Textures
     public static final AssetDescriptor<Texture> tabletexture = new AssetDescriptor<Texture>("images/game/lightpaperfibers.png", Texture.class);
@@ -70,6 +72,11 @@ public class Assets {
         mainScreenTitleFontParameter.fontFileName = "fonts/Courgette-Regular.ttf";
         mainmenutext = new AssetDescriptor<BitmapFont>(mainScreenTitleFontParameter.fontFileName, BitmapFont.class, mainScreenTitleFontParameter);
 
+        FreetypeFontLoader.FreeTypeFontLoaderParameter personFontParameter = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+        personFontParameter.fontParameters.size = (int) (PERSON_FONT_SIZE * Gdx.graphics.getDensity());
+        personFontParameter.fontFileName = "fonts/OpenSans-Regular-2.ttf";
+        persontext = new AssetDescriptor<BitmapFont>(personFontParameter.fontFileName, BitmapFont.class, personFontParameter);
+
         //Find all the files in the backgrounds directory
         FileHandle dirHandle = Gdx.files.internal("images/backgrounds");
         for (FileHandle entry : dirHandle.list()) {
@@ -92,6 +99,7 @@ public class Assets {
         manager.load(buttontext);
         manager.load(dialogtext);
         manager.load(mainmenutext);
+        manager.load(persontext);
 
         manager.load(tabletexture);
         manager.load(floortexture);
@@ -107,6 +115,7 @@ public class Assets {
         resources.put("default-font", manager.get(buttontext));
         resources.put("dialog-font", manager.get(dialogtext));
         resources.put("main-screen-font", manager.get(mainmenutext));
+        resources.put("person-font", manager.get(persontext));
         SkinLoader.SkinParameter skinParameter = new SkinLoader.SkinParameter("uiskin.atlas", resources);
         uiSkin = new AssetDescriptor<Skin>("uiskin.json", Skin.class, skinParameter);
 
