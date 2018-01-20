@@ -221,6 +221,7 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlAction("openVenue")
     public void openVenue() {
+        venuePeopleListAdapter.itemsChanged();
         venueDialog.getTitleLabel().setText(seatingLogic.conference.conferenceName);
         venueDialog.setVisible(true);
         venueDialog.show(getStage());
@@ -228,6 +229,8 @@ public class SeatingScreen extends AbstractLmlView {
 
     private Table selectedTable;
     public void openTable(Table table) {
+        tablePeopleListAdapter.itemsChanged();
+        venuePersonTableAdapter.itemsChanged();
         selectedTable = table;
 
         for(Person person : tableList) {
@@ -316,7 +319,7 @@ public class SeatingScreen extends AbstractLmlView {
         Table table = getEditTable();
         for(Person person : editTableRemovePeopleList) {
             seatingLogic.removePersonFromTable(table, person);
-            tableList.removeValue(person, true);
+            tableList.remove(person);
         }
 
         editTableRemovePeopleList.clear();
@@ -380,7 +383,7 @@ public class SeatingScreen extends AbstractLmlView {
         }
     }
 
-    Array<Person> tableList = new Array<Person>();
+    ArrayList<Person> tableList = new ArrayList<Person>();
     //Create two adapters for each list view of people
     private PeopleListAdapter<Person> tablePeopleListAdapter;
     @LmlAction("tablePersonAdapter")
@@ -410,17 +413,17 @@ public class SeatingScreen extends AbstractLmlView {
         return contactsPeopleListAdapter;
     }
 
-    private Array<Person> selectedContacts = new Array<Person>();
+    private ArrayList<Person> selectedContacts = new ArrayList<Person>();
     @LmlAction("contactsPersonListener")
     public void contactsPersonListener(final Person selectedItem) {
         VisTable view = contactsPeopleListAdapter.getView(selectedItem);
 
-        if(!selectedContacts.contains(selectedItem, true)) {
+        if(!selectedContacts.contains(selectedItem)) {
             selectedContacts.add(selectedItem);
             System.out.println(view.getChildren().get(0));
             view.getChildren().get(0).setColor(Color.CYAN);
         } else {
-            selectedContacts.removeValue(selectedItem, true);
+            selectedContacts.remove(selectedItem);
             view.getChildren().get(0).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
         }
     }
@@ -537,11 +540,11 @@ public class SeatingScreen extends AbstractLmlView {
         //clear the selected contacts in case user hid the dialog
         selectedContacts.clear();
 
-        Array<Person> contactPeople = EasySeatingGame.importer.getPersonList();
-        Array<Person> conferencePeople = seatingLogic.conference.persons;
+        ArrayList<Person> contactPeople = EasySeatingGame.importer.getPersonList();
+        ArrayList<Person> conferencePeople = seatingLogic.conference.persons;
 
         //Only show contacts that have not been added to the conference
-        contactPeople.removeAll(conferencePeople, false);
+        contactPeople.removeAll(conferencePeople);
 
         //Clear and retrieve the person list in case contacts were added
         contactsPeopleListAdapter.clear();

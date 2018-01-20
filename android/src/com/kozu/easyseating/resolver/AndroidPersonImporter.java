@@ -10,8 +10,9 @@ import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
-import com.badlogic.gdx.utils.Array;
 import com.kozu.easyseating.object.Person;
+
+import java.util.ArrayList;
 
 import static com.kozu.easyseating.AndroidLauncher.MY_PERMISSIONS_REQUEST_READ_CONTACTS;
 
@@ -29,7 +30,7 @@ public class AndroidPersonImporter implements PersonImporter {
     }
 
     @Override
-    public Array<Person> getPersonList() {
+    public ArrayList<Person> getPersonList() {
         if (ContextCompat.checkSelfPermission(activity,
                 Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -56,11 +57,11 @@ public class AndroidPersonImporter implements PersonImporter {
             return readPersonList();
         }
 
-       return new Array<>();
+       return new ArrayList<>();
     }
 
-    public Array<Person> readPersonList() {
-        Array<Person> personList = new Array<Person>();
+    public ArrayList<Person> readPersonList() {
+        ArrayList<Person> personList = new ArrayList<Person>();
 
         ContentResolver cr = context.getContentResolver();
         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,

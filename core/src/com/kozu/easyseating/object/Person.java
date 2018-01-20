@@ -2,11 +2,13 @@ package com.kozu.easyseating.object;
 
 import com.badlogic.gdx.math.Circle;
 
+import java.io.Serializable;
+
 /**
  * Created by Rob on 8/2/2017.
  */
 
-public class Person implements Model {
+public class Person implements Model, Serializable {
     private final int PERSON_RADIUS = 30;
 
     private String name;
@@ -16,6 +18,8 @@ public class Person implements Model {
     public Circle bounds;
 
     private transient boolean flaggedForRemoval;
+
+    public String assignedTable;
 
     public Person() {}
 

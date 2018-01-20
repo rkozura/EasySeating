@@ -2,25 +2,27 @@ package com.kozu.easyseating.object;
 
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
+
+import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by Rob on 8/1/2017.
  */
 
-public class Table implements Model {
+public class Table implements Model, Serializable {
     private final int INIT_TABLE_RADIUS = 75;
 
     public String tableIdentifier;
     public Circle bounds;
-    public Array<Person> assignedSeats;
+    public ArrayList<Person> assignedSeats;
 
     public Table() {}
 
     public Table(Vector3 position) {
         bounds = new Circle();
         bounds.set(position.x, position.y, INIT_TABLE_RADIUS);
-        assignedSeats = new Array<>();
+        assignedSeats = new ArrayList<>();
     }
 
     @Override

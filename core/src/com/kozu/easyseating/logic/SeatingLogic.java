@@ -104,10 +104,10 @@ public class SeatingLogic {
     }
 
     public void removePerson(Person person) {
-        conference.persons.removeValue(person, false);
+        conference.persons.remove(person);
         for(Table table : conference.getTables()) {
-            if(table.assignedSeats.contains(person, true)) {
-                table.assignedSeats.removeValue(person, true);
+            if(table.assignedSeats.contains(person)) {
+                table.assignedSeats.remove(person);
                 break;
             }
         }
@@ -116,22 +116,24 @@ public class SeatingLogic {
     public Timeline addPersonToTable(Table table, Person person) {
         //Find the person in an existing table and remove
         for(Table allTable : conference.getTables()) {
-            if(allTable.assignedSeats.contains(person, true)) {
+            if(allTable.assignedSeats.contains(person)) {
                 removePersonFromTable(allTable, person);
                 break;
             }
         }
 
+        person.assignedTable = table.tableIdentifier;
         table.assignedSeats.add(person);
         return startTweenAndSaveState(getPersonPositionTweens(table, new Vector3(table.bounds.x, table.bounds.y, 0)));
     }
 
     public void removePersonFromTable(Table table, Person person) {
-        if(table.assignedSeats.size != 0) {
-            table.assignedSeats.removeValue(person, true);
+        person.assignedTable = "";
+        if(table.assignedSeats.size() != 0) {
+            table.assignedSeats.remove(person);
 
             //If not empty, set the person positions
-            if(table.assignedSeats.size != 0) {
+            if(table.assignedSeats.size() != 0) {
                 startTweenAndSaveState(getPersonPositionTweens(table, new Vector3(table.bounds.x, table.bounds.y, 0)));
             }
         }
@@ -181,17 +183,28 @@ public class SeatingLogic {
     }
 
     public void removeTable(Table table) {
+        for(Person person : table.assignedSeats) {
+            person.assignedTable = "";
+        }
+        table.assignedSeats.clear();
+
         conference.getTables().remove(table); //remove the table from the conference
 
         for(int i = 0; i<conference.getTables().size(); i++) {
             conference.getTables().get(i).tableIdentifier = String.valueOf(i+1);
         }
 
+        for(Table conferenceTable : conference.getTables()) {
+            for(Person person : conferenceTable.assignedSeats) {
+                person.assignedTable = conferenceTable.tableIdentifier;
+            }
+        }
+
         State.save();
     }
 
     public boolean isPersonAtTable(Table table, Person person) {
-        return table.assignedSeats.contains(person, true);
+        return table.assignedSeats.contains(person);
     }
 
     public void moveTableToPosition(Table table, Vector3 pos) {
@@ -224,8 +237,8 @@ public class SeatingLogic {
         float personTableRadius = table.getRadius() + 40;
         List<Tween> returnList = new ArrayList<Tween>();
 
-        if(table.assignedSeats.size != 0) {
-            double angleBetweenSeats = 360 / table.assignedSeats.size;
+        if(table.assignedSeats.size() != 0) {
+            double angleBetweenSeats = 360 / table.assignedSeats.size();
 
             double nextSeatAngle = 0;
             for (Person person : table.assignedSeats) {
@@ -245,8 +258,8 @@ public class SeatingLogic {
         float personTableRadius = table.getRadius() + 40;
         List<Tween> returnList = new ArrayList<Tween>();
 
-        if(table.assignedSeats.size != 0) {
-            double angleBetweenSeats = 360 / table.assignedSeats.size;
+        if(table.assignedSeats.size() != 0) {
+            double angleBetweenSeats = 360 / table.assignedSeats.size();
 
             double nextSeatAngle = 0;
             for (Person person : table.assignedSeats) {
@@ -267,7 +280,7 @@ public class SeatingLogic {
         Table returnTable = null;
 
         for(Table table : conference.getTables()) {
-            if(table.assignedSeats.contains(person, true)) {
+            if(table.assignedSeats.contains(person)) {
                 returnTable = table;
                 break;
             }

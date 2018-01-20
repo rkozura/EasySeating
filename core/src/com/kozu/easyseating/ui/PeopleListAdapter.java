@@ -6,32 +6,32 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.util.adapter.ArrayAdapter;
+import com.kotcrab.vis.ui.util.adapter.ArrayListAdapter;
 import com.kotcrab.vis.ui.util.adapter.SimpleListAdapter;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kozu.easyseating.object.Person;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 /**
  * Created by Rob on 9/9/2017.
  */
 
-public class PeopleListAdapter<ItemT> extends ArrayAdapter<ItemT, VisTable> {
+public class PeopleListAdapter<ItemT> extends ArrayListAdapter<ItemT, VisTable> {
     private SimpleListAdapter.SimpleListAdapterStyle style;
 
-    public PeopleListAdapter(Array<ItemT> array) {
+    public PeopleListAdapter(ArrayList<ItemT> array) {
         this(array, "default");
     }
 
-    public PeopleListAdapter(Array<ItemT> array, String styleName) {
+    public PeopleListAdapter(ArrayList<ItemT> array, String styleName) {
         this(array, VisUI.getSkin().get(styleName, SimpleListAdapter.SimpleListAdapterStyle.class));
     }
 
-    public PeopleListAdapter(Array<ItemT> array, SimpleListAdapter.SimpleListAdapterStyle style) {
+    public PeopleListAdapter(ArrayList<ItemT> array, SimpleListAdapter.SimpleListAdapterStyle style) {
         super(array);
         this.style = style;
 
@@ -55,7 +55,7 @@ public class PeopleListAdapter<ItemT> extends ArrayAdapter<ItemT, VisTable> {
         pm1.fill();
 
         Person person = (Person)item;
-        VisLabel tableLabel = new VisLabel();
+        VisLabel tableLabel = new VisLabel(person.assignedTable);
         VisLabel personLabel = new VisLabel(person.getName());
         personLabel.setWrap(true);
 

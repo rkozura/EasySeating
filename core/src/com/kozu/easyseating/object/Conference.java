@@ -1,8 +1,8 @@
 package com.kozu.easyseating.object;
 
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * A conference is where tables are setup at
  */
-public class Conference {
+public class Conference implements Serializable {
     public String conferenceName;
     public double conferenceWidth;
     public double conferenceHeight;
@@ -25,7 +25,7 @@ public class Conference {
     public transient HashMap<Vector3, Table> snapGrid;
 
     private ArrayList<Table> tables;
-    public Array<Person> persons;
+    public ArrayList<Person> persons;
 
     /**
      * Needed for deserialization
@@ -33,7 +33,7 @@ public class Conference {
     public Conference() {
         snapGrid = new HashMap<Vector3, Table>();
         tables = new ArrayList<Table>();
-        persons = new Array<Person>();
+        persons = new ArrayList<Person>();
     }
 
     public Conference(String conferenceName, double conferenceWidth, double conferenceHeight,
