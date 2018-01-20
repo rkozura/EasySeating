@@ -114,7 +114,7 @@ public class AndroidPDFGenerator implements PDFGenerator {
 
     private void generateGuestListTable(PdfDocument document, Paint paint, Conference conference, float left, float top, float right, float bottom) {
         float rows = 20;
-        int numberOfPages = (int)Math.ceil(conference.persons.size/rows);
+        int numberOfPages = (int)Math.ceil(conference.persons.size()/rows);
         float gutterHeight = (bottom-top)/rows;
 
         Iterator<Person> jj = conference.persons.iterator();
