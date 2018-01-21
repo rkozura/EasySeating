@@ -229,9 +229,14 @@ public class SeatingScreen extends AbstractLmlView {
 
     private Table selectedTable;
     public void openTable(Table table) {
+        selectedTable = table;
+
+        peopleWithoutTable.clear();
+        peopleWithoutTable.addAll(seatingLogic.conference.persons);
+        peopleWithoutTable.removeAll(selectedTable.assignedSeats);
+
         tablePeopleListAdapter.itemsChanged();
         venuePersonTableAdapter.itemsChanged();
-        selectedTable = table;
 
         for(Person person : tableList) {
             VisTable view = tablePeopleListAdapter.getView(person);
@@ -308,9 +313,13 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlAction("tableVenuePersonListener")
     public void tableVenuePersonListener(final Person selectedItem) {
         tableList.add(selectedItem);
+
+        peopleWithoutTable.remove(selectedItem);
+
+        seatingLogic.addPersonToTable(selectedTable, selectedItem);
+
         tablePeopleListAdapter.itemsChanged();
         venuePersonTableAdapter.itemsChanged();
-        seatingLogic.addPersonToTable(selectedTable, selectedItem);
     }
 
     Array<Person> editTableRemovePeopleList = new Array<Person>();
@@ -399,10 +408,11 @@ public class SeatingScreen extends AbstractLmlView {
         return venuePeopleListAdapter;
     }
 
+    private ArrayList<Person> peopleWithoutTable = new ArrayList<>();
     private PeopleListAdapter<Person> venuePersonTableAdapter;
     @LmlAction("venuePersonTableAdapter")
     public ListAdapter<?> venuePersonTableAdapter() {
-        venuePersonTableAdapter = new PeopleListAdapter<Person>(seatingLogic.conference.persons);
+        venuePersonTableAdapter = new PeopleListAdapter<Person>(peopleWithoutTable);
         return venuePersonTableAdapter;
     }
 
