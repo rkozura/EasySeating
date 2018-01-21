@@ -280,6 +280,7 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlAction("createCustomPerson")
     public void createCustomPerson() {
         String personName = ((VisTextField) LmlUtilities.getActorWithId(customPersonDialog, "personName")).getText();
+
         if(StringUtils.isBlank(personName)) {
             final ToastManager manager = getToastManager(getStage());
             manager.clear();
@@ -287,12 +288,27 @@ public class SeatingScreen extends AbstractLmlView {
             manager.show("Invalid Person Name", 1.5f);
             manager.toFront();
         } else {
-            seatingLogic.createPerson(personName);
+            boolean isDuplicate = false;
+            for(Person person : seatingLogic.conference.persons) {
+                if(person.getName().equalsIgnoreCase(personName)) {
+                    isDuplicate = true;
+                    break;
+                }
+            }
+            if(isDuplicate) {
+                final ToastManager manager = getToastManager(getStage());
+                manager.clear();
+                manager.setAlignment(Align.topLeft);
+                manager.show("Person already exists", 1.5f);
+                manager.toFront();
+            } else {
+                seatingLogic.createPerson(personName);
 
-            venuePeopleListAdapter.itemsChanged();
-            venuePersonTableAdapter.itemsChanged();
+                venuePeopleListAdapter.itemsChanged();
+                venuePersonTableAdapter.itemsChanged();
 
-            customPersonDialog.hide();
+                customPersonDialog.hide();
+            }
         }
     }
 
