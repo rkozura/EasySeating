@@ -11,6 +11,11 @@ import java.util.ArrayList;
 
 public class DesktopPersonImporter implements PersonImporter {
     @Override
+    public void checkPermission() {
+        //No need on desktop
+    }
+
+    @Override
     public ArrayList<Person> getPersonList() {
         ArrayList<Person> people = new ArrayList<Person>();
         people.add(new Person("Desktop ImporterOne"));

@@ -9,5 +9,6 @@ import java.util.ArrayList;
  */
 
 public interface PersonImporter {
+    void checkPermission();
     ArrayList<Person> getPersonList();
 }

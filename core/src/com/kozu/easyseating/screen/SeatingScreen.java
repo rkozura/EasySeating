@@ -256,6 +256,7 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlAction("openCreatePersonDialog")
     public void openCreatePersonDialog() {
+        EasySeatingGame.importer.checkPermission();
         createPersonDialog.setVisible(true);
         createPersonDialog.show(getStage());
         createPersonDialog.toFront();
@@ -433,9 +434,10 @@ public class SeatingScreen extends AbstractLmlView {
     }
 
     private PeopleListAdapter<Person> contactsPeopleListAdapter;
+    private ArrayList<Person> contacts = new ArrayList<>();
     @LmlAction("contactsPersonAdapter")
     public ListAdapter<?> contactsPersonAdapter() {
-        contactsPeopleListAdapter = new PeopleListAdapter<Person>(EasySeatingGame.importer.getPersonList());
+        contactsPeopleListAdapter = new PeopleListAdapter<Person>(contacts);
         return contactsPeopleListAdapter;
     }
 
@@ -563,23 +565,32 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlAction("openImportContactsDialog")
     public void openImportContactsDialog() {
-        //clear the selected contacts in case user hid the dialog
-        selectedContacts.clear();
+        ArrayList<Person> contactList = EasySeatingGame.importer.getPersonList();
 
-        ArrayList<Person> contactPeople = EasySeatingGame.importer.getPersonList();
-        ArrayList<Person> conferencePeople = seatingLogic.conference.persons;
+        if(contactList != null) {
+            contacts.clear();
+            contacts.addAll(contactList);
+            contacts.removeAll(seatingLogic.conference.persons);
+            contactsPeopleListAdapter.itemsChanged();
 
-        //Only show contacts that have not been added to the conference
-        contactPeople.removeAll(conferencePeople);
+            //clear the selected contacts in case user hid the dialog
+            selectedContacts.clear();
 
-        //Clear and retrieve the person list in case contacts were added
-        contactsPeopleListAdapter.clear();
-        contactsPeopleListAdapter.addAll(contactPeople);
-        createPersonDialog.hide();
+            //ArrayList<Person> contactPeople = EasySeatingGame.importer.getPersonList();
+            //ArrayList<Person> conferencePeople = seatingLogic.conference.persons;
 
-        importContactsDialog.setVisible(true);
-        importContactsDialog.show(getStage());
-        importContactsDialog.toFront();
+            //Only show contacts that have not been added to the conference
+            //contactPeople.removeAll(conferencePeople);
+
+            //Clear and retrieve the person list in case contacts were added
+            //contactsPeopleListAdapter.clear();
+            //contactsPeopleListAdapter.addAll(contactPeople);
+            createPersonDialog.hide();
+
+            importContactsDialog.setVisible(true);
+            importContactsDialog.show(getStage());
+            importContactsDialog.toFront();
+        }
     }
 
     private Vector3 longPressLocation;

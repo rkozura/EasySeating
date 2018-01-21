@@ -169,8 +169,6 @@ public class MainScreen extends AbstractLmlView {
             continueButton.setTouchable(Touchable.enabled);
         }
 
-        //TODO this will show the "allow access dialog"...why doesnt it show up in the adapater?
-        EasySeatingGame.importer.getPersonList();
         super.show();
     }
 
