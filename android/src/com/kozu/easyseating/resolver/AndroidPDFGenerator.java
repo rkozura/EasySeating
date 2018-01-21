@@ -68,10 +68,12 @@ public class AndroidPDFGenerator implements PDFGenerator {
                 //canvas.drawText(table.tableIdentifier, table.getX(), (int)conference.conferenceHeight-table.getY(), paint);
             }
 
-            paint.setColor(Color.CYAN);
             for(Table table : conference.getTables()) {
                 for(Person person : table.assignedSeats) {
+                    paint.setColor(Color.CYAN);
                     canvas.drawCircle(person.getX(), (int)conference.conferenceHeight-person.getY(), person.bounds.radius, paint);
+                    paint.setColor(Color.BLACK);
+                    drawTextCentred(canvas, paint, person.getName(), person.getX(), (int)conference.conferenceHeight-person.getY());
                 }
             }
 
