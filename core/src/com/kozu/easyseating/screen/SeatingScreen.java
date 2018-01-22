@@ -549,7 +549,17 @@ public class SeatingScreen extends AbstractLmlView {
             @Override
             public boolean acceptChar(VisTextField textField, char c) {
                 if(isAlpha(Character.toString(c))) {
-                    return true;
+                    if(textField.getText().length() >= 70) {
+                        ToastManager manager = getToastManager(getStage());
+                        manager.clear();
+                        manager.setAlignment(Align.topLeft);
+                        manager.show("Name too long!", 1.5f);
+                        manager.toFront();
+
+                        return false;
+                    } else {
+                        return true;
+                    }
                 } else {
                     ToastManager manager = getToastManager(getStage());
                     manager.clear();
