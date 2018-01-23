@@ -36,9 +36,9 @@
 
 <dialogsize id="tableDialog" titlealign="center" style="dialog" movable="false" visible="false">
     <splitpane touchable="childrenOnly" vertical="true" row="true" width="{dialogWidth}" height="$splitDialogHeight">
-        <listview id="tableListView" flickscroll="true"
+        <listview scrollingdisabledx="true" id="tableListView" flickscroll="true"
         adapter="tablePersonAdapter" itemlistener="tablePersonListener"/>
-        <listview id="venueListViewTable" flickscroll="true" width="{dialogWidth}"
+        <listview scrollingdisabledx="true" id="venueListViewTable" flickscroll="true" width="{dialogWidth}"
             adapter="venuePersonTableAdapter" itemlistener="tableVenuePersonListener"/>
     </splitpane>
     <textbutton growx="true" height="{dialogButtonHeight}" onclick="confirmEditTable">Confirm</textbutton>

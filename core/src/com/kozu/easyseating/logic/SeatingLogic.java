@@ -128,6 +128,7 @@ public class SeatingLogic {
     }
 
     public void removePersonFromTable(Table table, Person person) {
+        person.setFlaggedForRemoval(false);
         person.assignedTable = "";
         if(table.assignedSeats.size() != 0) {
             table.assignedSeats.remove(person);
