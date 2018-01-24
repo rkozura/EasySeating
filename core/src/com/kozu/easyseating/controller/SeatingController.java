@@ -164,18 +164,18 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
                 return false;
             }
         } else {
-                Table table = seatingLogic.getTableAtPosition(pos);
-                if (table != null) {
-                    //seatingScreen.openTable(table);
-                    Tween.to(camera, CameraAccessor.POSITION_XY, .3f).target(table.bounds.x, table.bounds.y)
-                            .start(TweenUtil.getTweenManager());
-                    Tween.to(camera, CameraAccessor.ZOOM, .3f).target(.5f)
-                            .start(TweenUtil.getTweenManager());
-                    seatingScreen.editTable(table);
-                    return true;
-                } else {
-                    return false;
-                }
+            Table table = seatingLogic.getTableAtPosition(pos);
+            if (table != null) {
+                TweenUtil.getTweenManager().killTarget(camera);
+                Tween.to(camera, CameraAccessor.POSITION_XY, .3f).target(table.bounds.x, table.bounds.y)
+                        .start(TweenUtil.getTweenManager());
+                Tween.to(camera, CameraAccessor.ZOOM, .3f).target(.5f)
+                        .start(TweenUtil.getTweenManager());
+                seatingScreen.editTable(table);
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
