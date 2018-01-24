@@ -35,10 +35,10 @@
 </dialogsize>
 
 <dialogsize id="tableDialog" titlealign="center" style="dialog" movable="false" visible="false">
-    <splitpane touchable="childrenOnly" vertical="true" row="true" width="{dialogWidth}" height="$splitDialogHeight">
-        <listview scrollingdisabledx="true" id="tableListView" flickscroll="true"
+    <splitpane id="tableSplitPane" touchable="childrenOnly" vertical="true" row="true" width="{dialogWidth}" height="$splitDialogHeight">
+        <listview scrollingdisabledx="true" flickscroll="true"
         adapter="tablePersonAdapter" itemlistener="tablePersonListener"/>
-        <listview scrollingdisabledx="true" id="venueListViewTable" flickscroll="true" width="{dialogWidth}"
+        <listview scrollingdisabledx="true" flickscroll="true" width="{dialogWidth}"
             adapter="venuePersonTableAdapter" itemlistener="tableVenuePersonListener"/>
     </splitpane>
     <textbutton growx="true" height="{dialogButtonHeight}" onclick="confirmEditTable">Confirm</textbutton>

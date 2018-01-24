@@ -73,7 +73,6 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlActor("personName") private VisTextField personName;
 
     @LmlActor("venueListView") private ListView.ListViewTable venueListView;
-    @LmlActor("tableListView") private ListView.ListViewTable tableListView;
     @LmlActor("contactsListView") private ListView.ListViewTable contactsListView;
 
     @LmlActor("deleteTableButton") private TextButton deleteTableButton;
@@ -89,6 +88,8 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlActor("toggleAddRemoveButton") private TextButton toggleAddRemoveButton;
     @LmlActor("toggleAddRemoveLabel") private Label toggleAddRemoveLabel;
+
+    @LmlActor("tableSplitPane") private VisSplitPane tableSplitPane;
 
     public SeatingScreen(Conference conference, Assets assets) {
         super(new Stage(new ScreenViewport()));
@@ -488,8 +489,10 @@ public class SeatingScreen extends AbstractLmlView {
         venueDialog.getContentTable().getCell(venueListView).height(getDialogHeight(null));
         venuePeopleListAdapter.itemsChanged();
 
-        //tableDialog.getContentTable().getCell(tableListView).height(getDialogHeight(null));
+        tableDialog.getContentTable().getCell(tableSplitPane).height(getSplitDialogHeight(null));
         tablePeopleListAdapter.itemsChanged();
+        //tableDialog.getContentTable().getCell(tableVenueListView).height(getDialogHeight(null)/2);
+        venuePersonTableAdapter.itemsChanged();
 
         importContactsDialog.getContentTable().getCell(contactsListView).height(getDialogHeight(null));
         contactsPeopleListAdapter.itemsChanged();
