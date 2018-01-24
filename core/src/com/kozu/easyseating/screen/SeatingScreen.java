@@ -504,14 +504,21 @@ public class SeatingScreen extends AbstractLmlView {
         importContactsDialog.invalidate();
         importContactsDialog.pack();
 
-        centerActorOnStage(venueDialog);
-        centerActorOnStage(tableDialog);
-        centerActorOnStage(createPersonDialog);
-        centerActorOnStage(customPersonDialog);
-        centerActorOnStage(customPersonDialog);
-        centerActorOnStage(editPersonDialog);
-        centerActorOnStage(confirmDeletePersonDialog);
-        centerActorOnStage(importContactsDialog);
+//TODO Figure out how to center dialogs correctly
+//        centerActorOnStage(venueDialog);
+//        centerActorOnStage(tableDialog);
+//        centerActorOnStage(createPersonDialog);
+//        centerActorOnStage(customPersonDialog);
+//        centerActorOnStage(customPersonDialog);
+//        centerActorOnStage(editPersonDialog);
+//        centerActorOnStage(confirmDeletePersonDialog);
+//        centerActorOnStage(importContactsDialog);
+
+        for(Actor actor : getStage().getActors()) {
+            if(actor instanceof DialogSize) {
+                ((DialogSize)actor).hide();
+            }
+        }
 
         super.resize(width, height, centerCamera);
     }
