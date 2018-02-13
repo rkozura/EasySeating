@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE table SYSTEM "lml.dtd">
+
+<:assign key="buttonWidth" value="{=.7 * $ppi}"/>
+<:assign key="buttonHeight" value="{=.35 * $ppi}"/>
+
+<table fillparent="true" onecolumn="true" defaultpad="10">
+    <vislabel style="main-screen">Easy Seating</vislabel>
+    <textbutton padtop="100" onclick="openCreateVenueDialog" style="blue" width="{buttonWidth}" height="{buttonHeight}">New</textbutton>
+    <textbutton id="continueButton" onclick="openContinueVenue" touchable="disabled" disabled="true" width="{buttonWidth}" height="{buttonHeight}">Continue</textbutton>
+    <textbutton disabled="true" width="{buttonWidth}" height="{buttonHeight}">Load</textbutton>
+</table>
+
+<dialogsize id="createVenueDialog" title="Venue Name" style="dialog" titlealign="center" movable="false" visible="false">
+    <textfield id="venueName" growx="true"></textfield>
+    <textbutton padleft="250" padright="250" onresult="checkForInvalidVenueName" width="{buttonWidth}" height="{buttonHeight}">Ok</textbutton>
+</dialogsize>

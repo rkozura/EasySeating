@@ -3,76 +3,97 @@ package com.kozu.easyseating.renderer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
+import com.badlogic.gdx.utils.Disposable;
+import com.kozu.easyseating.Assets;
 import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
-
-import static com.kozu.easyseating.EasySeatingGame.uiSkin;
+import com.kozu.easyseating.screen.SeatingScreen;
 
 /**
  * Created by Rob on 8/2/2017.
  */
 
-public class SeatingRenderer {
+public class SeatingRenderer implements Disposable{
     private TiledDrawable tableTile;
+    private TiledDrawable floorTile;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     private SeatingLogic seatingLogic;
 
-    public SeatingRenderer(SeatingLogic seatingLogic) {
-        //TODO move to assett manager
-        Texture tableTexture = new Texture(Gdx.files.internal("lightpaperfibers.png"));
-        TextureRegion tr = new TextureRegion(tableTexture);
-        tableTile = new TiledDrawable(tr);
+    //Positions the Bitmapfonts
+    private static GlyphLayout glyphLayout = new GlyphLayout();
+
+    private Assets assets;
+
+    public SeatingRenderer(SeatingLogic seatingLogic, Assets assets) {
+        tableTile = new TiledDrawable(new TextureRegion(assets.manager.get(assets.tabletexture)));
+        floorTile = new TiledDrawable(new TextureRegion(assets.manager.get(assets.floortexture)));
 
         this.seatingLogic = seatingLogic;
+        this.assets = assets;
+    }
+
+    @Override
+    public void dispose() {
+        shapeRenderer.dispose();
     }
 
     public void render() {
+        shapeRenderer.setProjectionMatrix(EasySeatingGame.batch.getProjectionMatrix());
+        shapeRenderer.setTransformMatrix(EasySeatingGame.batch.getTransformMatrix());
+
         renderFloor();
         renderTables();
     }
 
     public void renderTables() {
-        if(seatingLogic.conference.getTables().size() > 0) {
-            for (Table table : seatingLogic.conference.getTables()) {
-                Gdx.gl.glDepthFunc(GL20.GL_LESS);
-                Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-                Gdx.gl.glDepthMask(true);
-                Gdx.gl.glColorMask(false, false, false, false);
+        Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
 
-                shapeRenderer.setProjectionMatrix(EasySeatingGame.batch.getProjectionMatrix());
-                shapeRenderer.setTransformMatrix(EasySeatingGame.batch.getTransformMatrix());
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        if(seatingLogic.conference.getTables().size() > 0) {
+            Gdx.gl.glDepthFunc(GL20.GL_LESS);
+            Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+            Gdx.gl.glDepthMask(true);
+            Gdx.gl.glColorMask(false, false, false, false);
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            for (Table table : seatingLogic.conference.getTables()) {
                 shapeRenderer.circle(table.bounds.x, table.bounds.y, table.bounds.radius);
-                shapeRenderer.end();
             }
+            shapeRenderer.end();
 
             //Draw the table texture
             EasySeatingGame.batch.begin();
             Gdx.gl.glColorMask(true, true, true, true);
             Gdx.gl.glDepthFunc(GL20.GL_EQUAL);
-            tableTile.draw(EasySeatingGame.batch, 0, 0, seatingLogic.conference.conferenceWidth,
-                    seatingLogic.conference.conferenceHeight);
+            tableTile.draw(EasySeatingGame.batch, 0, 0, (float)seatingLogic.conference.conferenceWidth,
+                    (float)seatingLogic.conference.conferenceHeight);
             EasySeatingGame.batch.end();
 
             //Disable depth testing so people are not clipped
             Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setColor(Color.BLACK);
             for (Table table : seatingLogic.conference.getTables()) {
-                EasySeatingGame.batch.begin();
-                uiSkin.getFont("largetext").setColor(Color.BLACK);
-                //Now draw the table identifier
-                uiSkin.getFont("largetext").draw(EasySeatingGame.batch, table.tableIdentifier,
-                        table.bounds.x, table.bounds.y);
-                EasySeatingGame.batch.end();
+                shapeRenderer.circle(table.bounds.x, table.bounds.y, table.bounds.radius);
             }
+            shapeRenderer.end();
+
+            //Draw the table identifier text
+            EasySeatingGame.batch.begin();
+            for (Table table : seatingLogic.conference.getTables()) {
+                assets.manager.get(Assets.buttontext).setColor(Color.BLACK);
+                glyphLayout.setText(assets.manager.get(Assets.buttontext), table.tableIdentifier);
+                //Now draw the table identifier
+                assets.manager.get(Assets.buttontext).draw(EasySeatingGame.batch, glyphLayout,
+                        table.bounds.x - glyphLayout.width/2, table.bounds.y + glyphLayout.height/2);
+            }
+            EasySeatingGame.batch.end();
 
             for (Table table : seatingLogic.conference.getTables()) {
                 renderAssignedSeats(table);
@@ -81,39 +102,73 @@ public class SeatingRenderer {
     }
 
     public void renderAssignedSeats(Table table) {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for(Person person : table.assignedSeats) {
+            if (!person.isFlaggedForRemoval()) {
+                shapeRenderer.setColor(Color.CYAN);
+            } else {
+                shapeRenderer.setColor(Color.RED);
+            }
             //If projection matrices are not set, objects will not be drawn relative to the tables
-            shapeRenderer.setProjectionMatrix(EasySeatingGame.batch.getProjectionMatrix());
-            shapeRenderer.setTransformMatrix(EasySeatingGame.batch.getTransformMatrix());
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(Color.CYAN);
-            shapeRenderer.circle(person.position.x, person.position.y, 30);
-            shapeRenderer.end();
+            shapeRenderer.circle(person.bounds.x, person.bounds.y, person.bounds.radius);
+        }
+        shapeRenderer.end();
+        EasySeatingGame.batch.begin();
+        for(Person person : table.assignedSeats) {
+            //Draw the person text
+            assets.manager.get(Assets.persontext).setColor(Color.BLUE);
+            glyphLayout.setText(assets.manager.get(Assets.persontext), person.getTruncatedName());
+            assets.manager.get(Assets.persontext).draw(EasySeatingGame.batch, glyphLayout,
+                    person.bounds.x - glyphLayout.width/2, person.bounds.y + glyphLayout.height/2);
+        }
+        EasySeatingGame.batch.end();
 
-            EasySeatingGame.batch.begin();
-            uiSkin.getFont("smalltext").setColor(Color.BLACK);
-            //Now draw the table identifier
-            uiSkin.getFont("smalltext").draw(EasySeatingGame.batch, person.getInitials(),
-                    person.position.x, person.position.y);
-            EasySeatingGame.batch.end();
+        if(seatingLogic.isOverTable()) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(Color.GOLD);
+            float tableX = seatingLogic.table.getX();
+            float tableY = seatingLogic.table.getY();
+            float personX = seatingLogic.person.getX();
+            float personY = seatingLogic.person.getY();
+            shapeRenderer.rectLine(tableX, tableY, personX, personY, 20);
+            shapeRenderer.end();
         }
     }
 
     private void renderFloor() {
-        shapeRenderer.setProjectionMatrix(EasySeatingGame.batch.getProjectionMatrix());
-        shapeRenderer.setTransformMatrix(EasySeatingGame.batch.getTransformMatrix());
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.BLUE);
-        shapeRenderer.rect(0, 0, seatingLogic.conference.conferenceWidth, seatingLogic.conference.conferenceHeight);
-        shapeRenderer.end();
+        EasySeatingGame.batch.begin();
+        //Set a tint based on if a table is being viewed or not
+        EasySeatingGame.batch.setColor(seatingLogic.getBackgroundTint());
+        floorTile.draw(EasySeatingGame.batch, 0, 0, (float)seatingLogic.conference.conferenceWidth,
+                (float)seatingLogic.conference.conferenceHeight);
+        EasySeatingGame.batch.setColor(1, 1, 1, 1);
+        EasySeatingGame.batch.end();
 
-        for(Vector2 point : seatingLogic.conference.snapGrid.keySet()) {
-            shapeRenderer.setProjectionMatrix(EasySeatingGame.batch.getProjectionMatrix());
-            shapeRenderer.setTransformMatrix(EasySeatingGame.batch.getTransformMatrix());
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Point);
-            shapeRenderer.setColor(Color.RED);
-            shapeRenderer.point(point.x, point.y, 0);
-            shapeRenderer.end();
+        float gridAlpha;
+        if(SeatingScreen.addRemoveTable) {
+            gridAlpha = 1f;
+        } else {
+            gridAlpha = .1f;
         }
+
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.GRAY);
+        shapeRenderer.getColor().a = gridAlpha;
+
+        float currentX = 0;
+        for (double i = 0; i <= seatingLogic.conference.gridCountWidth; i++) {
+            shapeRenderer.line(currentX, 0, currentX, (float) seatingLogic.conference.conferenceHeight);
+            currentX += seatingLogic.conference.gridGutterLength;
+        }
+        float currentY = 0;
+        for (double i = 0; i <= seatingLogic.conference.gridCountHeight; i++) {
+            shapeRenderer.line(0, currentY, (float) seatingLogic.conference.conferenceWidth, currentY);
+            currentY += seatingLogic.conference.gridGutterLength;
+        }
+
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 }

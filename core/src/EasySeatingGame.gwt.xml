@@ -2,4 +2,6 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit trunk//EN" "http://google-web-toolkit.googlecode.com/svn/trunk/distro-source/core/src/gwt-module.dtd">
 <module>
 	<source path="com/kozu/easyseating" />
+	<inherits name='com.github.czyzby.lml.GdxLml' />
+    <extend-configuration-property name="gdx.reflect.include" value="com.github.czyzby.views" />
 </module>

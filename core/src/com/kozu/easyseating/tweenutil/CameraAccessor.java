@@ -41,5 +41,6 @@ public class CameraAccessor implements TweenAccessor<Camera> {
             case ZOOM: ((OrthographicCamera)target).zoom = newValues[0]; break;
             default: assert false; break;
         }
+        target.update();
     }
 }

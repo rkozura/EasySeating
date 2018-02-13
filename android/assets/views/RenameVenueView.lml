@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE table SYSTEM "lml.dtd">
+
+<dialogsize id="renameVenueDialog" title="Venue Name" style="dialog" titlealign="center" movable="false" onecolumn="true">
+    <textfield id="venueName" growx="true"></textfield>
+    <textbutton padleft="250" padright="250" onresult="checkForInvalidVenueName" width="{buttonWidth}" height="{buttonHeight}">Ok</textbutton>
+</dialogsize>

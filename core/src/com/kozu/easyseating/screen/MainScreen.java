@@ -1,144 +1,205 @@
 package com.kozu.easyseating.screen;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.github.czyzby.lml.annotation.LmlAction;
+import com.github.czyzby.lml.annotation.LmlActor;
+import com.github.czyzby.lml.parser.impl.AbstractLmlView;
+import com.github.czyzby.lml.scene2d.ui.reflected.ReflectedLmlDialog;
+import com.github.czyzby.lml.util.LmlUtilities;
+import com.kotcrab.vis.ui.FocusManager;
+import com.kotcrab.vis.ui.util.ToastManager;
+import com.kotcrab.vis.ui.widget.VisTable;
+import com.kotcrab.vis.ui.widget.VisTextButton;
+import com.kotcrab.vis.ui.widget.VisTextField;
+import com.kozu.easyseating.Assets;
+import com.kozu.easyseating.EasySeatingGame;
+import com.kozu.easyseating.logic.State;
+import com.kozu.easyseating.tweenutil.CameraAccessor;
+import com.kozu.easyseating.tweenutil.TweenUtil;
 import com.kozu.easyseating.ui.DialogSize;
+import com.kozu.easyseating.ui.PhotoCarousel;
 
 import org.apache.commons.lang3.StringUtils;
 
-import static com.kozu.easyseating.EasySeatingGame.skin;
-import static com.kozu.easyseating.EasySeatingGame.uiSkin;
+import aurelienribon.tweenengine.BaseTween;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
 
 /**
  * Created by Rob on 8/27/2017.
  */
 
-public class MainScreen extends ScreenAdapter {
-    private Stage uiStage;
-    private Game game;
+public class MainScreen extends AbstractLmlView {
+    @LmlActor("createVenueDialog") private DialogSize createVenueDialog;
 
-    public MainScreen(final Game game) {
-        this.game = game;
+    @LmlActor("venueName") private VisTextField venueName;
 
-        Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+    @LmlActor("continueButton") private VisTextButton continueButton;
 
-        uiStage = new Stage(new ScreenViewport());
+    private ToastManager toastManager;
 
-        Image image = new Image(uiSkin.getPatch("blue_button06"));
-        image.setFillParent(true);
+    private Viewport viewport;
 
-        uiStage.addActor(image);
+    private PhotoCarousel photoCarousel;
 
-        Table table = new Table();
-        table.setFillParent(true);
-        uiStage.addActor(table);
+    private Assets assets;
 
-        TextButton newButton = new TextButton("New",uiSkin);
-        newButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                createVenueDialog();
-            }
-        });
+    public MainScreen(Assets assets) {
+        super(new Stage(new ScreenViewport()));
 
-        table.add(newButton);
-        table.add(new TextButton("Continue",uiSkin));
-        table.add(new TextButton("Load",uiSkin));
+        viewport = new FillViewport(0, 0);
 
-        Table helpTable = new Table();
-        helpTable.setFillParent(true);
-        TextButton helpButton = new TextButton("?", uiSkin, "circle");
-        helpTable.add(helpButton).expand().bottom().right();
+        photoCarousel = new PhotoCarousel(viewport, assets);
 
-        uiStage.addActor(helpTable);
+        //Zoom it in so there is enough area to move the camera around without moving
+        //the background texture off the screen
+        ((OrthographicCamera)viewport.getCamera()).zoom = .8f;
+
+        this.assets = assets;
     }
 
-    private void createVenueDialog() {
-        final DialogSize dialog = new DialogSize(400f, 200f, uiSkin, "dialog");
+    @Override
+    public FileHandle getTemplateFile() {
+        return Gdx.files.internal("views/MainMenuView.lml");
+    }
 
-        //Set the title table
-        Table titleTable = dialog.getTitleTable();
-        titleTable.clear();
-        titleTable.add(new Label("   Venue Name   ", uiSkin)).padTop(70);
+    @Override
+    public String getViewId() {
+        return "second";
+    }
 
-        //Set the content table
-        Table contentTable = dialog.getContentTable();
-        contentTable.clear();
-        final TextField newVenueName = new TextField("", skin);
-        newVenueName.addListener(new FocusListener() {
-            @Override
-            public void keyboardFocusChanged(FocusEvent event, Actor actor, boolean focused) {
-                super.keyboardFocusChanged(event, actor, focused);
-                if (!focused)
-                    Gdx.input.setOnscreenKeyboardVisible(false);
-                else
-                    Gdx.input.setOnscreenKeyboardVisible(true);
-            }
-        });
-        contentTable.add(newVenueName).colspan(2);
-        contentTable.row();
-        final TextButton createNewPersonButton = new TextButton("Go!", uiSkin);
-        createNewPersonButton.addListener(new ChangeListener() {
-                                              @Override
-                                              public void changed(ChangeEvent event, Actor actor) {
-                                                  newVenueName.setText(newVenueName.getText().trim());
-                                                  if (!StringUtils.isBlank(newVenueName.getText())) {
-                                                      game.setScreen(new SeatingScreen(newVenueName.getText(), game));
-                                                  }
-                                                  newVenueName.setText("");
-                                                  dialog.hide();
-                                              }
-                                          }
-        );
+    @LmlAction("checkForInvalidVenueName")
+    public boolean checkForInvalidVenueName(final DialogSize dialog) {
+        String venueName = ((VisTextField) LmlUtilities.getActorWithId(dialog, "venueName")).getText();
+        if(StringUtils.isBlank(venueName)) {
+            final ToastManager manager = getToastManager(dialog.getStage());
+            manager.clear();
+            manager.setAlignment(Align.topLeft);
+            manager.show("Invalid Venue Name", 1.5f);
+            manager.toFront();
 
-        contentTable.add(createNewPersonButton);
-        final TextButton cancelButton = new TextButton("Cancel", uiSkin);
-        cancelButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                newVenueName.setText("");
-                dialog.hide();
-            }
-        });
-        contentTable.add(cancelButton);
+            return ReflectedLmlDialog.CANCEL_HIDING;
 
-        dialog.show(uiStage);
-        dialog.setY(uiStage.getHeight());
+        } else {
+            EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
+            SeatingScreen seatingScreen = new SeatingScreen(venueName, assets);
+            core.getParser().createView(seatingScreen, seatingScreen.getTemplateFile());
 
-        uiStage.setKeyboardFocus(newVenueName);
+            core.setView(seatingScreen);
+
+            return ReflectedLmlDialog.HIDE;
+        }
+    }
+
+    @LmlAction("openCreateVenueDialog")
+    public void openCreateVenueDialog() {
+        createVenueDialog.setVisible(true);
+        createVenueDialog.show(getStage());
+        createVenueDialog.toFront();
+
+        createVenueDialog.setPosition(createVenueDialog.getX(), Gdx.graphics.getHeight()-(Gdx.graphics.getPpiX()/2));
+
+        //The following three lines are absolutely needed for correct input on mobile
+        FocusManager.switchFocus(getStage(), venueName);
+        getStage().setKeyboardFocus(venueName);
+        Gdx.input.setOnscreenKeyboardVisible(true);
+    }
+
+    @LmlAction("openContinueVenue")
+    public void openContinueVenue() {
+        EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
+
+        try {
+            SeatingScreen seatingScreen = new SeatingScreen(State.loadLast(), assets);
+
+            core.getParser().createView(seatingScreen, seatingScreen.getTemplateFile());
+            core.setView(seatingScreen);
+        } catch(Exception e) {
+            //TODO Show confirmation message that the data is corrupt and want to remove
+            e.printStackTrace();
+            //If there was an exception loading the conference, disable to the continue button
+            continueButton.setDisabled(true);
+            continueButton.setTouchable(Touchable.disabled);
+        }
+    }
+
+    private ToastManager getToastManager(Stage stage) {
+        if (toastManager == null) {
+            toastManager = new ToastManager(stage);
+        }
+        return toastManager;
+    }
+
+    @LmlAction("ppi")
+    public float getPPI(final VisTable container) {
+        return Gdx.graphics.getPpiX();
+    }
+
+    @Override
+    public void resize(int width, int height, boolean centerCamera) {
+        viewport.getCamera().position.set(width/2f, height/2f, 0);
+        viewport.update(width, height, true);
+        getStage().getViewport().update(width, height, true);
+
+        centerActorOnStage(createVenueDialog);
+
+        super.resize(width, height, centerCamera);
+    }
+
+    private void centerActorOnStage(Actor actor) {
+        actor.setPosition(Math.round((getStage().getWidth() - actor.getWidth()) / 2),
+                Math.round((getStage().getHeight())));
     }
 
     @Override
     public void show() {
-        InputMultiplexer multi = new InputMultiplexer();
-        multi.addProcessor(uiStage);
-        Gdx.input.setInputProcessor(multi);
+        createCameraTween().start(TweenUtil.getTweenManager());
+
+        if(State.hasContinue()) {
+            continueButton.setDisabled(false);
+            continueButton.setTouchable(Touchable.enabled);
+        }
+
+        super.show();
+    }
+
+    private Tween createCameraTween() {
+        //Find a random point to move to
+        float angle = (float)(Math.random()*Math.PI*2);
+        float x = (float)Math.cos(angle)*100;
+        float y = (float)Math.sin(angle)*100;
+
+        return Tween.to(viewport.getCamera(), CameraAccessor.POSITION_XY, 15f)
+                .target(viewport.getCamera().position.x + x, viewport.getCamera().position.y + y)
+                .repeatYoyo(1, 1)
+                .setCallback(new TweenCallback() {
+                    @Override
+                    public void onEvent(int i, BaseTween<?> baseTween) {
+                        createCameraTween().start(TweenUtil.getTweenManager());
+                    }
+                });
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        viewport.apply();
 
-        //Update (act) and draw the UI after everything else
-        uiStage.act();
-        uiStage.draw();
-    }
+        EasySeatingGame.batch.setProjectionMatrix(viewport.getCamera().combined);
 
-    @Override
-    public void resize(int width, int height) {
-        uiStage.getViewport().update(width, height);
+        EasySeatingGame.batch.begin();
+        photoCarousel.draw();
+        EasySeatingGame.batch.end();
+
+        getStage().getViewport().apply();
+        super.render(delta);
     }
 }

@@ -1,19 +1,32 @@
 package com.kozu.easyseating.object;
 
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Circle;
+
+import java.io.Serializable;
 
 /**
  * Created by Rob on 8/2/2017.
  */
 
-public class Person implements Model {
+public class Person implements Model, Serializable {
+    private final int PERSON_RADIUS = 30;
+
     private String name;
     private String initials = "";
+    private String truncatedName = ""; //Used when display close up
 
-    public Vector2 position = new Vector2();
+    public Circle bounds;
+
+    private transient boolean flaggedForRemoval;
+
+    public String assignedTable;
+
+    public Person() {}
 
     public Person(String name) {
         setName(name);
+
+        bounds = new Circle(0, 0, PERSON_RADIUS);
     }
 
     public String getName() {
@@ -21,6 +34,8 @@ public class Person implements Model {
     }
 
     public void setName(String name) {
+        name = name.trim();
+        name = name.replaceAll("[ ]+", " ");
         this.name = name;
 
         initials = "";
@@ -28,26 +43,31 @@ public class Person implements Model {
         for(String oneName : names) {
             initials += oneName.charAt(0);
         }
+
+        truncatedName = names[0];
+        if(names.length > 1) {
+            truncatedName += "." + names[1].charAt(0);
+        }
     }
 
     @Override
     public float getX() {
-        return position.x;
+        return bounds.x;
     }
 
     @Override
     public float getY() {
-        return position.y;
+        return bounds.y;
     }
 
     @Override
     public void setX(float x) {
-        position.x = x;
+        bounds.x = x;
     }
 
     @Override
     public void setY(float y) {
-        position.y = y;
+        bounds.y = y;
     }
 
     @Override
@@ -61,5 +81,17 @@ public class Person implements Model {
 
     public String getInitials() {
         return initials;
+    }
+
+    public String getTruncatedName() {
+        return truncatedName;
+    }
+
+    public boolean isFlaggedForRemoval() {
+        return flaggedForRemoval;
+    }
+
+    public void setFlaggedForRemoval(boolean flaggedForRemoval) {
+        this.flaggedForRemoval = flaggedForRemoval;
     }
 }
