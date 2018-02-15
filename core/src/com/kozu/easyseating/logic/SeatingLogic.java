@@ -52,15 +52,17 @@ public class SeatingLogic {
         //Load the conference object into the state
         State.load(conference);
 
-        //Generate the snap grid
-        double currentX = GRID_GUTTER_LENGTH, currentY = GRID_GUTTER_LENGTH;
-        for(int i=0; i<GRID_COUNT_WIDTH-1; i++) {
-            for(int j=0; j<GRID_COUNT_HEIGHT-1; j++) {
-                conference.snapGrid.put(new Vector3((float)currentX, (float)currentY, 0), null);
-                currentY += GRID_GUTTER_LENGTH;
+        //Generate the snap grid if empty
+        if(conference.snapGrid.isEmpty()) {
+            double currentX = GRID_GUTTER_LENGTH, currentY = GRID_GUTTER_LENGTH;
+            for (int i = 0; i < GRID_COUNT_WIDTH - 1; i++) {
+                for (int j = 0; j < GRID_COUNT_HEIGHT - 1; j++) {
+                    conference.snapGrid.put(new Vector3((float) currentX, (float) currentY, 0), null);
+                    currentY += GRID_GUTTER_LENGTH;
+                }
+                currentY = GRID_GUTTER_LENGTH;
+                currentX += GRID_GUTTER_LENGTH;
             }
-            currentY = GRID_GUTTER_LENGTH;
-            currentX += GRID_GUTTER_LENGTH;
         }
     }
 
@@ -201,6 +203,13 @@ public class SeatingLogic {
             }
         }
 
+        for(Map.Entry<Vector3, Table> entry : conference.snapGrid.entrySet()) {
+            if(table == entry.getValue()) {
+                entry.setValue(null);
+                break;
+            }
+        }
+
         State.save();
     }
 
@@ -221,7 +230,15 @@ public class SeatingLogic {
             }
         }
 
-        if(closestEntry != null) {
+        if(closestEntry != null && closestEntry.getValue() == null) {
+            //Clear the snap position that contained the table
+            for(Map.Entry<Vector3, Table> entry : conference.snapGrid.entrySet()) {
+                if(entry.getValue() == table) {
+                    entry.setValue(null);
+                    break;
+                }
+            }
+
             closestEntry.setValue(table);
             setPersonPositions(table, closestEntry.getKey());
             table.setX(closestEntry.getKey().x);

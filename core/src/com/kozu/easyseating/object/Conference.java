@@ -22,7 +22,7 @@ public class Conference implements Serializable {
     public long gridCountHeight;
     public double gridGutterLength;
 
-    public transient HashMap<Vector3, Table> snapGrid;
+    public HashMap<Vector3, Table> snapGrid = new HashMap<Vector3, Table>();
 
     private ArrayList<Table> tables;
     public ArrayList<Person> persons;
@@ -31,7 +31,6 @@ public class Conference implements Serializable {
      * Needed for deserialization
      */
     public Conference() {
-        snapGrid = new HashMap<Vector3, Table>();
         tables = new ArrayList<Table>();
         persons = new ArrayList<Person>();
     }

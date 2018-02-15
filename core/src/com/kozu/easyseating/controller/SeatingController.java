@@ -141,6 +141,7 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
     public boolean tap(float x, float y, int count, int button) {
         Vector3 pos = convertScreenCoordsToWorldCoords(x, y);
 
+        draggedTable = null;
         if(seatingScreen.addRemoveTable) {
             if(seatingScreen.removeTable) {
                 Table table = seatingLogic.getTableAtPosition(pos);
@@ -209,6 +210,7 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
         Vector3 vec2 = camera.unproject(new Vector3(x, y, 0));
+
         if(draggedPerson != null) {
             draggedPerson.setFlaggedForRemoval(false);
             draggedPerson.bounds.x = vec2.x;

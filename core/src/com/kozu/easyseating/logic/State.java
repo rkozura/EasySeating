@@ -3,14 +3,12 @@ package com.kozu.easyseating.logic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.SerializationException;
 import com.kozu.easyseating.object.Conference;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.HashMap;
 
 /**
  * Created by Rob on 11/15/2017.
@@ -32,7 +30,6 @@ public class State {
         Conference conference;
         try {
             conference = (Conference)ois.readObject();
-            conference.snapGrid = new HashMap<>();
             State.load(conference);
         } catch(SerializationException rte) {
             prefs.clear();
@@ -47,9 +44,6 @@ public class State {
 
     public static void save() {
         System.out.println("Saving");
-
-        Json json = new Json();
-        json.setUsePrototypes(false);
 
         String fileSystemNameOfConference = currentConference.conferenceName.toLowerCase();
 
