@@ -109,7 +109,7 @@ public class SeatingLogic {
         conference.persons.remove(person);
         for(Table table : conference.getTables()) {
             if(table.assignedSeats.contains(person)) {
-                table.assignedSeats.remove(person);
+                table.removePerson(person);
                 break;
             }
         }
@@ -125,7 +125,7 @@ public class SeatingLogic {
         }
 
         person.assignedTable = table.tableIdentifier;
-        table.assignedSeats.add(person);
+        table.addPerson(person);
         return startTweenAndSaveState(getPersonPositionTweens(table, new Vector3(table.bounds.x, table.bounds.y, 0)));
     }
 
@@ -133,7 +133,7 @@ public class SeatingLogic {
         person.setFlaggedForRemoval(false);
         person.assignedTable = "";
         if(table.assignedSeats.size() != 0) {
-            table.assignedSeats.remove(person);
+            table.removePerson(person);
 
             //If not empty, set the person positions
             if(table.assignedSeats.size() != 0) {
