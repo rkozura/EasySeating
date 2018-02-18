@@ -170,7 +170,9 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
                 TweenUtil.getTweenManager().killTarget(camera);
                 Tween.to(camera, CameraAccessor.POSITION_XY, .3f).target(table.bounds.x, table.bounds.y)
                         .start(TweenUtil.getTweenManager());
-                Tween.to(camera, CameraAccessor.ZOOM, .3f).target(.5f)
+
+                float zoom = calculateZoom(table);
+                Tween.to(camera, CameraAccessor.ZOOM, .3f).target(zoom)
                         .start(TweenUtil.getTweenManager());
                 seatingScreen.editTable(table);
                 return true;
@@ -178,6 +180,18 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
                 return false;
             }
         }
+    }
+
+    private float calculateZoom(Table table) {
+        Vector3 vecXY = worldToScreenCoords(table.getX(), table.getY());
+        Vector3 vecRadius = worldToScreenCoords(table.getX()+(table.getRadius()*2), table.getY());
+
+        float tableScreenSize = Math.abs(vecXY.x - vecRadius.x);
+        float screenWidth = Gdx.graphics.getWidth();
+
+        float ratio = tableScreenSize/(screenWidth-(Gdx.graphics.getPpiX()*1.5f));
+
+        return ((OrthographicCamera)camera).zoom * ratio;
     }
 
     /**
@@ -360,5 +374,19 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
         camera.unproject(touchPos);
 
         return touchPos;
+    }
+
+    /**
+     * Converts world to screen coords
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    private Vector3 worldToScreenCoords(float x, float y) {
+        Vector3 worldPos = new Vector3(x, y, 0);
+        camera.project(worldPos);
+
+        return worldPos;
     }
 }
