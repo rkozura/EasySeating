@@ -116,7 +116,11 @@ public class SeatingRenderer implements Disposable{
         EasySeatingGame.batch.begin();
         for(Person person : table.assignedSeats) {
             //Draw the person text
-            assets.manager.get(Assets.persontext).setColor(Color.BLUE);
+            if(seatingLogic.getBackgroundTint().a == 1) {
+                assets.manager.get(Assets.persontext).setColor(Color.BLACK);
+            } else {
+                assets.manager.get(Assets.persontext).setColor(Color.WHITE);
+            }
             glyphLayout.setText(assets.manager.get(Assets.persontext), person.getTruncatedName());
             assets.manager.get(Assets.persontext).draw(EasySeatingGame.batch, glyphLayout,
                     person.bounds.x - glyphLayout.width/2, person.bounds.y + glyphLayout.height/2);

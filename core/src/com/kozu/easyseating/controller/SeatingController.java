@@ -356,7 +356,7 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
         camera.update();
         Vector3 oldUnprojection = camera.unproject(origin.cpy()).cpy();
         ((OrthographicCamera)camera).zoom = scale; //Larger value of zoom = small images, border view
-        ((OrthographicCamera)camera).zoom = Math.min(2.0f, Math.max(((OrthographicCamera)camera).zoom, 0.5f));
+        ((OrthographicCamera)camera).zoom = Math.min(2.0f, Math.max(((OrthographicCamera)camera).zoom, 0.2f));
         camera.update();
         Vector3 newUnprojection = camera.unproject(origin.cpy()).cpy();
         camera.position.add(oldUnprojection.cpy().add(newUnprojection.cpy().scl(-1f)));

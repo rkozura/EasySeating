@@ -74,6 +74,8 @@ public class Assets {
 
         FreetypeFontLoader.FreeTypeFontLoaderParameter personFontParameter = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         personFontParameter.fontParameters.size = (int) (PERSON_FONT_SIZE * Gdx.graphics.getDensity());
+        personFontParameter.fontParameters.borderWidth = 1f;
+        personFontParameter.fontParameters.borderColor = Color.BLACK;
         personFontParameter.fontFileName = "fonts/OpenSans-Regular-2.ttf";
         persontext = new AssetDescriptor<BitmapFont>(personFontParameter.fontFileName, BitmapFont.class, personFontParameter);
 
