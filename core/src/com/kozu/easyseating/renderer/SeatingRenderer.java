@@ -175,7 +175,7 @@ public class SeatingRenderer implements Disposable{
         shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
 
-        if(seatingLogic.conference.getTables().isEmpty()) {
+        if(seatingLogic.conference.getTables().isEmpty() && !SeatingScreen.addRemoveTable) {
             EasySeatingGame.batch.begin();
             glyphLayout.setText(assets.manager.get(Assets.buttontext), "Tap and hold to add tables");
             assets.manager.get(Assets.buttontext).setColor(Color.BLACK);
