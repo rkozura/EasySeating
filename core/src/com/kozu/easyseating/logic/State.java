@@ -9,6 +9,10 @@ import com.kozu.easyseating.object.Conference;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Rob on 11/15/2017.
@@ -23,23 +27,57 @@ public class State {
 
     public static Conference loadLast() throws Exception {
         Preferences prefs = Gdx.app.getPreferences("SeatingChart");
-        FileHandle file = Gdx.files.absolute(prefs.getString("lastSavedFile"));
 
-        ObjectInputStream ois = new ObjectInputStream(file.read());
+        return load("lastSavedFile", prefs.getString("lastSavedFile"));
+    }
 
+    public static Conference load(String conferenceName, String conferenceFileLocation) throws Exception {
+        FileHandle file = Gdx.files.absolute(conferenceFileLocation);
+
+        System.out.println("File location is: "+file.path());
+
+        ObjectInputStream ois = null;
         Conference conference;
         try {
+            ois = new ObjectInputStream(file.read());
             conference = (Conference)ois.readObject();
             State.load(conference);
-        } catch(SerializationException rte) {
-            prefs.clear();
+        } catch(Throwable rte) {
+            Preferences prefs = Gdx.app.getPreferences("SeatingChart");
+            prefs.remove(conferenceName);
+            prefs.flush();
             file.delete();
             throw new Exception("Unable to parse conference file.  Deleting prefs.", rte);
         } finally {
-            ois.close();
+            if(ois != null)
+                ois.close();
         }
 
         return conference;
+    }
+
+    public static ArrayList<String> getListOfVenues() {
+        ArrayList<String> listOfVenues = new ArrayList<String>();
+
+        Preferences prefs = Gdx.app.getPreferences("SeatingChart");
+
+        Map<String, ?> map = prefs.get();
+
+        listOfVenues.addAll(map.keySet());
+
+        listOfVenues.remove("lastSavedFile");
+
+        for(String list: listOfVenues) {
+            System.out.println(list);
+        }
+
+        return listOfVenues;
+    }
+
+    public static Conference loadConference(String conferenceName) throws Exception {
+        Preferences prefs = Gdx.app.getPreferences("SeatingChart");
+
+        return load(conferenceName, prefs.getString(conferenceName));
     }
 
     public static void save() {
@@ -69,7 +107,7 @@ public class State {
         //%UserProfile%/.prefs/My Preferences
         Preferences prefs = Gdx.app.getPreferences("SeatingChart");
         prefs.putString("lastSavedFile", file.path());
-        prefs.putString(currentConference.conferenceName, fileSystemNameOfConference);
+        prefs.putString(currentConference.conferenceName, file.path());
         prefs.flush();
     }
 

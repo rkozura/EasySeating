@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
+import com.github.czyzby.lml.parser.LmlView;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
 import com.github.czyzby.lml.scene2d.ui.reflected.ReflectedLmlDialog;
 import com.github.czyzby.lml.util.LmlUtilities;
@@ -44,6 +45,8 @@ public class MainScreen extends AbstractLmlView {
     @LmlActor("venueName") private VisTextField venueName;
 
     @LmlActor("continueButton") private VisTextButton continueButton;
+
+    @LmlActor("loadButton") private VisTextButton loadButton;
 
     private ToastManager toastManager;
 
@@ -132,6 +135,13 @@ public class MainScreen extends AbstractLmlView {
         }
     }
 
+    @LmlAction("openLoadDialog")
+    public void openLoadDialog() {
+        EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
+        LmlView venueListVIew = new VenueListView(getStage(), assets);
+        core.getParser().createView(venueListVIew, Gdx.files.internal("views/VenueListView.lml"));
+    }
+
     private ToastManager getToastManager(Stage stage) {
         if (toastManager == null) {
             toastManager = new ToastManager(stage);
@@ -167,6 +177,8 @@ public class MainScreen extends AbstractLmlView {
         if(State.hasContinue()) {
             continueButton.setDisabled(false);
             continueButton.setTouchable(Touchable.enabled);
+            loadButton.setDisabled(false);
+            loadButton.setTouchable(Touchable.enabled);
         }
 
         super.show();
