@@ -160,7 +160,12 @@ public class MainScreen extends AbstractLmlView {
         viewport.update(width, height, true);
         getStage().getViewport().update(width, height, true);
 
-        centerActorOnStage(createVenueDialog);
+        for(Actor actor : getStage().getActors()) {
+            if(actor instanceof DialogSize) {
+                ((DialogSize)actor).hide();
+            }
+        }
+        //centerActorOnStage(createVenueDialog);
 
         super.resize(width, height, centerCamera);
     }
