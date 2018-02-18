@@ -57,7 +57,7 @@ public class Assets {
 
         FreetypeFontLoader.FreeTypeFontLoaderParameter dialogTitleFontParameter = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         dialogTitleFontParameter.fontParameters.size = (int) (DIALOG_FONT_SIZE * Gdx.graphics.getDensity());
-        dialogTitleFontParameter.fontParameters.borderWidth = 1f;
+        dialogTitleFontParameter.fontParameters.borderWidth = 2f;
         dialogTitleFontParameter.fontParameters.borderColor = Color.BLACK;
         dialogTitleFontParameter.fontFileName = "fonts/Pacifico.ttf";
         dialogtext = new AssetDescriptor<BitmapFont>(dialogTitleFontParameter.fontFileName, BitmapFont.class, dialogTitleFontParameter);
