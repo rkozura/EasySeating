@@ -2,6 +2,7 @@
 <!DOCTYPE table SYSTEM "lml.dtd">
 
 <dialogsize title="Help" style="dialog" titlealign="center" movable="false" onecolumn="true">
-    <vislabel>This is how you help!</vislabel>
-    <vislabel>This is also how you help!</vislabel>
+    <vislabel>-Tap and hold to add tables</vislabel>
+    <vislabel>-Tap "Venue" to add people</vislabel>
+    <vislabel>-Tap table to add people to table</vislabel>
 </dialogsize>

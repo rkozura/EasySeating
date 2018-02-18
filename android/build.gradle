@@ -30,7 +30,7 @@ android {
     }
     defaultConfig {
         applicationId "com.kozu.easyseating"
-        minSdkVersion 24
+        minSdkVersion 19
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"

@@ -188,8 +188,11 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
 
         float tableScreenSize = Math.abs(vecXY.x - vecRadius.x);
         float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
 
-        float ratio = tableScreenSize/(screenWidth-(Gdx.graphics.getPpiX()*1.5f));
+        float smallestScreenDimension = screenWidth < screenHeight ? screenWidth : screenHeight;
+
+        float ratio = tableScreenSize/(smallestScreenDimension-(Gdx.graphics.getPpiX()*1.5f));
 
         return ((OrthographicCamera)camera).zoom * ratio;
     }
