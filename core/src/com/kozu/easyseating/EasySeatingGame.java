@@ -4,10 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.github.czyzby.lml.parser.LmlParser;
 import com.github.czyzby.lml.parser.action.ActorConsumer;
 import com.github.czyzby.lml.parser.impl.tag.actor.DialogLmlTag;
@@ -41,6 +45,9 @@ public class EasySeatingGame extends LmlApplicationListener {
 
     private MainScreen mainScreen;
 
+    private Stage stage;
+    private BitmapFont font;
+
     public EasySeatingGame(PersonImporter importer, PDFGenerator pdfGenerator) {
         this.importer = importer;
         this.pdfGenerator = pdfGenerator;
@@ -62,18 +69,13 @@ public class EasySeatingGame extends LmlApplicationListener {
 
     @Override
     public void create() {
+        stage = new Stage(new StretchViewport(300, 300));
+
+        font = new BitmapFont();
+        font.setColor(Color.BLUE);
+
         assets = new Assets();
         assets.load();
-        //Block until manager has finished loading..
-        assets.manager.finishLoading();
-
-        Skin visSkin = assets.manager.get(Assets.uiSkin);
-
-        if(!VisUI.isLoaded()) {
-            VisUI.load(visSkin);
-        }
-
-        super.create();
 
         batch = new SpriteBatch();
 
@@ -83,23 +85,50 @@ public class EasySeatingGame extends LmlApplicationListener {
         Tween.registerAccessor(Sprite.class, new SpriteAccessor());
         Tween.registerAccessor(Color.class, new ColorAccessor());
         Tween.setCombinedAttributesLimit(4);
-
-        mainScreen = new MainScreen(assets);
-        getParser().createView(mainScreen, mainScreen.getTemplateFile());
-
-        setView(mainScreen);
     }
 
+    boolean loaded = false;
+    Skin visSkin;
     @Override
     public void render() {
         //Always update the tween engine
         TweenUtil.getTweenManager().update(Gdx.graphics.getDeltaTime());
 
         super.render();
+
+        if(!loaded && assets.manager.update()) {
+            visSkin = new Skin(new TextureAtlas(Gdx.files.internal("uiskin.atlas")));
+            visSkin.add("default-font", assets.manager.get(Assets.buttontext), BitmapFont.class);
+            visSkin.add("dialog-font", assets.manager.get(Assets.dialogtext), BitmapFont.class);
+            visSkin.add("main-screen-font", assets.manager.get(Assets.mainmenutext), BitmapFont.class);
+            visSkin.add("person-font", assets.manager.get(Assets.persontext), BitmapFont.class);
+
+            visSkin.load(Gdx.files.internal("uiskin.json"));
+
+            if(!VisUI.isLoaded())
+                VisUI.load(visSkin);
+
+            loaded = true;
+
+            super.create();
+
+            mainScreen = new MainScreen(assets);
+
+            getParser().createView(mainScreen, mainScreen.getTemplateFile());
+            setView(mainScreen);
+        } else if(!loaded) {
+            batch.setProjectionMatrix(stage.getCamera().combined);
+            batch.begin();
+            font.draw(batch, "Loading..."+assets.manager.getProgress()*100+"%", 0, 300);
+            batch.end();
+            System.out.println("loading..");
+        }
     }
 
     @Override
     public void dispose() {
+        stage.dispose();
+        font.dispose();
         batch.dispose();
         assets.dispose();
     }

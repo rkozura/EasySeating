@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
-import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -13,8 +12,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.ObjectMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +27,6 @@ public class Assets {
     private static final int PERSON_FONT_SIZE = 10;
 
     public AssetManager manager;
-
-    //VisSkin
-    public static AssetDescriptor<Skin> uiSkin;
 
     //Fonts
     public static AssetDescriptor<BitmapFont> buttontext;
@@ -109,19 +103,6 @@ public class Assets {
         for(AssetDescriptor backgroundDescriptor : backgroundtextures) {
             manager.load(backgroundDescriptor);
         }
-
-        //Finish loading before loading the skins.  Skin cannot be loaded until fonts referenced in
-        //json are generated
-        manager.finishLoading();
-        ObjectMap<String, Object> resources = new ObjectMap<String, Object>();
-        resources.put("default-font", manager.get(buttontext));
-        resources.put("dialog-font", manager.get(dialogtext));
-        resources.put("main-screen-font", manager.get(mainmenutext));
-        resources.put("person-font", manager.get(persontext));
-        SkinLoader.SkinParameter skinParameter = new SkinLoader.SkinParameter("uiskin.atlas", resources);
-        uiSkin = new AssetDescriptor<Skin>("uiskin.json", Skin.class, skinParameter);
-
-        manager.load(uiSkin);
     }
 
     public void dispose() {
