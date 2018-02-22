@@ -1,26 +1,16 @@
 package com.kozu.easyseating.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
-import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.adapter.ListAdapter;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kozu.easyseating.Assets;
 import com.kozu.easyseating.EasySeatingGame;
-import com.kozu.easyseating.logic.SeatingLogic;
 import com.kozu.easyseating.logic.State;
 import com.kozu.easyseating.object.Conference;
-import com.kozu.easyseating.object.Person;
-import com.kozu.easyseating.ui.PeopleListAdapter;
 import com.kozu.easyseating.ui.VenueListAdapter;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * Created by Rob on 02/18/2018
@@ -64,6 +54,11 @@ public class VenueListView extends AbstractLmlView {
         } catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @LmlAction("deleteSelectedVenue")
+    public void deleteSelectedVenue() {
+        System.out.println("TODO DELETE SELECTED VENUE");
     }
 
     @LmlAction("venueListAdapter")
