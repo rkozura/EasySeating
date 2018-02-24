@@ -4,9 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -139,7 +142,27 @@ public class MainScreen extends AbstractLmlView {
     public void openLoadDialog() {
         EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
         LmlView venueListVIew = new VenueListView(getStage(), assets);
-        core.getParser().createView(venueListVIew, Gdx.files.internal("views/VenueListView.lml"));
+        Array<Actor> actors = core.getParser().createView(venueListVIew, Gdx.files.internal("views/VenueListView.lml"));
+
+        final DialogSize dialog = (DialogSize)actors.get(0);
+        dialog.addListener(new InputListener() {
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                if (x < 0 || x > dialog.getWidth() || y < 0 || y > dialog.getHeight()) {
+                    if (!State.hasContinue()) {
+                        continueButton.setDisabled(true);
+                        continueButton.setTouchable(Touchable.disabled);
+                    }
+
+                    if (!State.hasLoad()) {
+                        loadButton.setDisabled(true);
+                        loadButton.setTouchable(Touchable.disabled);
+                    }
+
+                }
+
+                return false;
+            }
+        });
     }
 
     private ToastManager getToastManager(Stage stage) {

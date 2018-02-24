@@ -3,15 +3,12 @@ package com.kozu.easyseating.logic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.SerializationException;
 import com.kozu.easyseating.object.Conference;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,8 +31,6 @@ public class State {
     public static Conference load(String conferenceName, String conferenceFileLocation) throws Exception {
         FileHandle file = Gdx.files.absolute(conferenceFileLocation);
 
-        System.out.println("File location is: "+file.path());
-
         ObjectInputStream ois = null;
         Conference conference;
         try {
@@ -53,6 +48,12 @@ public class State {
                 ois.close();
         }
 
+        Preferences prefs = Gdx.app.getPreferences("SeatingChart");
+        if(!prefs.contains("lastSavedFile")) {
+            prefs.putString("lastSavedFile", file.path());
+            prefs.flush();
+        }
+
         return conference;
     }
 
@@ -66,10 +67,6 @@ public class State {
         listOfVenues.addAll(map.keySet());
 
         listOfVenues.remove("lastSavedFile");
-
-        for(String list: listOfVenues) {
-            System.out.println(list);
-        }
 
         return listOfVenues;
     }
@@ -111,14 +108,30 @@ public class State {
         prefs.flush();
     }
 
+    /**
+     * Deletes a loaded conference
+     */
     public static void delete() {
-        String fileSystemNameOfConference = currentConference.conferenceName.toLowerCase();
-        FileHandle file = Gdx.files.absolute(Gdx.files.getLocalStoragePath()+"\\EasySeatingSaves\\"+fileSystemNameOfConference+".txt");
+        delete(currentConference.conferenceName);
+    }
+
+    /**
+     * Deletes a conference saved file and removes the entry from the pref file
+     */
+    public static void delete(String conferenceName) {
+        Preferences prefs = Gdx.app.getPreferences("SeatingChart");
+
+        String conferenceFileLocation = prefs.getString(conferenceName.toLowerCase());
+
+        FileHandle file = Gdx.files.absolute(conferenceFileLocation);
+        System.out.println("delete path:"+file.path());
         file.delete();
 
-        Preferences prefs = Gdx.app.getPreferences("SeatingChart");
-        prefs.remove("lastSavedFile");
-        prefs.remove(currentConference.conferenceName);
+        if(conferenceFileLocation.equals(prefs.getString("lastSavedFile"))) {
+            prefs.remove("lastSavedFile");
+        }
+        prefs.remove(conferenceName);
+
         prefs.flush();
     }
 
@@ -141,6 +154,16 @@ public class State {
             }
         } else {
             return false;
+        }
+    }
+
+    public static boolean hasLoad() {
+        ArrayList<String> venues = getListOfVenues();
+
+        if(venues.isEmpty()) {
+            return false;
+        } else {
+            return true;
         }
     }
 }

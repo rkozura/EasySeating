@@ -6,6 +6,6 @@
     movable="false">
     <listview id="venueListView" flickscroll="true" colspan="2" row="true" width="{dialogWidth}"
         height="$dialogHeight" adapter="venueListAdapter" itemlistener="venueListListener"/>
-    <textbutton onclick="loadSelectedVenue" growx="true" height="{dialogButtonHeight}">Load</textbutton>
-    <textbutton onclick="deleteSelectedVenue" growx="true" height="{dialogButtonHeight}">Delete</textbutton>
+    <textbutton id="loadButton" onclick="loadSelectedVenue" growx="true" height="{dialogButtonHeight}">Load</textbutton>
+    <textbutton id="deleteButton" onclick="deleteSelectedVenue" growx="true" height="{dialogButtonHeight}">Delete</textbutton>
 </dialogsize>

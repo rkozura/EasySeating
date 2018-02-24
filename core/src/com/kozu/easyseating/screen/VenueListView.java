@@ -1,7 +1,12 @@
 package com.kozu.easyseating.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
 import com.kotcrab.vis.ui.util.adapter.ListAdapter;
@@ -17,7 +22,7 @@ import com.kozu.easyseating.ui.VenueListAdapter;
  */
 
 public class VenueListView extends AbstractLmlView {
-    private VenueListAdapter venueListAdapter;
+    private VenueListAdapter<String> venueListAdapter;
     private Assets assets;
 
     public VenueListView(Stage stage, Assets assets) {
@@ -33,32 +38,41 @@ public class VenueListView extends AbstractLmlView {
     private String selectedVenue;
     @LmlAction("loadSelectedVenue")
     public void loadSelectedVenue() {
-        try {
-            Conference conference = State.loadConference(selectedVenue);
-
-            State.load(conference);
-
-            EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
-
+        if(selectedVenue != null) {
             try {
-                SeatingScreen seatingScreen = new SeatingScreen(conference, assets);
+                Conference conference = State.loadConference(selectedVenue);
 
-                core.getParser().createView(seatingScreen, seatingScreen.getTemplateFile());
-                core.setView(seatingScreen);
-            } catch(Exception e) {
-                venueListAdapter.itemsChanged();
-                venueListAdapter.itemsDataChanged();
-                //TODO Show confirmation message that the data is corrupt and want to remove
+                State.load(conference);
+
+                EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
+
+                try {
+                    SeatingScreen seatingScreen = new SeatingScreen(conference, assets);
+
+                    core.getParser().createView(seatingScreen, seatingScreen.getTemplateFile());
+                    core.setView(seatingScreen);
+                } catch (Exception e) {
+                    venueListAdapter.itemsChanged();
+                    venueListAdapter.itemsDataChanged();
+                    //TODO Show confirmation message that the data is corrupt and want to remove
+                    e.printStackTrace();
+                } finally {
+                    selectedVenue = null;
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        } catch(Exception e) {
-            e.printStackTrace();
         }
     }
 
     @LmlAction("deleteSelectedVenue")
     public void deleteSelectedVenue() {
-        System.out.println("TODO DELETE SELECTED VENUE");
+        if(selectedVenue != null) {
+            State.delete(selectedVenue);
+            venueListAdapter.remove(selectedVenue);
+            venueListAdapter.itemsChanged();
+            selectedVenue = null;
+        }
     }
 
     @LmlAction("venueListAdapter")
@@ -69,10 +83,18 @@ public class VenueListView extends AbstractLmlView {
 
     @LmlAction("venueListListener")
     public void venueListListener(final String selectedItem) {
+        // Clear the existing selection
+        venueListAdapter.itemsChanged();
+
+        VisTable view = venueListAdapter.getView(selectedItem);
+
+        Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
+        pm1.setColor(Color.LIGHT_GRAY);
+        pm1.fill();
+
+        view.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
+
         selectedVenue = selectedItem;
-        System.out.println("selected: "+selectedItem);
-
-
     }
 
     @LmlAction("dialogHeight")
