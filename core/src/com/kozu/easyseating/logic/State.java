@@ -5,6 +5,7 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.files.FileHandle;
 import com.kozu.easyseating.object.Conference;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -32,11 +33,19 @@ public class State {
         FileHandle file = Gdx.files.absolute(conferenceFileLocation);
 
         ObjectInputStream ois = null;
-        Conference conference;
+        Conference conference = null;
         try {
-            ois = new ObjectInputStream(file.read());
-            conference = (Conference)ois.readObject();
-            State.load(conference);
+            try {
+                ois = new ObjectInputStream(file.read());
+            } catch(EOFException eof) {
+                //Do nothing
+            }
+            try {
+                conference = (Conference)ois.readObject();
+                State.load(conference);
+            } catch(EOFException eof) {
+                //Do nothing
+            }
         } catch(Throwable rte) {
             Preferences prefs = Gdx.app.getPreferences("SeatingChart");
             prefs.remove(conferenceName);
