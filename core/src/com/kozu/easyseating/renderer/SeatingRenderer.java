@@ -78,13 +78,20 @@ public class SeatingRenderer implements Disposable{
             //Disable depth testing so people are not clipped
             Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 
+            //Draw a black outline around the table
+            Gdx.gl.glLineWidth(5);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.setColor(Color.BLACK);
             for (int i = 0; i < seatingLogic.conference.getTables().size(); i++) {
                 Table table = seatingLogic.conference.getTables().get(i);
+                shapeRenderer.setColor(Color.BLACK);
                 shapeRenderer.circle(table.bounds.x, table.bounds.y, table.bounds.radius);
+                if(SeatingScreen.getEditTable() == table) {
+                    shapeRenderer.setColor(Color.GREEN);
+                    shapeRenderer.circle(table.bounds.x, table.bounds.y, table.bounds.radius);
+                }
             }
             shapeRenderer.end();
+            Gdx.gl.glLineWidth(1);
 
             //Draw the table identifier text
             EasySeatingGame.batch.begin();

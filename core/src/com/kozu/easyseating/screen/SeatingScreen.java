@@ -137,7 +137,7 @@ public class SeatingScreen extends AbstractLmlView {
         openOptionsButton.setVisible(false);
     }
 
-    public Table getEditTable() {
+    public static Table getEditTable() {
         return selectedTable;
     }
 
@@ -232,7 +232,7 @@ public class SeatingScreen extends AbstractLmlView {
         venueDialog.show(getStage());
     }
 
-    private Table selectedTable;
+    private static Table selectedTable;
     public void openTable(Table table) {
         selectedTable = table;
 
