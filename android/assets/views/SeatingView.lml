@@ -30,7 +30,7 @@
 <dialogsize id="venueDialog" titlealign="center" style="dialog" movable="false" visible="false">
     <listview scrollingdisabledx="true" id="venueListView" flickscroll="true" colspan="2" row="true" width="{dialogWidth}" height="$dialogHeight"
         adapter="venuePersonAdapter" itemlistener="venuePersonListener"/>
-    <textbutton onclick="openCreatePersonDialog" growx="true" height="{dialogButtonHeight}">Add</textbutton>
+    <textbutton style="blue" onclick="openCreatePersonDialog" growx="true" height="{dialogButtonHeight}">Add</textbutton>
     <!--textbutton growx="true" height="{dialogButtonHeight}">Sort</textbutton-->
 </dialogsize>
 
@@ -41,44 +41,44 @@
         <listview scrollingdisabledx="true" flickscroll="true" width="{dialogWidth}"
             adapter="venuePersonTableAdapter" itemlistener="tableVenuePersonListener"/>
     </splitpane>
-    <textbutton growx="true" height="{dialogButtonHeight}" onclick="confirmEditTable">Confirm</textbutton>
+    <textbutton style="blue" growx="true" height="{dialogButtonHeight}" onclick="confirmEditTable">Confirm</textbutton>
 </dialogsize>
 
 <dialogsize id="createPersonDialog" title="Create Person" titlealign="center" style="dialog" movable="false"
 visible="false" onecolumn="true">
-    <textbutton onclick="openCustomPersonDialog" width="{buttonWidth}" height="{buttonHeight}">Custom</textbutton>
-    <textbutton onclick="openImportContactsDialog" width="{buttonWidth}" height="{buttonHeight}">Import Contacts</textbutton>
+    <textbutton style="blue" onclick="openCustomPersonDialog" width="{buttonWidth}" height="{buttonHeight}">Custom</textbutton>
+    <textbutton style="blue" onclick="openImportContactsDialog" width="{buttonWidth}" height="{buttonHeight}">Contacts</textbutton>
 </dialogsize>
 
 <dialogsize id="customPersonDialog" title="Custom Person" titlealign="center" style="dialog" movable="false"
 visible="false" onecolumn="true">
     <textfield growx="true" oninit="initTextField" id="personName"></textfield>
-    <textbutton padleft="250" padright="250" onclick="createCustomPerson" width="{buttonWidth}" height="{buttonHeight}">Create</textbutton>
+    <textbutton style="blue" padleft="250" padright="250" onclick="createCustomPerson" width="{buttonWidth}" height="{buttonHeight}">Create</textbutton>
 </dialogsize>
 
 <dialogsize id="editPersonDialog" titlealign="center" style="dialog" movable="false" visible="false"
 onecolumn="true">
     <textfield growx="true" oninit="initTextField" id="editPersonName"></textfield>
-    <textbutton padleft="250" padright="250" onclick="openConfirmDeletePersonDialog" width="{buttonWidth}" height="{buttonHeight}">Delete</textbutton>
-    <textbutton onclick="confirmEditPerson" width="{buttonWidth}" height="{buttonHeight}">Save</textbutton>
+    <textbutton style="blue" padleft="250" padright="250" onclick="openConfirmDeletePersonDialog" width="{buttonWidth}" height="{buttonHeight}">Delete</textbutton>
+    <textbutton style="blue" onclick="confirmEditPerson" width="{buttonWidth}" height="{buttonHeight}">Save</textbutton>
 </dialogsize>
 
 <dialogsize id="confirmDeletePersonDialog" title="Delete Person?" titlealign="center" style="dialog"
 movable="false" visible="false" onecolumn="true">
     <label wrap="true" width="{dialogWidth}">(Person will be removed from the venue and table)</label>
-    <textbutton onclick="deletePerson">Delete</textbutton>
+    <textbutton style="blue" onclick="deletePerson">Delete</textbutton>
 </dialogsize>
 
 <dialogsize id="importContactsDialog" title="Import Contacts" titlealign="center" style="dialog"
     movable="false" visible="false">
     <listview id="contactsListView" flickscroll="true" colspan="2" row="true" width="{dialogWidth}"
         height="$dialogHeight" adapter="contactsPersonAdapter" itemlistener="contactsPersonListener"/>
-    <textbutton onclick="saveContactsDialog" growx="true" height="{dialogButtonHeight}">Save</textbutton>
+    <textbutton style="blue" onclick="saveContactsDialog" growx="true" height="{dialogButtonHeight}">Save</textbutton>
 </dialogsize>
 
 <dialogsize id="createObjectDialog" title="Add Object" titlealign="center" style="dialog" movable="false"
 visible="false" onecolumn="true">
-    <textbutton onclick="createRoundTable" width="{buttonWidth}" height="{buttonHeight}">Circle Table</textbutton>
-    <textbutton onclick="createSquareTable" width="{buttonWidth}" height="{buttonHeight}">Square Table</textbutton>
-    <textbutton onclick="createObject" width="{buttonWidth}" height="{buttonHeight}">Venue Object</textbutton>
+    <textbutton style="blue" onclick="createRoundTable" width="{buttonWidth}" height="{buttonHeight}">Circle Table</textbutton>
+    <textbutton style="blue" onclick="createSquareTable" width="{buttonWidth}" height="{buttonHeight}">Square Table</textbutton>
+    <textbutton style="blue" onclick="createObject" width="{buttonWidth}" height="{buttonHeight}">Venue Object</textbutton>
 </dialogsize>

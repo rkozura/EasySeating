@@ -455,20 +455,13 @@ public class SeatingScreen extends AbstractLmlView {
             selectedContacts.add(selectedItem);
 
             Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
-            pm1.setColor(Color.LIGHT_GRAY);
+            pm1.setColor(new Color(0, .502f, .949f, 1));
             pm1.fill();
-
-            view.getChildren().get(0).setColor(Color.CYAN);
 
             view.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
         } else {
             selectedContacts.remove(selectedItem);
-
-            Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
-            pm1.setColor(Color.PINK);
-            pm1.fill();
-
-            view.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
+            contactsPeopleListAdapter.itemsChanged();
         }
     }
 

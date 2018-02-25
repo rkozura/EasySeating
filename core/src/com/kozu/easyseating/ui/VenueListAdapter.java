@@ -10,13 +10,10 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.adapter.ArrayListAdapter;
 import com.kotcrab.vis.ui.util.adapter.SimpleListAdapter;
 import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisScrollPane;
 import com.kotcrab.vis.ui.widget.VisTable;
-import com.kozu.easyseating.object.Person;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Map;
 
 /**
  * Created by Rob on 9/9/2017.
@@ -58,8 +55,8 @@ public class VenueListAdapter<ItemT> extends ArrayListAdapter<ItemT, VisTable> {
     protected VisTable createView(ItemT item) {
         String entry = (String)item;
 
-        Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
-        pm1.setColor(Color.BLACK);
+        Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGBA4444);
+        pm1.setColor(new Color(.694f, .714f, .718f, .2f));
         pm1.fill();
 
         VisLabel venueLabel = new VisLabel(entry);

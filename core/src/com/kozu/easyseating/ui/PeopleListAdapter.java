@@ -57,8 +57,8 @@ public class PeopleListAdapter<ItemT> extends ArrayListAdapter<ItemT, VisTable> 
     protected VisTable createView(ItemT item) {
         Person person = (Person)item;
 
-        Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
-        pm1.setColor(Color.PINK);
+        Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGBA4444);
+        pm1.setColor(new Color(.694f, .714f, .718f, .2f));
         pm1.fill();
 
         VisLabel tableLabel = new VisLabel(person.assignedTable);

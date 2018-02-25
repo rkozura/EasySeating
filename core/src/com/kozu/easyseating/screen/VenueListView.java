@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.github.czyzby.lml.annotation.LmlAction;
+import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
 import com.kotcrab.vis.ui.util.adapter.ListAdapter;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -15,6 +16,7 @@ import com.kozu.easyseating.Assets;
 import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.logic.State;
 import com.kozu.easyseating.object.Conference;
+import com.kozu.easyseating.ui.DialogSize;
 import com.kozu.easyseating.ui.VenueListAdapter;
 
 /**
@@ -22,6 +24,8 @@ import com.kozu.easyseating.ui.VenueListAdapter;
  */
 
 public class VenueListView extends AbstractLmlView {
+    @LmlActor("venueListDialog") private DialogSize venueListDialog;
+
     private VenueListAdapter<String> venueListAdapter;
     private Assets assets;
 
@@ -57,6 +61,7 @@ public class VenueListView extends AbstractLmlView {
                     //TODO Show confirmation message that the data is corrupt and want to remove
                     e.printStackTrace();
                 } finally {
+                    venueListDialog.hide();
                     selectedVenue = null;
                 }
             } catch (Exception e) {
@@ -89,7 +94,7 @@ public class VenueListView extends AbstractLmlView {
         VisTable view = venueListAdapter.getView(selectedItem);
 
         Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
-        pm1.setColor(Color.LIGHT_GRAY);
+        pm1.setColor(new Color(0, .502f, .949f, 1));
         pm1.fill();
 
         view.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));

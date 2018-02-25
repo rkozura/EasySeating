@@ -188,7 +188,6 @@ public class MainScreen extends AbstractLmlView {
                 ((DialogSize)actor).hide();
             }
         }
-        //centerActorOnStage(createVenueDialog);
 
         super.resize(width, height, centerCamera);
     }
@@ -240,6 +239,7 @@ public class MainScreen extends AbstractLmlView {
         EasySeatingGame.batch.end();
 
         getStage().getViewport().apply();
+
         super.render(delta);
     }
 }

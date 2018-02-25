@@ -25,6 +25,7 @@ public class Assets {
     private static final int DIALOG_FONT_SIZE = 35;
     private static final int MAIN_SCREEN_FONT_SIZE = 55;
     private static final int PERSON_FONT_SIZE = 10;
+    private static final int HELP_FONT_SIZE = 15;
 
     public AssetManager manager;
 
@@ -33,6 +34,7 @@ public class Assets {
     public static AssetDescriptor<BitmapFont> dialogtext;
     public static AssetDescriptor<BitmapFont> mainmenutext;
     public static AssetDescriptor<BitmapFont> persontext;
+    public static AssetDescriptor<BitmapFont> helptext;
 
     //Textures
     public static final AssetDescriptor<Texture> tabletexture = new AssetDescriptor<Texture>("images/game/lightpaperfibers.png", Texture.class);
@@ -48,6 +50,11 @@ public class Assets {
         buttonFontParameter.fontParameters.size = (int) (BUTTON_FONT_SIZE * Gdx.graphics.getDensity());
         buttonFontParameter.fontFileName = "fonts/OpenSans-Regular.ttf";
         buttontext = new AssetDescriptor<BitmapFont>(buttonFontParameter.fontFileName, BitmapFont.class, buttonFontParameter);
+
+        FreetypeFontLoader.FreeTypeFontLoaderParameter helpFontParameter = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+        helpFontParameter.fontParameters.size = (int) (HELP_FONT_SIZE * Gdx.graphics.getDensity());
+        helpFontParameter.fontFileName = "fonts/OpenSans-Regular-3.ttf";
+        helptext = new AssetDescriptor<BitmapFont>(helpFontParameter.fontFileName, BitmapFont.class, helpFontParameter);
 
         FreetypeFontLoader.FreeTypeFontLoaderParameter dialogTitleFontParameter = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         dialogTitleFontParameter.fontParameters.size = (int) (DIALOG_FONT_SIZE * Gdx.graphics.getDensity());
@@ -96,6 +103,7 @@ public class Assets {
         manager.load(dialogtext);
         manager.load(mainmenutext);
         manager.load(persontext);
+        manager.load(helptext);
 
         manager.load(tabletexture);
         manager.load(floortexture);

@@ -102,6 +102,7 @@ public class EasySeatingGame extends LmlApplicationListener {
             visSkin.add("dialog-font", assets.manager.get(Assets.dialogtext), BitmapFont.class);
             visSkin.add("main-screen-font", assets.manager.get(Assets.mainmenutext), BitmapFont.class);
             visSkin.add("person-font", assets.manager.get(Assets.persontext), BitmapFont.class);
+            visSkin.add("help-font", assets.manager.get(Assets.helptext), BitmapFont.class);
 
             visSkin.load(Gdx.files.internal("uiskin.json"));
 

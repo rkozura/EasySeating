@@ -4,7 +4,8 @@
 <:assign key="dialogWidth" value="{=1.8 * $ppi}"/>
 
 <dialogsize title="Help" style="dialog" titlealign="center" movable="false" onecolumn="true">
-    <vislabel wrap="true" width="{dialogWidth}">-Tap and hold to add/remove/move tables</vislabel>
-    <vislabel wrap="true" width="{dialogWidth}">-Tap "Venue" to add people</vislabel>
-    <vislabel wrap="true" width="{dialogWidth}">-Tap table to add people to table</vislabel>
+    <vislabel style="help" wrap="true" width="{dialogWidth}">-Tap and hold to add/remove/move tables</vislabel>
+    <vislabel style="help" wrap="true" width="{dialogWidth}">-Tap "Venue" to add people</vislabel>
+    <vislabel style="help" wrap="true" width="{dialogWidth}">-Tap table and click "Add" to add people to table</vislabel>
+    <vislabel style="help" wrap="true" width="{dialogWidth}">-While focusing on a table, drag assigned people to other tables</vislabel>
 </dialogsize>

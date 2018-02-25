@@ -66,7 +66,8 @@
   link-label: {fontColor: link-label, font: default-font },
   menuitem-shortcut: {font: default-font, fontColor: menuitem },
   main-screen: {font: main-screen-font, fontColor: main-screen-color },
-  instruction: {font: dialog-font, fontColor: white }
+  instruction: {font: dialog-font, fontColor: white },
+  help: {font: help-font, fontColor: white }
 },
   com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
   default: {font: default-font, fontColor: white, disabledFontColor: grey, selection: selection, background: textfield, cursor: cursor, messageFont: default-font, messageFontColor: grey },
