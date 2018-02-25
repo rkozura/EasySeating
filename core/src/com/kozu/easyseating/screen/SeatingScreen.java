@@ -4,11 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -449,37 +453,24 @@ public class SeatingScreen extends AbstractLmlView {
 
         if(!selectedContacts.contains(selectedItem)) {
             selectedContacts.add(selectedItem);
-            System.out.println(view.getChildren().get(0));
+
+            Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
+            pm1.setColor(Color.LIGHT_GRAY);
+            pm1.fill();
+
             view.getChildren().get(0).setColor(Color.CYAN);
+
+            view.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
         } else {
             selectedContacts.remove(selectedItem);
-            view.getChildren().get(0).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
+
+            Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
+            pm1.setColor(Color.PINK);
+            pm1.fill();
+
+            view.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
         }
     }
-
-    /**
-     * Sets the person selection
-     */
-//    private void setPersonSelection() {
-//        if(selectedTable != null) {
-//            for (Person person : tablePeopleListAdapter.iterable()) {
-//                VisTable view = tablePeopleListAdapter.getView(person);
-//                if (seatingLogic.isPersonAtTable(selectedTable, person)) {
-//                    (view.getChildren().get(0)).setColor(Color.CYAN);
-//                    ((VisLabel)view.getChildren().get(1)).setText("");
-//                } else {
-//                    (view.getChildren().get(0)).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
-//                    Table assignedTable = seatingLogic.getAssignedTable(person);
-//                    if(assignedTable != null) {
-//                        ((VisLabel) view.getChildren().get(1)).setText(assignedTable.tableIdentifier);
-//                    }
-//                }
-//            }
-//        }
-//
-//        //This will resort the array based on what is selected
-//        tablePeopleListAdapter.itemsDataChanged();
-//    }
 
     @Override
     public void resize(int width, int height, boolean centerCamera) {
@@ -491,7 +482,6 @@ public class SeatingScreen extends AbstractLmlView {
 
         tableDialog.getContentTable().getCell(tableSplitPane).height(getSplitDialogHeight(null));
         tablePeopleListAdapter.itemsChanged();
-        //tableDialog.getContentTable().getCell(tableVenueListView).height(getDialogHeight(null)/2);
         venuePersonTableAdapter.itemsChanged();
 
         importContactsDialog.getContentTable().getCell(contactsListView).height(getDialogHeight(null));
@@ -503,16 +493,6 @@ public class SeatingScreen extends AbstractLmlView {
         tableDialog.pack();
         importContactsDialog.invalidate();
         importContactsDialog.pack();
-
-//TODO Figure out how to center dialogs correctly
-//        centerActorOnStage(venueDialog);
-//        centerActorOnStage(tableDialog);
-//        centerActorOnStage(createPersonDialog);
-//        centerActorOnStage(customPersonDialog);
-//        centerActorOnStage(customPersonDialog);
-//        centerActorOnStage(editPersonDialog);
-//        centerActorOnStage(confirmDeletePersonDialog);
-//        centerActorOnStage(importContactsDialog);
 
         for(Actor actor : getStage().getActors()) {
             if(actor instanceof DialogSize) {
