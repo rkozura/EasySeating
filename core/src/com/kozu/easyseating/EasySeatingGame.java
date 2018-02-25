@@ -128,7 +128,6 @@ public class EasySeatingGame extends LmlApplicationListener {
             batch.begin();
             font.draw(batch, "Loading..."+(int)(assets.manager.getProgress()*100)+"%", 0, 300);
             batch.end();
-            System.out.println("loading..");
         }
     }
 
@@ -138,7 +137,6 @@ public class EasySeatingGame extends LmlApplicationListener {
         font.dispose();
         batch.dispose();
         visSkin.dispose();
-        visSkin.getAtlas().dispose();
         assets.manager.dispose();
 
         super.dispose();
