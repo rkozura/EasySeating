@@ -126,7 +126,7 @@ public class EasySeatingGame extends LmlApplicationListener {
         } else if(!loaded) {
             batch.setProjectionMatrix(stage.getCamera().combined);
             batch.begin();
-            font.draw(batch, "Loading..."+assets.manager.getProgress()*100+"%", 0, 300);
+            font.draw(batch, "Loading..."+(int)(assets.manager.getProgress()*100)+"%", 0, 300);
             batch.end();
             System.out.println("loading..");
         }
@@ -135,9 +135,11 @@ public class EasySeatingGame extends LmlApplicationListener {
     @Override
     public void dispose() {
         stage.dispose();
-        //font.dispose();
+        font.dispose();
         batch.dispose();
-        assets.manager.clear();
+        visSkin.dispose();
+        visSkin.getAtlas().dispose();
+        assets.manager.dispose();
 
         super.dispose();
     }
