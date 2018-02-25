@@ -61,7 +61,8 @@ public class SeatingRenderer implements Disposable{
             Gdx.gl.glDepthMask(true);
             Gdx.gl.glColorMask(false, false, false, false);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            for (Table table : seatingLogic.conference.getTables()) {
+            for (int i = 0; i < seatingLogic.conference.getTables().size(); i++) {
+                Table table = seatingLogic.conference.getTables().get(i);
                 shapeRenderer.circle(table.bounds.x, table.bounds.y, table.bounds.radius);
             }
             shapeRenderer.end();
@@ -79,14 +80,16 @@ public class SeatingRenderer implements Disposable{
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.setColor(Color.BLACK);
-            for (Table table : seatingLogic.conference.getTables()) {
+            for (int i = 0; i < seatingLogic.conference.getTables().size(); i++) {
+                Table table = seatingLogic.conference.getTables().get(i);
                 shapeRenderer.circle(table.bounds.x, table.bounds.y, table.bounds.radius);
             }
             shapeRenderer.end();
 
             //Draw the table identifier text
             EasySeatingGame.batch.begin();
-            for (Table table : seatingLogic.conference.getTables()) {
+            for (int i = 0; i < seatingLogic.conference.getTables().size(); i++) {
+                Table table = seatingLogic.conference.getTables().get(i);
                 assets.manager.get(Assets.buttontext).setColor(Color.BLACK);
                 glyphLayout.setText(assets.manager.get(Assets.buttontext), table.tableIdentifier);
                 //Now draw the table identifier
@@ -95,7 +98,8 @@ public class SeatingRenderer implements Disposable{
             }
             EasySeatingGame.batch.end();
 
-            for (Table table : seatingLogic.conference.getTables()) {
+            for (int i = 0; i < seatingLogic.conference.getTables().size(); i++) {
+                Table table = seatingLogic.conference.getTables().get(i);
                 renderAssignedSeats(table);
             }
         }
@@ -103,7 +107,8 @@ public class SeatingRenderer implements Disposable{
 
     public void renderAssignedSeats(Table table) {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        for(Person person : table.assignedSeats) {
+        for(int i = 0; i < table.assignedSeats.size(); i++) {
+            Person person = table.assignedSeats.get(i);
             if (!person.isFlaggedForRemoval()) {
                 shapeRenderer.setColor(Color.CYAN);
             } else {
@@ -114,7 +119,8 @@ public class SeatingRenderer implements Disposable{
         }
         shapeRenderer.end();
         EasySeatingGame.batch.begin();
-        for(Person person : table.assignedSeats) {
+        for(int i = 0; i < table.assignedSeats.size(); i++) {
+            Person person = table.assignedSeats.get(i);
             //Draw the person text
             if(seatingLogic.getBackgroundTint().a == 1) {
                 assets.manager.get(Assets.persontext).setColor(Color.BLACK);

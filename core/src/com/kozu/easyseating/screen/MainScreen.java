@@ -100,6 +100,8 @@ public class MainScreen extends AbstractLmlView {
             SeatingScreen seatingScreen = new SeatingScreen(venueName, assets);
             core.getParser().createView(seatingScreen, seatingScreen.getTemplateFile());
 
+            TweenUtil.getTweenManager().killAll();
+
             core.setView(seatingScreen);
 
             return ReflectedLmlDialog.HIDE;
@@ -190,11 +192,6 @@ public class MainScreen extends AbstractLmlView {
         }
 
         super.resize(width, height, centerCamera);
-    }
-
-    private void centerActorOnStage(Actor actor) {
-        actor.setPosition(Math.round((getStage().getWidth() - actor.getWidth()) / 2),
-                Math.round((getStage().getHeight())));
     }
 
     @Override
