@@ -1,6 +1,7 @@
 package com.kozu.easyseating;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -69,6 +70,8 @@ public class EasySeatingGame extends LmlApplicationListener {
 
     @Override
     public void create() {
+        Gdx.input.setCatchBackKey(true);
+
         stage = new Stage(new StretchViewport(300, 300));
 
         font = new BitmapFont();
@@ -91,7 +94,10 @@ public class EasySeatingGame extends LmlApplicationListener {
     Skin visSkin;
     @Override
     public void render() {
-        //Always update the tween engine
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+        }
+
+            //Always update the tween engine
         TweenUtil.getTweenManager().update(Gdx.graphics.getDeltaTime());
 
         super.render();
@@ -129,9 +135,11 @@ public class EasySeatingGame extends LmlApplicationListener {
     @Override
     public void dispose() {
         stage.dispose();
-        font.dispose();
+        //font.dispose();
         batch.dispose();
-        assets.dispose();
+        assets.manager.clear();
+
+        super.dispose();
     }
 
     private static LmlTagProvider getDialogSizeProvider() {

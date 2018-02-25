@@ -29,9 +29,11 @@ public class AndroidLauncher extends AndroidApplication {
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
-		// Create the libgdx View
+		// Create the libgdx View and hide the android navigation bar
 		EasySeatingGame seatingChart = new EasySeatingGame(importer, pdfGenerator);
 		View gameView = initializeForView(seatingChart);
+//		int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+//		gameView.setSystemUiVisibility(uiOptions);
 
 		// Add the libgdx view
 		layout.addView(gameView);

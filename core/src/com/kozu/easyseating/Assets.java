@@ -113,8 +113,4 @@ public class Assets {
         }
     }
 
-    public void dispose() {
-        manager.dispose();
-    }
-
 }
