@@ -15,10 +15,7 @@ import com.kozu.easyseating.screen.SeatingScreen;
 import com.kozu.easyseating.tweenutil.CameraAccessor;
 import com.kozu.easyseating.tweenutil.TweenUtil;
 
-import aurelienribon.tweenengine.BaseTween;
-import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenCallback;
 
 /**
  * Created by Rob on 8/4/2017.
@@ -111,9 +108,7 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
                 return false;
             }
         } else {
-            //Else, try and get a draggable person
-            Table table = seatingScreen.getEditTable();
-            if (table != null) {
+            for(Table table : seatingLogic.conference.getTables()) {
                 for (Person person : table.assignedSeats) {
                     if (person.bounds.contains(pos.x, pos.y)) {
                         draggedPerson = person;
@@ -121,10 +116,8 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
                         return true;
                     }
                 }
-                return false;
-            } else {
-                return false;
             }
+            return false;
         }
     }
 
@@ -261,42 +254,20 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
     @Override
     public boolean panStop(float x, float y, int pointer, int button) {
         if(draggedPerson != null) {
-            boolean switchedPersonTable = false;
             for(Table table : seatingLogic.conference.getTables()) {
                 if(!table.assignedSeats.contains(draggedPerson)) {
                     if (table.bounds.overlaps(draggedPerson.bounds)) {
-                        Timeline timeline = seatingLogic.addPersonToTable(table, draggedPerson);
-                        if(seatingScreen.getEditTable() != null) {
-                            final Table table2 = table;
-                            timeline.setCallback(new TweenCallback() {
-                                @Override
-                                public void onEvent(int type, BaseTween<?> source) {
-                                    Timeline timeline = Timeline.createSequence();
-
-                                    timeline.push(Tween.to(camera, CameraAccessor.POSITION_XY, .9f).target(table2.bounds.x, table2.bounds.y)
-                                            .start(TweenUtil.getTweenManager()));
-                                    timeline.pushPause(2l);
-                                    Table table = seatingScreen.getEditTable();
-                                    if(table != null) {
-                                        timeline.push(Tween.to(camera, CameraAccessor.POSITION_XY, .9f).target(table.bounds.x, table.bounds.y)
-                                                .start(TweenUtil.getTweenManager()));
-                                    }
-                                    timeline.start(TweenUtil.getTweenManager());
-                                }
-                            });
-                        }
-                        switchedPersonTable = true;
+                        seatingLogic.addPersonToTable(table, draggedPerson);
                         break;
                     }
                 }
             }
 
-            if(!switchedPersonTable) {
-                seatingLogic.resetTable(seatingScreen.getEditTable());
-
-                Table table = seatingScreen.getEditTable();
-                Tween.to(camera, CameraAccessor.POSITION_XY, .3f).target(table.bounds.x, table.bounds.y)
-                        .start(TweenUtil.getTweenManager());
+            for(Table table : seatingLogic.conference.getTables()) {
+                if(table.assignedSeats.contains(draggedPerson)) {
+                    seatingLogic.resetTable(table);
+                    break;
+                }
             }
 
             draggedPerson = null;
@@ -304,10 +275,6 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
             State.save();
             draggedTable = null;
 
-        } else if(seatingScreen.getEditTable() != null) {
-            Table table = seatingScreen.getEditTable();
-            Tween.to(camera, CameraAccessor.POSITION_XY, .3f).target(table.bounds.x, table.bounds.y)
-                    .start(TweenUtil.getTweenManager());
         } else {
             float xx = MathUtils.clamp(camera.position.x, 0, (float) seatingLogic.conference.conferenceWidth);
             float yy = MathUtils.clamp(camera.position.y, 0, (float) seatingLogic.conference.conferenceHeight);
