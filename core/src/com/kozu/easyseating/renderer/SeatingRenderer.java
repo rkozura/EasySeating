@@ -79,14 +79,15 @@ public class SeatingRenderer implements Disposable{
             Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 
             //Draw a black outline around the table
-            Gdx.gl.glLineWidth(5);
+            Gdx.gl.glLineWidth(6);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             for (int i = 0; i < seatingLogic.conference.getTables().size(); i++) {
                 Table table = seatingLogic.conference.getTables().get(i);
-                shapeRenderer.setColor(Color.BLACK);
-                shapeRenderer.circle(table.bounds.x, table.bounds.y, table.bounds.radius);
                 if(SeatingScreen.getEditTable() == table) {
                     shapeRenderer.setColor(Color.GREEN);
+                    shapeRenderer.circle(table.bounds.x, table.bounds.y, table.bounds.radius);
+                } else {
+                    shapeRenderer.setColor(Color.BLACK);
                     shapeRenderer.circle(table.bounds.x, table.bounds.y, table.bounds.radius);
                 }
             }
