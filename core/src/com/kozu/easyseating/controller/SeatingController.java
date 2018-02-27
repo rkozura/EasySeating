@@ -235,7 +235,7 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
     public boolean pan(float x, float y, float deltaX, float deltaY) {
         Vector3 vec2 = camera.unproject(new Vector3(x, y, 0));
 
-        if(draggedPerson != null) {
+        if(draggedPerson != null && SeatingScreen.getEditTable() != null) {
             draggedPerson.setFlaggedForRemoval(false);
             draggedPerson.bounds.x = vec2.x;
             draggedPerson.bounds.y = vec2.y;
