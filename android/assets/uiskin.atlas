@@ -591,8 +591,8 @@ splitpane-over
 splitpane-vertical
   rotate: false
   xy: 40, 16
-  size: 1, 8
-  orig: 1, 8
+  size: 1, 14
+  orig: 1, 14
   offset: 0, 0
   index: -1
 splitpane-vertical-over
