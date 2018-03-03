@@ -409,11 +409,21 @@ public class SeatingScreen extends AbstractLmlView {
         VisTable view = tablePeopleListAdapter.getView(selectedItem);
 
         if(editTableRemovePeopleList.contains(selectedItem, true)) {
-            view.getChildren().get(0).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
             editTableRemovePeopleList.removeValue(selectedItem, true);
+
+            Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGBA4444);
+            pm1.setColor(new Color(.694f, .714f, .718f, .2f));
+            pm1.fill();
+
+            view.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
         } else {
-            view.getChildren().get(0).setColor(Color.RED);
             editTableRemovePeopleList.add(selectedItem);
+
+            Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
+            pm1.setColor(new Color(.929f, .306f, .306f, 1));
+            pm1.fill();
+
+            view.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
         }
     }
 
