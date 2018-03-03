@@ -65,11 +65,10 @@ public class PeopleListAdapter<ItemT> extends ArrayListAdapter<ItemT, VisTable> 
         VisLabel personLabel = new VisLabel(person.getName());
         VisScrollPane personScroll = new VisScrollPane(personLabel);
         personScroll.setScrollingDisabled(true, false);
-        //personLabel.setWrap(true);
 
         VisTable table = new VisTable();
         table.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
-        table.add(tableLabel).width(30);
+        table.add(tableLabel).center().width(100);
         table.add(personScroll).growX().height(.25f* Gdx.graphics.getPpiX()).padLeft(10f);
 
         return table;
