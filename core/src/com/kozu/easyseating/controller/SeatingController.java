@@ -40,6 +40,8 @@ public class SeatingController extends GestureDetector {
      */
     public void personPan() {
         if(SeatingControllerListener.draggedPerson != null && isPanning()) {
+            float panSpeed = .009f / ((OrthographicCamera)camera).zoom;
+
             float touchX = Gdx.input.getX();
             float touchY = Gdx.input.getY();
 
@@ -49,18 +51,18 @@ public class SeatingController extends GestureDetector {
 
             boolean panned = false;
             if(touchX >= width-space) {
-                camera.position.add(space*.1f, 0, 0);
+                camera.position.add(space*panSpeed, 0, 0);
                 panned = true;
             } else if(touchX <= space) {
-                camera.position.sub(space*.1f, 0, 0);
+                camera.position.sub(space*panSpeed, 0, 0);
                 panned = true;
             }
 
             if(touchY >= height-space) {
-                camera.position.sub(0, space*.1f, 0);
+                camera.position.sub(0, space*panSpeed, 0);
                 panned = true;
             } else if(touchY <= space) {
-                camera.position.add(0, space*.1f, 0);
+                camera.position.add(0, space*panSpeed, 0);
                 panned = true;
             }
 
