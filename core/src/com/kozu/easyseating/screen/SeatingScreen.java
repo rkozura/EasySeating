@@ -330,6 +330,7 @@ public class SeatingScreen extends AbstractLmlView {
         editPersonDialog.setVisible(true);
         editPersonDialog.show(getStage());
         editPersonDialog.toFront();
+        editPersonDialog.setPosition(editPersonDialog.getX(), Gdx.graphics.getHeight()-(Gdx.graphics.getPpiX()/2));
     }
 
     @LmlAction("tableVenuePersonListener")
