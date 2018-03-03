@@ -23,7 +23,6 @@ import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.LmlView;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
 import com.github.czyzby.lml.util.LmlUtilities;
-import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ToastManager;
 import com.kotcrab.vis.ui.util.adapter.ListAdapter;
 import com.kotcrab.vis.ui.widget.ListView;
@@ -127,9 +126,6 @@ public class SeatingScreen extends AbstractLmlView {
         Tween.to(seatingLogic.getBackgroundTint(), ColorAccessor.ALPHA, .3f).target(.20f)
                 .start(TweenUtil.getTweenManager());
 
-        tableList.clear();
-        tableList.addAll(table.assignedSeats);
-        tablePeopleListAdapter.itemsChanged();
         selectedTable = table;
         addPersonToTableButton.setVisible(true);
         doneEditingTableButton.setVisible(true);
@@ -236,17 +232,18 @@ public class SeatingScreen extends AbstractLmlView {
     public void openTable(Table table) {
         selectedTable = table;
 
+        tableList.clear();
+        editTableAddPeopleList.clear();
+        editTableRemovePeopleList.clear();
         peopleWithoutTable.clear();
+
         peopleWithoutTable.addAll(seatingLogic.conference.persons);
         peopleWithoutTable.removeAll(selectedTable.assignedSeats);
 
+        tableList.addAll(table.assignedSeats);
+
         tablePeopleListAdapter.itemsChanged();
         venuePersonTableAdapter.itemsChanged();
-
-        for(Person person : tableList) {
-            VisTable view = tablePeopleListAdapter.getView(person);
-            view.getChildren().get(0).setColor(VisUI.getSkin().get(Label.LabelStyle.class).fontColor);
-        }
 
         tableDialog.getTitleLabel().setText("Table "+table.tableIdentifier);
         tableDialog.setVisible(true);
@@ -341,27 +338,42 @@ public class SeatingScreen extends AbstractLmlView {
 
         peopleWithoutTable.remove(selectedItem);
 
-        seatingLogic.addPersonToTable(selectedTable, selectedItem);
+        editTableAddPeopleList.add(selectedItem);
 
-        tablePeopleListAdapter.itemsChanged();
+        VisTable view = tablePeopleListAdapter.getView(selectedItem);
+        Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGBA4444);
+        pm1.setColor(new Color(.514f, .988f, .616f, .2f));
+        pm1.fill();
+
+        view.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
+
+        //seatingLogic.addPersonToTable(selectedTable, selectedItem);
+
+        tablePeopleListAdapter.itemsDataChanged();
         venuePersonTableAdapter.itemsChanged();
     }
 
     Array<Person> editTableRemovePeopleList = new Array<Person>();
+    Array<Person> editTableAddPeopleList = new Array<Person>();
     @LmlAction("confirmEditTable")
     public void confirmEditTable() {
         Table table = getEditTable();
         for(Person person : editTableRemovePeopleList) {
             seatingLogic.removePersonFromTable(table, person);
             tableList.remove(person);
+            peopleWithoutTable.add(person);
+        }
+        for(Person person : editTableAddPeopleList) {
+            seatingLogic.addPersonToTable(table, person);
         }
 
         editTableRemovePeopleList.clear();
+        editTableAddPeopleList.clear();
 
         tablePeopleListAdapter.itemsChanged();
         venuePersonTableAdapter.itemsChanged();
 
-        tableDialog.hide();
+        //tableDialog.hide();
     }
 
     @LmlAction("openConfirmDeletePersonDialog")
@@ -408,22 +420,31 @@ public class SeatingScreen extends AbstractLmlView {
     public void tablePersonListener(final Person selectedItem) {
         VisTable view = tablePeopleListAdapter.getView(selectedItem);
 
-        if(editTableRemovePeopleList.contains(selectedItem, true)) {
-            editTableRemovePeopleList.removeValue(selectedItem, true);
+        if(editTableAddPeopleList.contains(selectedItem, true)){
+            editTableAddPeopleList.removeValue(selectedItem, true);
+            peopleWithoutTable.add(selectedItem);
+            tableList.remove(selectedItem);
 
-            Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGBA4444);
-            pm1.setColor(new Color(.694f, .714f, .718f, .2f));
-            pm1.fill();
-
-            view.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
+            tablePeopleListAdapter.itemsDataChanged();
+            venuePersonTableAdapter.itemsDataChanged();
         } else {
-            editTableRemovePeopleList.add(selectedItem);
+            if (editTableRemovePeopleList.contains(selectedItem, true)) {
+                editTableRemovePeopleList.removeValue(selectedItem, true);
 
-            Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
-            pm1.setColor(new Color(.929f, .306f, .306f, 1));
-            pm1.fill();
+                Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGBA4444);
+                pm1.setColor(new Color(.694f, .714f, .718f, .2f));
+                pm1.fill();
 
-            view.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
+                view.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
+            } else {
+                editTableRemovePeopleList.add(selectedItem);
+
+                Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGB565);
+                pm1.setColor(new Color(.929f, .306f, .306f, 1));
+                pm1.fill();
+
+                view.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
+            }
         }
     }
 
