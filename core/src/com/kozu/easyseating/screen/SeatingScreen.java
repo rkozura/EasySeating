@@ -259,8 +259,10 @@ public class SeatingScreen extends AbstractLmlView {
         System.out.println("export");
     }
 
+    private boolean shouldResize = true;
     @LmlAction("openCreatePersonDialog")
     public void openCreatePersonDialog() {
+        shouldResize = false;
         EasySeatingGame.importer.checkPermission();
         createPersonDialog.setVisible(true);
         createPersonDialog.show(getStage());
@@ -468,33 +470,37 @@ public class SeatingScreen extends AbstractLmlView {
 
     @Override
     public void resize(int width, int height, boolean centerCamera) {
-        viewport.update(width, height);
-        getStage().getViewport().update(width, height, true);
+        if(shouldResize) {
+            viewport.update(width, height);
+            getStage().getViewport().update(width, height, true);
 
-        venueDialog.getContentTable().getCell(venueListView).height(getDialogHeight(null));
-        venuePeopleListAdapter.itemsChanged();
+            venueDialog.getContentTable().getCell(venueListView).height(getDialogHeight(null));
+            venuePeopleListAdapter.itemsChanged();
 
-        tableDialog.getContentTable().getCell(tableSplitPane).height(getSplitDialogHeight(null));
-        tablePeopleListAdapter.itemsChanged();
-        venuePersonTableAdapter.itemsChanged();
+            tableDialog.getContentTable().getCell(tableSplitPane).height(getSplitDialogHeight(null));
+            tablePeopleListAdapter.itemsChanged();
+            venuePersonTableAdapter.itemsChanged();
 
-        importContactsDialog.getContentTable().getCell(contactsListView).height(getDialogHeight(null));
-        contactsPeopleListAdapter.itemsChanged();
+            importContactsDialog.getContentTable().getCell(contactsListView).height(getDialogHeight(null));
+            contactsPeopleListAdapter.itemsChanged();
 
-        venueDialog.invalidateHierarchy();
-        venueDialog.pack();
-        tableDialog.invalidateHierarchy();
-        tableDialog.pack();
-        importContactsDialog.invalidate();
-        importContactsDialog.pack();
+            venueDialog.invalidateHierarchy();
+            venueDialog.pack();
+            tableDialog.invalidateHierarchy();
+            tableDialog.pack();
+            importContactsDialog.invalidate();
+            importContactsDialog.pack();
 
-        for(Actor actor : getStage().getActors()) {
-            if(actor instanceof DialogSize) {
-                ((DialogSize)actor).hide();
+            for (Actor actor : getStage().getActors()) {
+                if (actor instanceof DialogSize) {
+                    ((DialogSize) actor).hide();
+                }
             }
+
+            super.resize(width, height, centerCamera);
         }
 
-        super.resize(width, height, centerCamera);
+        shouldResize = true;
     }
 
     private void centerActorOnStage(Actor actor) {
@@ -560,25 +566,17 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlAction("openImportContactsDialog")
     public void openImportContactsDialog() {
         ArrayList<Person> contactList = EasySeatingGame.importer.getPersonList();
+        shouldResize = false;
 
         if(contactList != null) {
+            shouldResize = true;
             contacts.clear();
             contacts.addAll(contactList);
             contacts.removeAll(seatingLogic.conference.persons);
             contactsPeopleListAdapter.itemsChanged();
 
-            //clear the selected contacts in case user hid the dialog
             selectedContacts.clear();
 
-            //ArrayList<Person> contactPeople = EasySeatingGame.importer.getPersonList();
-            //ArrayList<Person> conferencePeople = seatingLogic.conference.persons;
-
-            //Only show contacts that have not been added to the conference
-            //contactPeople.removeAll(conferencePeople);
-
-            //Clear and retrieve the person list in case contacts were added
-            //contactsPeopleListAdapter.clear();
-            //contactsPeopleListAdapter.addAll(contactPeople);
             createPersonDialog.hide();
 
             importContactsDialog.setVisible(true);
