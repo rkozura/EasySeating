@@ -271,7 +271,7 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlAction("export")
     public void export(VisTextButton visTextButton) {
-        System.out.println("export");
+        //System.out.println("export");
     }
 
     private boolean shouldResize = true;
@@ -737,13 +737,13 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlAction("createObject")
     public void createObject() {
         //TODO Create round table
-        System.out.println("Creating object");
+        //System.out.println("Creating object");
     }
 
     @LmlAction("createSquareTable")
     public void createSquareTable() {
         //TODO Create square table
-        System.out.println("Creating square table");
+        //System.out.println("Creating square table");
     }
 
     public boolean isAlpha(String s){

@@ -87,7 +87,7 @@ public class State {
     }
 
     public static void save() {
-        System.out.println("Saving");
+        //System.out.println("Saving");
 
         String fileSystemNameOfConference = currentConference.conferenceName.toLowerCase();
 
@@ -133,7 +133,7 @@ public class State {
         String conferenceFileLocation = prefs.getString(conferenceName.toLowerCase());
 
         FileHandle file = Gdx.files.absolute(conferenceFileLocation);
-        System.out.println("delete path:"+file.path());
+        //System.out.println("delete path:"+file.path());
         file.delete();
 
         if(conferenceFileLocation.equals(prefs.getString("lastSavedFile"))) {

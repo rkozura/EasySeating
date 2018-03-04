@@ -21,7 +21,7 @@ import java.io.IOException;
 public class DesktopPDFGenerator implements PDFGenerator {
     @Override
     public void generatePDF(Conference conference) {
-        System.out.println("Desktop saving PDF");
+        //System.out.println("Desktop saving PDF");
 
         int line = 0;
 
