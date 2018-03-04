@@ -4,8 +4,10 @@
 <:assign key="dialogWidth" value="{=1.8 * $ppi}"/>
 
 <dialogsize title="Help" style="dialog" titlealign="center" movable="false" onecolumn="true">
-    <vislabel style="help" wrap="true" width="{dialogWidth}">-Tap and hold to add/remove/move tables</vislabel>
-    <vislabel style="help" wrap="true" width="{dialogWidth}">-Tap "Venue" to add people</vislabel>
-    <vislabel style="help" wrap="true" width="{dialogWidth}">-Tap table and click "Add" to add people to table</vislabel>
-    <vislabel style="help" wrap="true" width="{dialogWidth}">-While focusing on a table, drag assigned people to other tables</vislabel>
+    <vislabel style="help" wrap="true" width="{dialogWidth}">-Tap "+" to add/remove/move tables</vislabel>
+    <vislabel style="help" wrap="true" width="{dialogWidth}">-Tap table to add/remove people</vislabel>
+    <vislabel style="help" wrap="true" width="{dialogWidth}">-Tap table and drag people to other tables!  Tap people to remove them from table</vislabel>
+    <vislabel style="help" wrap="true" width="{dialogWidth}">-"Venue" will add new people</vislabel>
+    <vislabel style="help" wrap="true" width="{dialogWidth}">-"Contacts" will import contacts into app</vislabel>
+    <vislabel style="help" wrap="true" width="{dialogWidth}">-"Export" will export a PDF of your venue</vislabel>
 </dialogsize>

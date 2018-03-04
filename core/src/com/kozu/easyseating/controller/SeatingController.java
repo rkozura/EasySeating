@@ -215,7 +215,7 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
      */
     @Override
     public boolean longPress(float x, float y) {
-        seatingScreen.showAddRemoveTablesTable();
+        // seatingScreen.showAddRemoveTablesTable();
         return true;
     }
 

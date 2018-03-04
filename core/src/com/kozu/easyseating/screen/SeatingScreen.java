@@ -101,6 +101,8 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlActor("personcounter") private Label personcounter;
 
+    @LmlActor("addTableButton") private TextButton addTableButton;
+
     public SeatingScreen(Conference conference, Assets assets) {
         super(new Stage(new ScreenViewport()));
 
@@ -138,6 +140,8 @@ public class SeatingScreen extends AbstractLmlView {
         doneEditingTableButton.setVisible(true);
         openVenueButton.setVisible(false);
         openOptionsButton.setVisible(false);
+        addTableButton.setVisible(false);
+        personcounter.setVisible(false);
     }
 
     public static Table getEditTable() {
@@ -175,9 +179,9 @@ public class SeatingScreen extends AbstractLmlView {
         doneEditingTableButton.setVisible(false);
         openVenueButton.setVisible(true);
         openOptionsButton.setVisible(true);
+        addTableButton.setVisible(true);
+        personcounter.setVisible(true);
 
-        Tween.to(camera, CameraAccessor.ZOOM, .3f).target(1f) //TODO this is needed when killing a tween target, it somehow uses a bad pool entry and frees up good ones for the next two tween calls
-                .start(TweenUtil.getTweenManager());
         Tween.to(camera, CameraAccessor.ZOOM, .3f).target(1f)
                 .start(TweenUtil.getTweenManager());
         Tween.to(seatingLogic.getBackgroundTint(), ColorAccessor.ALPHA, .3f).target(1)
@@ -394,6 +398,8 @@ public class SeatingScreen extends AbstractLmlView {
         venuePersonTableAdapter.itemsChanged();
 
         updateCounter();
+
+        State.save();
     }
 
     @LmlAction("openConfirmDeletePersonDialog")
@@ -451,6 +457,8 @@ public class SeatingScreen extends AbstractLmlView {
         importContactsDialog.hide();
 
         updateCounter();
+
+        State.save();
     }
 
     @LmlAction("tablePersonListener")
@@ -683,6 +691,8 @@ public class SeatingScreen extends AbstractLmlView {
 
     public static boolean addRemoveTable;
     public static boolean removeTable;
+
+    @LmlAction("showAddRemoveTablesTable")
     public void showAddRemoveTablesTable() {
         removeTable = false;
         addRemoveTable = true;
@@ -691,6 +701,8 @@ public class SeatingScreen extends AbstractLmlView {
         addRemoveTablesTable.setVisible(true);
         openVenueButton.setVisible(false);
         openOptionsButton.setVisible(false);
+        addTableButton.setVisible(false);
+        personcounter.setVisible(false);
     }
 
     @LmlAction("toggleAddRemove")
@@ -711,6 +723,8 @@ public class SeatingScreen extends AbstractLmlView {
         addRemoveTablesTable.setVisible(false);
         openVenueButton.setVisible(true);
         openOptionsButton.setVisible(true);
+        addTableButton.setVisible(true);
+        personcounter.setVisible(true);
     }
 
     @LmlAction("createRoundTable")

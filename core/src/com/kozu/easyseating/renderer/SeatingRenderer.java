@@ -24,7 +24,7 @@ import static com.kozu.easyseating.EasySeatingGame.batch;
 
 public class SeatingRenderer implements Disposable{
     private Color tableTrimColor = new Color(.047f, .561f, .8f, 1f);
-    private Color personColor = new Color(.447f, .898f, 1f, .6f);
+    private Color personColor = new Color(.667f, .937f, 1f, 1f);
 
     private TiledDrawable tableTile;
     private TiledDrawable floorTile;
@@ -148,8 +148,8 @@ public class SeatingRenderer implements Disposable{
     }
 
     public void renderAssignedSeats(Table table) {
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+//        Gdx.gl.glEnable(GL20.GL_BLEND);
+//        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for(int i = 0; i < table.assignedSeats.size(); i++) {
             Person person = table.assignedSeats.get(i);
@@ -165,7 +165,7 @@ public class SeatingRenderer implements Disposable{
             shapeRenderer.rectLine(person.bounds.x, person.bounds.y, table.getX(), table.getY(), 10);
         }
         shapeRenderer.end();
-        Gdx.gl.glDisable(GL20.GL_BLEND);
+        //Gdx.gl.glDisable(GL20.GL_BLEND);
 
         if(seatingLogic.isOverTable()) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
