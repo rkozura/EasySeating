@@ -39,6 +39,7 @@ public class Assets {
     //Textures
     public static final AssetDescriptor<Texture> tabletexture = new AssetDescriptor<Texture>("images/game/lightpaperfibers.png", Texture.class);
     public static final AssetDescriptor<Texture> floortexture = new AssetDescriptor<Texture>("images/game/floor.png", Texture.class);
+    public static final AssetDescriptor<Texture> venueBackgroundTexture = new AssetDescriptor<Texture>("images/game/back-pattern.png", Texture.class);
 
     //Main menu backgrounds
     public static final List<AssetDescriptor<Texture>> backgroundtextures = new ArrayList<AssetDescriptor<Texture>>();
@@ -107,6 +108,7 @@ public class Assets {
 
         manager.load(tabletexture);
         manager.load(floortexture);
+        manager.load(venueBackgroundTexture);
 
         for(AssetDescriptor backgroundDescriptor : backgroundtextures) {
             manager.load(backgroundDescriptor);

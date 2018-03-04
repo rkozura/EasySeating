@@ -124,7 +124,7 @@ public class SeatingScreen extends AbstractLmlView {
         gestureDetector = new SeatingController(camera, seatingLogic, this);
 
         //Create the renderer.  Renderer needs to see the logic to know what to render
-        renderer = new SeatingRenderer(seatingLogic, assets);
+        renderer = new SeatingRenderer(seatingLogic, assets, getStage().getCamera(), camera);
 
         this.assets = assets;
     }

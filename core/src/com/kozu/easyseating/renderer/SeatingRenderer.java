@@ -1,6 +1,7 @@
 package com.kozu.easyseating.renderer;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -15,6 +16,8 @@ import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
 import com.kozu.easyseating.screen.SeatingScreen;
 
+import static com.kozu.easyseating.EasySeatingGame.batch;
+
 /**
  * Created by Rob on 8/2/2017.
  */
@@ -25,6 +28,7 @@ public class SeatingRenderer implements Disposable{
 
     private TiledDrawable tableTile;
     private TiledDrawable floorTile;
+    private TiledDrawable floorBackgroundTile;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     private SeatingLogic seatingLogic;
@@ -34,12 +38,18 @@ public class SeatingRenderer implements Disposable{
 
     private Assets assets;
 
-    public SeatingRenderer(SeatingLogic seatingLogic, Assets assets) {
+    private Camera uiCamera;
+    private Camera gameCamera;
+
+    public SeatingRenderer(SeatingLogic seatingLogic, Assets assets, Camera uiCamera, Camera gameCamera) {
         tableTile = new TiledDrawable(new TextureRegion(assets.manager.get(assets.tabletexture)));
         floorTile = new TiledDrawable(new TextureRegion(assets.manager.get(assets.floortexture)));
+        floorBackgroundTile = new TiledDrawable(new TextureRegion(assets.manager.get(assets.venueBackgroundTexture)));
 
         this.seatingLogic = seatingLogic;
         this.assets = assets;
+        this.uiCamera = uiCamera;
+        this.gameCamera = gameCamera;
     }
 
     @Override
@@ -48,6 +58,10 @@ public class SeatingRenderer implements Disposable{
     }
 
     public void render() {
+        batch.setProjectionMatrix(uiCamera.combined);
+        renderBackground();
+
+        batch.setProjectionMatrix(gameCamera.combined);
         shapeRenderer.setProjectionMatrix(EasySeatingGame.batch.getProjectionMatrix());
         shapeRenderer.setTransformMatrix(EasySeatingGame.batch.getTransformMatrix());
 
@@ -165,8 +179,16 @@ public class SeatingRenderer implements Disposable{
         }
     }
 
+    private void renderBackground() {
+        EasySeatingGame.batch.begin();
+        floorBackgroundTile.draw(EasySeatingGame.batch, 0, 0, (float)seatingLogic.conference.conferenceWidth,
+                (float)seatingLogic.conference.conferenceHeight);
+        EasySeatingGame.batch.end();
+    }
+
     private void renderFloor() {
         EasySeatingGame.batch.begin();
+
         //Set a tint based on if a table is being viewed or not
         EasySeatingGame.batch.setColor(seatingLogic.getBackgroundTint());
         floorTile.draw(EasySeatingGame.batch, 0, 0, (float)seatingLogic.conference.conferenceWidth,
