@@ -415,6 +415,11 @@ public class SeatingScreen extends AbstractLmlView {
             manager.setAlignment(Align.topLeft);
             manager.show("Name can't be empty!", 1.5f);
             manager.toFront();
+
+            FocusManager.switchFocus(getStage(), editPersonFirstName);
+            getStage().setKeyboardFocus(editPersonFirstName);
+            Gdx.input.setOnscreenKeyboardVisible(true);
+            editPersonFirstName.setCursorAtTextEnd();
         } else {
             selectedPerson.setName(editPersonFirstName.getText(), editPersonLastName.getText());
             venuePeopleListAdapter.itemsChanged();

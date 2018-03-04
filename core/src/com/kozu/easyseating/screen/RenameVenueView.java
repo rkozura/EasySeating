@@ -15,6 +15,10 @@ import com.kozu.easyseating.ui.DialogSize;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+
+import static org.apache.commons.lang3.StringUtils.isAlphaSpace;
+
 /**
  * Created by Rob on 01/3/2018.
  */
@@ -38,7 +42,9 @@ public class RenameVenueView extends AbstractLmlInputDialogView {
         return "101";
     }
 
+    private String initialText;
     public void setTextFieldString(String value) {
+        initialText = value;
         venueName.setText(value);
 
         //The following three lines are absolutely needed for correct input on mobile
@@ -51,12 +57,46 @@ public class RenameVenueView extends AbstractLmlInputDialogView {
     @LmlAction("checkForInvalidVenueName")
     public boolean checkForInvalidVenueName(final DialogSize dialog) {
         String venueNameString = venueName.getText();
-        if(!StringUtils.isBlank(venueNameString)) {
+
+        ArrayList<String> venues = State.getListOfVenues();
+        ArrayList<String> venuesFormatted = new ArrayList<String>();
+        for(String venue: venues) {
+            venuesFormatted.add(venue.toLowerCase());
+        }
+
+        if(StringUtils.isBlank(venueNameString)) {
+            final ToastManager manager = getToastManager(dialog.getStage());
+            manager.clear();
+            manager.setAlignment(Align.topLeft);
+            manager.show("Invalid Venue Name", 1.5f);
+            manager.toFront();
+
+            //The following three lines are absolutely needed for correct input on mobile
+            FocusManager.switchFocus(getStage(), venueName);
+            getStage().setKeyboardFocus(venueName);
+            Gdx.input.setOnscreenKeyboardVisible(true);
+            venueName.setCursorAtTextEnd();
+
+            return ReflectedLmlDialog.CANCEL_HIDING;
+
+        } else if(!initialText.equalsIgnoreCase(venueNameString) && venuesFormatted.contains(venueNameString.toLowerCase())) {
+            final ToastManager manager = getToastManager(dialog.getStage());
+            manager.clear();
+            manager.setAlignment(Align.topLeft);
+            manager.show("Venue name already exists", 1.5f);
+            manager.toFront();
+
+            //The following three lines are absolutely needed for correct input on mobile
+            FocusManager.switchFocus(getStage(), venueName);
+            getStage().setKeyboardFocus(venueName);
+            Gdx.input.setOnscreenKeyboardVisible(true);
+            venueName.setCursorAtTextEnd();
+
+            return ReflectedLmlDialog.CANCEL_HIDING;
+        } else {
             State.rename(venueNameString);
 
             return ReflectedLmlDialog.HIDE;
-        } else {
-            return ReflectedLmlDialog.CANCEL_HIDING;
         }
     }
 
@@ -65,16 +105,26 @@ public class RenameVenueView extends AbstractLmlInputDialogView {
         visTextField.setTextFieldFilter(new VisTextField.TextFieldFilter() {
             @Override
             public boolean acceptChar(VisTextField textField, char c) {
-                if(textField.getText().length() >= 15) {
+                if(isAlphaSpace((Character.toString(c)))) {
+                    if(textField.getText().length() >= 16) {
+                        ToastManager manager = getToastManager(getStage());
+                        manager.clear();
+                        manager.setAlignment(Align.topLeft);
+                        manager.show("Name too long!", 1.5f);
+                        manager.toFront();
+
+                        return false;
+                    } else {
+                        return true;
+                    }
+                } else {
                     ToastManager manager = getToastManager(getStage());
                     manager.clear();
                     manager.setAlignment(Align.topLeft);
-                    manager.show("Name too long!", 1.5f);
+                    manager.show("Invalid character!", 1.5f);
                     manager.toFront();
 
                     return false;
-                } else {
-                    return true;
                 }
             }
         });

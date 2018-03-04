@@ -40,6 +40,8 @@ import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
 
+import static org.apache.commons.lang3.StringUtils.isAlphaSpace;
+
 /**
  * Created by Rob on 8/27/2017.
  */
@@ -87,7 +89,7 @@ public class MainScreen extends AbstractLmlView {
 
     @LmlAction("checkForInvalidVenueName")
     public boolean checkForInvalidVenueName(final DialogSize dialog) {
-        String venueName = ((VisTextField) LmlUtilities.getActorWithId(dialog, "venueName")).getText();
+        String venueNameString = ((VisTextField) LmlUtilities.getActorWithId(dialog, "venueName")).getText();
 
         ArrayList<String> venues = State.getListOfVenues();
         ArrayList<String> venuesFormatted = new ArrayList<String>();
@@ -95,26 +97,38 @@ public class MainScreen extends AbstractLmlView {
             venuesFormatted.add(venue.toLowerCase());
         }
 
-        if(StringUtils.isBlank(venueName)) {
+        if(StringUtils.isBlank(venueNameString)) {
             final ToastManager manager = getToastManager(dialog.getStage());
             manager.clear();
             manager.setAlignment(Align.topLeft);
             manager.show("Invalid Venue Name", 1.5f);
             manager.toFront();
 
+            //The following three lines are absolutely needed for correct input on mobile
+            FocusManager.switchFocus(getStage(), venueName);
+            getStage().setKeyboardFocus(venueName);
+            Gdx.input.setOnscreenKeyboardVisible(true);
+            venueName.setCursorAtTextEnd();
+
             return ReflectedLmlDialog.CANCEL_HIDING;
 
-        } else if(venuesFormatted.contains(venueName.toLowerCase())) {
+        } else if(venuesFormatted.contains(venueNameString.toLowerCase())) {
             final ToastManager manager = getToastManager(dialog.getStage());
             manager.clear();
             manager.setAlignment(Align.topLeft);
             manager.show("Venue name already exists", 1.5f);
             manager.toFront();
 
+            //The following three lines are absolutely needed for correct input on mobile
+            FocusManager.switchFocus(getStage(), venueName);
+            getStage().setKeyboardFocus(venueName);
+            Gdx.input.setOnscreenKeyboardVisible(true);
+            venueName.setCursorAtTextEnd();
+
             return ReflectedLmlDialog.CANCEL_HIDING;
         } else {
             EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
-            SeatingScreen seatingScreen = new SeatingScreen(venueName, assets);
+            SeatingScreen seatingScreen = new SeatingScreen(venueNameString, assets);
             core.getParser().createView(seatingScreen, seatingScreen.getTemplateFile());
 
             TweenUtil.getTweenManager().killAll();
@@ -130,16 +144,26 @@ public class MainScreen extends AbstractLmlView {
         visTextField.setTextFieldFilter(new VisTextField.TextFieldFilter() {
             @Override
             public boolean acceptChar(VisTextField textField, char c) {
-                if(textField.getText().length() >= 15) {
+                if(isAlphaSpace(Character.toString(c))) {
+                    if(textField.getText().length() >= 16) {
+                        ToastManager manager = getToastManager(getStage());
+                        manager.clear();
+                        manager.setAlignment(Align.topLeft);
+                        manager.show("Name too long!", 1.5f);
+                        manager.toFront();
+
+                        return false;
+                    } else {
+                        return true;
+                    }
+                } else {
                     ToastManager manager = getToastManager(getStage());
                     manager.clear();
                     manager.setAlignment(Align.topLeft);
-                    manager.show("Name too long!", 1.5f);
+                    manager.show("Invalid character!", 1.5f);
                     manager.toFront();
 
                     return false;
-                } else {
-                    return true;
                 }
             }
         });
@@ -157,6 +181,7 @@ public class MainScreen extends AbstractLmlView {
         FocusManager.switchFocus(getStage(), venueName);
         getStage().setKeyboardFocus(venueName);
         Gdx.input.setOnscreenKeyboardVisible(true);
+        venueName.setCursorAtTextEnd();
     }
 
     @LmlAction("openContinueVenue")
