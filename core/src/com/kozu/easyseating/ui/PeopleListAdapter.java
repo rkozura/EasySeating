@@ -112,7 +112,7 @@ public class PeopleListAdapter<ItemT> extends ArrayListAdapter<ItemT, VisTable> 
         return table;
     }
 
-    class LastNameComparator<ItemT> implements Comparator<ItemT> {
+    public static class LastNameComparator<ItemT> implements Comparator<ItemT> {
         @Override
         public int compare(ItemT itemT, ItemT t1) {
             Person personOne = (Person)itemT;
@@ -124,7 +124,7 @@ public class PeopleListAdapter<ItemT> extends ArrayListAdapter<ItemT, VisTable> 
         }
     }
 
-    class FirstNameComparator<ItemT> implements Comparator<ItemT> {
+    public static class FirstNameComparator<ItemT> implements Comparator<ItemT> {
         @Override
         public int compare(ItemT itemT, ItemT t1) {
             Person personOne = (Person)itemT;
@@ -136,7 +136,7 @@ public class PeopleListAdapter<ItemT> extends ArrayListAdapter<ItemT, VisTable> 
         }
     }
 
-    class TableComparator<ItemT> implements Comparator<ItemT> {
+    public static class TableComparator<ItemT> implements Comparator<ItemT> {
         @Override
         public int compare(ItemT itemT, ItemT t1) {
             Person personOne = (Person)itemT;

@@ -7,9 +7,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
+import com.kotcrab.vis.ui.util.ToastManager;
 import com.kotcrab.vis.ui.util.adapter.ListAdapter;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kozu.easyseating.Assets;
@@ -25,9 +27,12 @@ import com.kozu.easyseating.ui.VenueListAdapter;
 
 public class VenueListView extends AbstractLmlView {
     @LmlActor("venueListDialog") private DialogSize venueListDialog;
+    @LmlActor("confirmDeleteVenueDialog") private DialogSize confirmDeleteVenueDialog;
 
     private VenueListAdapter<String> venueListAdapter;
     private Assets assets;
+
+    private ToastManager toastManager;
 
     public VenueListView(Stage stage, Assets assets) {
         super(stage);
@@ -58,7 +63,13 @@ public class VenueListView extends AbstractLmlView {
                 } catch (Exception e) {
                     venueListAdapter.itemsChanged();
                     venueListAdapter.itemsDataChanged();
-                    //TODO Show confirmation message that the data is corrupt and want to remove
+
+                    ToastManager manager = getToastManager(getStage());
+                    manager.clear();
+                    manager.setAlignment(Align.topLeft);
+                    manager.show("Saved data is corrupt :(", 1.5f);
+                    manager.toFront();
+
                     e.printStackTrace();
                 } finally {
                     venueListDialog.hide();
@@ -70,14 +81,30 @@ public class VenueListView extends AbstractLmlView {
         }
     }
 
-    @LmlAction("deleteSelectedVenue")
-    public void deleteSelectedVenue() {
+    @LmlAction("deleteVenue")
+    public void deleteVenue() {
         if(selectedVenue != null) {
             State.delete(selectedVenue);
             venueListAdapter.remove(selectedVenue);
             venueListAdapter.itemsChanged();
             selectedVenue = null;
         }
+        confirmDeleteVenueDialog.hide();
+    }
+
+    @LmlAction("deleteSelectedVenue")
+    public void deleteSelectedVenue() {
+        Gdx.app.getInput().setOnscreenKeyboardVisible(false);
+        confirmDeleteVenueDialog.setVisible(true);
+        confirmDeleteVenueDialog.show(getStage());
+        confirmDeleteVenueDialog.toFront();
+    }
+
+    private ToastManager getToastManager(Stage stage) {
+        if (toastManager == null) {
+            toastManager = new ToastManager(stage);
+        }
+        return toastManager;
     }
 
     @LmlAction("venueListAdapter")

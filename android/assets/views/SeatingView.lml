@@ -15,6 +15,10 @@
 </table>
 
 <table fillparent="true">
+    <label id="personcounter" style="main-screen" expand="true" align="BOTTOMRIGHT" padbottom="{buttonHeight}" padright="50"></label>
+</table>
+
+<table fillparent="true">
     <textbutton id="addPersonToTableButton" visible="false" align="BOTTOMRIGHT" width="{buttonWidth}" height="{buttonHeight}" style="blue" expandy="true" onclick="openAddPersonToTableDialog">Add</textbutton>
     <textbutton id="doneEditingTableButton" visible="false" align="BOTTOMRIGHT" width="{buttonWidth}" height="{buttonHeight}" style="blue" expandy="true" onclick="doneEditingTable">Done</textbutton>
 </table>

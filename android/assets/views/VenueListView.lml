@@ -9,3 +9,8 @@
     <textbutton style="blue" id="loadButton" onclick="loadSelectedVenue" growx="true" height="{dialogButtonHeight}">Load</textbutton>
     <textbutton style="blue" id="deleteButton" onclick="deleteSelectedVenue" growx="true" height="{dialogButtonHeight}">Delete</textbutton>
 </dialogsize>
+
+<dialogsize id="confirmDeleteVenueDialog" title="Delete Venue?" titlealign="center" style="dialog" movable="false" visible="false" onecolumn="true">
+    <label wrap="true" width="{dialogWidth}">(All people and tables will be deleted)</label>
+    <textbutton style="blue" onclick="deleteVenue">Delete</textbutton>
+</dialogsize>

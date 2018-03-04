@@ -99,6 +99,8 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlActor("tableSplitPane") private VisSplitPane tableSplitPane;
 
+    @LmlActor("personcounter") private Label personcounter;
+
     public SeatingScreen(Conference conference, Assets assets) {
         super(new Stage(new ScreenViewport()));
 
@@ -180,6 +182,8 @@ public class SeatingScreen extends AbstractLmlView {
                 .start(TweenUtil.getTweenManager());
         Tween.to(seatingLogic.getBackgroundTint(), ColorAccessor.ALPHA, .3f).target(1)
                 .start(TweenUtil.getTweenManager());
+
+        updateCounter();
     }
 
     @Override
@@ -203,6 +207,8 @@ public class SeatingScreen extends AbstractLmlView {
                 .start(TweenUtil.getTweenManager());
 
         GdxUtilities.setMultipleInputProcessors(Gdx.input.getInputProcessor(), gestureDetector);
+
+        updateCounter();
     }
 
     @Override
@@ -321,6 +327,8 @@ public class SeatingScreen extends AbstractLmlView {
                 venuePersonTableAdapter.itemsChanged();
 
                 customPersonDialog.hide();
+
+                updateCounter();
             }
         }
     }
@@ -361,8 +369,6 @@ public class SeatingScreen extends AbstractLmlView {
 
         view.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
 
-        //seatingLogic.addPersonToTable(selectedTable, selectedItem);
-
         tablePeopleListAdapter.itemsDataChanged();
         venuePersonTableAdapter.itemsChanged();
     }
@@ -387,7 +393,7 @@ public class SeatingScreen extends AbstractLmlView {
         tablePeopleListAdapter.itemsChanged();
         venuePersonTableAdapter.itemsChanged();
 
-        //tableDialog.hide();
+        updateCounter();
     }
 
     @LmlAction("openConfirmDeletePersonDialog")
@@ -407,6 +413,8 @@ public class SeatingScreen extends AbstractLmlView {
         editPersonDialog.hide();
         confirmDeletePersonDialog.hide();
         State.save();
+
+        updateCounter();
     }
 
     @LmlAction("confirmEditPerson")
@@ -441,6 +449,8 @@ public class SeatingScreen extends AbstractLmlView {
         venuePersonTableAdapter.itemsChanged();
 
         importContactsDialog.hide();
+
+        updateCounter();
     }
 
     @LmlAction("tablePersonListener")
@@ -730,5 +740,18 @@ public class SeatingScreen extends AbstractLmlView {
     public void dispose() {
         renderer.dispose();
         super.dispose();
+    }
+
+    private void updateCounter() {
+        int seatingPeople = 0;
+
+        for(Table tables : seatingLogic.conference.getTables()) {
+            for(Person person : tables.assignedSeats){
+                seatingPeople++;
+            }
+        }
+        personcounter.setText(seatingPeople+"/"+seatingLogic.conference.persons.size());
+        personcounter.pack();
+        personcounter.validate();
     }
 }

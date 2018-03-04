@@ -135,9 +135,9 @@ public class SeatingRenderer implements Disposable{
 
     public void renderAssignedSeats(Table table) {
         Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for(int i = 0; i < table.assignedSeats.size(); i++) {
-            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_BLEND_DST_ALPHA);
             Person person = table.assignedSeats.get(i);
             if (!person.isFlaggedForRemoval()) {
                 shapeRenderer.setColor(personColor);
