@@ -78,10 +78,10 @@ public class AndroidPersonImporter implements PersonImporter {
                 if(name != null && !"".equalsIgnoreCase(name)) {
                     String[] nameSplit = name.split(" ");
                     if (nameSplit.length >= 1) {
-                        String firstName = nameSplit[0].substring(0, Math.min(30, nameSplit[0].length())), lastName = "";
+                        String firstName = nameSplit[0].substring(0, Math.min(12, nameSplit[0].length())), lastName = "";
 
                         if (nameSplit.length > 1) {
-                            lastName = nameSplit[nameSplit.length - 1].substring(0, Math.min(30, nameSplit[nameSplit.length - 1].length()));
+                            lastName = nameSplit[nameSplit.length - 1].substring(0, Math.min(12, nameSplit[nameSplit.length - 1].length()));
                         }
 
                         personList.add(new Person(firstName, lastName));
