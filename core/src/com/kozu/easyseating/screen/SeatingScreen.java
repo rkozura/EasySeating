@@ -22,7 +22,7 @@ import com.github.czyzby.lml.annotation.LmlAction;
 import com.github.czyzby.lml.annotation.LmlActor;
 import com.github.czyzby.lml.parser.LmlView;
 import com.github.czyzby.lml.parser.impl.AbstractLmlView;
-import com.github.czyzby.lml.util.LmlUtilities;
+import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.util.ToastManager;
 import com.kotcrab.vis.ui.util.adapter.ListAdapter;
 import com.kotcrab.vis.ui.widget.ListView;
@@ -73,7 +73,11 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlActor("importContactsDialog") private DialogSize importContactsDialog;
     @LmlActor("createObjectDialog") private DialogSize createObjectDialog;
 
-    @LmlActor("personName") private VisTextField personName;
+    @LmlActor("personFirstName") private VisTextField personFirstName;
+    @LmlActor("personLastName") private VisTextField personLastName;
+
+    @LmlActor("editPersonFirstName") private VisTextField editPersonFirstName;
+    @LmlActor("editPersonLastName") private VisTextField editPersonLastName;
 
     @LmlActor("venueListView") private ListView.ListViewTable venueListView;
     @LmlActor("contactsListView") private ListView.ListViewTable contactsListView;
@@ -268,7 +272,8 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlAction("openCustomPersonDialog")
     public void createPerson() {
-        personName.setText("");
+        personFirstName.setText("");
+        personLastName.setText("");
 
         createPersonDialog.hide();
 
@@ -278,15 +283,15 @@ public class SeatingScreen extends AbstractLmlView {
 
         customPersonDialog.setPosition(customPersonDialog.getX(), Gdx.graphics.getHeight()-(Gdx.graphics.getPpiX()/2));
 
-        getStage().setKeyboardFocus(personName);
-        Gdx.input.setOnscreenKeyboardVisible(true);
+        //The following three lines are absolutely needed for correct input on mobile
+//        FocusManager.switchFocus(getStage(), personFirstName);
+//        getStage().setKeyboardFocus(personFirstName);
+//        Gdx.input.setOnscreenKeyboardVisible(true);
     }
 
     @LmlAction("createCustomPerson")
     public void createCustomPerson() {
-        String personName = ((VisTextField) LmlUtilities.getActorWithId(customPersonDialog, "personName")).getText();
-
-        if(StringUtils.isBlank(personName)) {
+        if(StringUtils.isBlank(personFirstName.getText()) || StringUtils.isBlank(personLastName.getText())) {
             final ToastManager manager = getToastManager(getStage());
             manager.clear();
             manager.setAlignment(Align.topLeft);
@@ -295,7 +300,7 @@ public class SeatingScreen extends AbstractLmlView {
         } else {
             boolean isDuplicate = false;
             for(Person person : seatingLogic.conference.persons) {
-                if(person.getName().equalsIgnoreCase(personName)) {
+                if(person.getFirstName().equalsIgnoreCase(personFirstName.getText()) && person.getLastName().equalsIgnoreCase(personLastName.getText())) {
                     isDuplicate = true;
                     break;
                 }
@@ -307,7 +312,7 @@ public class SeatingScreen extends AbstractLmlView {
                 manager.show("Person already exists", 1.5f);
                 manager.toFront();
             } else {
-                seatingLogic.createPerson(personName);
+                seatingLogic.createPerson(personFirstName.getText(), personLastName.getText());
 
                 venuePeopleListAdapter.itemsChanged();
                 venuePersonTableAdapter.itemsChanged();
@@ -322,14 +327,20 @@ public class SeatingScreen extends AbstractLmlView {
     public void venuePersonListener(final Person selectedItem) {
         selectedPerson = selectedItem;
 
-        VisTextField renamePersonTextField = (VisTextField)LmlUtilities.getActorWithId(editPersonDialog, "editPersonName");
-        renamePersonTextField.setText(selectedItem.getName());
+        editPersonFirstName.setText(selectedItem.getFirstName());
+        editPersonLastName.setText(selectedItem.getLastName());
 
         editPersonDialog.getTitleLabel().setText("Person Details");
         editPersonDialog.setVisible(true);
         editPersonDialog.show(getStage());
         editPersonDialog.toFront();
         editPersonDialog.setPosition(editPersonDialog.getX(), Gdx.graphics.getHeight()-(Gdx.graphics.getPpiX()/2));
+
+        //The following three lines are absolutely needed for correct input on mobile
+        FocusManager.switchFocus(getStage(), editPersonFirstName);
+        getStage().setKeyboardFocus(editPersonFirstName);
+        Gdx.input.setOnscreenKeyboardVisible(true);
+        editPersonFirstName.setCursorAtTextEnd();
     }
 
     @LmlAction("tableVenuePersonListener")
@@ -378,6 +389,7 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlAction("openConfirmDeletePersonDialog")
     public void openConfirmDeletePersonDialog() {
+        Gdx.app.getInput().setOnscreenKeyboardVisible(false);
         confirmDeletePersonDialog.setVisible(true);
         confirmDeletePersonDialog.show(getStage());
         confirmDeletePersonDialog.toFront();
@@ -395,14 +407,20 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlAction("confirmEditPerson")
     public void confirmEditPerson() {
-        VisTextField renamePersonTextField = (VisTextField)LmlUtilities.getActorWithId(editPersonDialog, "editPersonName");
-        if(!renamePersonTextField.getText().equals(selectedPerson.getName())) {
-            selectedPerson.setName(renamePersonTextField.getText());
+        if(editPersonFirstName.getText().isEmpty() && editPersonLastName.getText().isEmpty()) {
+            ToastManager manager = getToastManager(getStage());
+            manager.clear();
+            manager.setAlignment(Align.topLeft);
+            manager.show("Name can't be empty!", 1.5f);
+            manager.toFront();
+        } else {
+            selectedPerson.setName(editPersonFirstName.getText(), editPersonLastName.getText());
             venuePeopleListAdapter.itemsChanged();
             tablePeopleListAdapter.itemsChanged();
             venuePersonTableAdapter.itemsChanged();
+
+            editPersonDialog.hide();
         }
-        editPersonDialog.hide();
     }
 
     @LmlAction("saveContactsDialog")
@@ -494,8 +512,14 @@ public class SeatingScreen extends AbstractLmlView {
 
             view.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
         } else {
+            Pixmap pm1 = new Pixmap(1, 1, Pixmap.Format.RGBA4444);
+            pm1.setColor(new Color(.694f, .714f, .718f, .2f));
+            pm1.fill();
+
+            view.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
+
             selectedContacts.remove(selectedItem);
-            contactsPeopleListAdapter.itemsChanged();
+            contactsPeopleListAdapter.itemsDataChanged();
         }
     }
 
@@ -570,7 +594,7 @@ public class SeatingScreen extends AbstractLmlView {
             @Override
             public boolean acceptChar(VisTextField textField, char c) {
                 if(isAlpha(Character.toString(c))) {
-                    if(textField.getText().length() >= 70) {
+                    if(textField.getText().length() >= 35) {
                         ToastManager manager = getToastManager(getStage());
                         manager.clear();
                         manager.setAlignment(Align.topLeft);

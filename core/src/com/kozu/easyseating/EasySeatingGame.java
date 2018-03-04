@@ -94,6 +94,7 @@ public class EasySeatingGame extends LmlApplicationListener {
     Skin visSkin;
     @Override
     public void render() {
+
         if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
         }
 

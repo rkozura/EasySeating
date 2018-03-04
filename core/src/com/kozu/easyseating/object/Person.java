@@ -11,7 +11,17 @@ import java.io.Serializable;
 public class Person implements Model, Serializable {
     private final int PERSON_RADIUS = 30;
 
-    private String name;
+    private String firstName;
+    private String lastName;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
     private String initials = "";
     private String truncatedName = ""; //Used when display close up
 
@@ -23,31 +33,47 @@ public class Person implements Model, Serializable {
 
     public Person() {}
 
-    public Person(String name) {
-        setName(name);
+    public Person(String firstName, String lastName) {
+        setName(firstName, lastName);
 
         bounds = new Circle(0, 0, PERSON_RADIUS);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        name = name.trim();
-        name = name.replaceAll("[ ]+", " ");
-        this.name = name;
-
-        initials = "";
-        String[] names = name.split(" ");
-        for(String oneName : names) {
-            initials += oneName.charAt(0);
+    public void setName(String firstName, String lastName) {
+        if(firstName.length() > 1) {
+            firstName = firstName.substring(0, 1).toUpperCase() + firstName.substring(1);
+        } else if (firstName.length() == 1) {
+            firstName = firstName.substring(0, 1).toUpperCase();
+        } else {
+            firstName = "";
         }
 
-        truncatedName = names[0];
-        if(names.length > 1) {
-            truncatedName += "." + names[1].charAt(0);
+        if(lastName.length() > 1) {
+            lastName = lastName.substring(0, 1).toUpperCase() + lastName.substring(1);
+        } else if (lastName.length() == 1) {
+            lastName = lastName.substring(0, 1).toUpperCase();
+        } else {
+            lastName = "";
         }
+
+        String firstInitial = "";
+        String lastInitial = "";
+        if(!firstName.isEmpty()) {
+            firstInitial = ""+firstName.charAt(0);
+        }
+        if(!lastName.isEmpty()) {
+            lastInitial = ""+lastName.charAt(0);
+        }
+        initials = firstInitial+lastInitial;
+
+        if(!lastName.isEmpty()) {
+            truncatedName = lastName + "." + firstInitial;
+        } else {
+            truncatedName = firstName;
+        }
+
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     @Override
@@ -72,7 +98,7 @@ public class Person implements Model, Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if(o != null && o instanceof Person && name.equals(((Person)o).getName())) {
+        if(o != null && o instanceof Person && firstName.equals(((Person)o).getFirstName()) && lastName.equals(((Person)o).getLastName())) {
             return true;
         } else {
             return false;

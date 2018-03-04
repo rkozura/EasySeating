@@ -12,6 +12,6 @@
 </table>
 
 <dialogsize id="createVenueDialog" title="Venue Name" style="dialog" titlealign="center" movable="false" visible="false">
-    <textfield id="venueName" growx="true"></textfield>
+    <textfield oninit="initTextField" id="venueName" growx="true"></textfield>
     <textbutton style="blue" padleft="250" padright="250" onresult="checkForInvalidVenueName" width="{buttonWidth}" height="{buttonHeight}">Ok</textbutton>
 </dialogsize>

@@ -24,7 +24,7 @@ public class Assets {
     private static final int BUTTON_FONT_SIZE = 25;
     private static final int DIALOG_FONT_SIZE = 35;
     private static final int MAIN_SCREEN_FONT_SIZE = 55;
-    private static final int PERSON_FONT_SIZE = 10;
+    private static final int PERSON_FONT_SIZE = 7;
     private static final int HELP_FONT_SIZE = 15;
 
     public AssetManager manager;

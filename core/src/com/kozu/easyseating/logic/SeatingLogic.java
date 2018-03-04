@@ -98,8 +98,8 @@ public class SeatingLogic {
         return returnPerson;
     }
 
-    public Person createPerson(String name) {
-        Person person = new Person(name);
+    public Person createPerson(String firstName, String lastName) {
+        Person person = new Person(firstName, lastName);
         conference.persons.add(person);
 
         return person;

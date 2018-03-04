@@ -20,6 +20,8 @@ import com.kozu.easyseating.screen.SeatingScreen;
  */
 
 public class SeatingRenderer implements Disposable{
+    private Color tableTrimColor = new Color(.047f, .561f, .8f, 1f);
+
     private TiledDrawable tableTile;
     private TiledDrawable floorTile;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
@@ -87,7 +89,7 @@ public class SeatingRenderer implements Disposable{
                     shapeRenderer.setColor(Color.GREEN);
                     shapeRenderer.circle(table.bounds.x, table.bounds.y, table.bounds.radius);
                 } else {
-                    shapeRenderer.setColor(Color.BLACK);
+                    shapeRenderer.setColor(tableTrimColor);
                     shapeRenderer.circle(table.bounds.x, table.bounds.y, table.bounds.radius);
                 }
             }

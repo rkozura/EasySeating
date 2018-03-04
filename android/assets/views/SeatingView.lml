@@ -52,13 +52,15 @@ visible="false" onecolumn="true">
 
 <dialogsize id="customPersonDialog" title="Custom Person" titlealign="center" style="dialog" movable="false"
 visible="false" onecolumn="true">
-    <textfield growx="true" oninit="initTextField" id="personName"></textfield>
+    <textfield messagetext="first name" growx="true" oninit="initTextField" id="personFirstName"></textfield>
+    <textfield messagetext="last name" growx="true" oninit="initTextField" id="personLastName"></textfield>
     <textbutton style="blue" padleft="250" padright="250" onclick="createCustomPerson" width="{buttonWidth}" height="{buttonHeight}">Create</textbutton>
 </dialogsize>
 
 <dialogsize id="editPersonDialog" titlealign="center" style="dialog" movable="false" visible="false"
 onecolumn="true">
-    <textfield growx="true" oninit="initTextField" id="editPersonName"></textfield>
+    <textfield messagetext="first name" growx="true" oninit="initTextField" id="editPersonFirstName"></textfield>
+    <textfield messagetext="last name" growx="true" oninit="initTextField" id="editPersonLastName"></textfield>
     <textbutton style="blue" padleft="250" padright="250" onclick="openConfirmDeletePersonDialog" width="{buttonWidth}" height="{buttonHeight}">Delete</textbutton>
     <textbutton style="blue" onclick="confirmEditPerson" width="{buttonWidth}" height="{buttonHeight}">Save</textbutton>
 </dialogsize>

@@ -72,7 +72,21 @@ public class AndroidPersonImporter implements PersonImporter {
                         cur.getColumnIndex(ContactsContract.Contacts._ID));
                 String name = cur.getString(cur.getColumnIndex(
                         ContactsContract.Contacts.DISPLAY_NAME));
-                personList.add(new Person(name));
+
+                name = name.replaceAll("[^a-zA-Z\\s]", "").trim().toLowerCase();
+
+                if(name != null && !"".equalsIgnoreCase(name)) {
+                    String[] nameSplit = name.split(" ");
+                    if (nameSplit.length >= 1) {
+                        String firstName = nameSplit[0].substring(0, Math.min(30, nameSplit[0].length())), lastName = "";
+
+                        if (nameSplit.length > 1) {
+                            lastName = nameSplit[nameSplit.length - 1].substring(0, Math.min(30, nameSplit[nameSplit.length - 1].length()));
+                        }
+
+                        personList.add(new Person(firstName, lastName));
+                    }
+                }
             }
         }
 

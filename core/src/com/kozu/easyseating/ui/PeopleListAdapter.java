@@ -44,7 +44,7 @@ public class PeopleListAdapter<ItemT> extends ArrayListAdapter<ItemT, VisTable> 
                 Person personOne = (Person)itemT;
                 Person personTwo = (Person)t1;
 
-                int returnValue = personOne.getName().compareTo(personTwo.getName());
+                int returnValue = (personOne.getLastName()+personOne.getFirstName()).compareTo(personTwo.getLastName()+personTwo.getFirstName());
 
                 return returnValue;
             }
@@ -62,7 +62,16 @@ public class PeopleListAdapter<ItemT> extends ArrayListAdapter<ItemT, VisTable> 
         pm1.fill();
 
         VisLabel tableLabel = new VisLabel(person.assignedTable);
-        VisLabel personLabel = new VisLabel(person.getName());
+
+        VisLabel personLabel;
+        if(person.getFirstName().isEmpty() && !person.getLastName().isEmpty()) {
+            personLabel = new VisLabel(person.getLastName());
+        } else if(!person.getFirstName().isEmpty() && person.getLastName().isEmpty()) {
+            personLabel = new VisLabel(person.getFirstName());
+        } else {
+            personLabel = new VisLabel( person.getFirstName() + " " + person.getLastName());
+        }
+
         VisScrollPane personScroll = new VisScrollPane(personLabel);
         personScroll.setScrollingDisabled(true, false);
 

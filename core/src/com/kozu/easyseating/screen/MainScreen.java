@@ -108,6 +108,26 @@ public class MainScreen extends AbstractLmlView {
         }
     }
 
+    @LmlAction("initTextField")
+    public void initTextField(final VisTextField visTextField) {
+        visTextField.setTextFieldFilter(new VisTextField.TextFieldFilter() {
+            @Override
+            public boolean acceptChar(VisTextField textField, char c) {
+                if(textField.getText().length() >= 15) {
+                    ToastManager manager = getToastManager(getStage());
+                    manager.clear();
+                    manager.setAlignment(Align.topLeft);
+                    manager.show("Name too long!", 1.5f);
+                    manager.toFront();
+
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        });
+    }
+
     @LmlAction("openCreateVenueDialog")
     public void openCreateVenueDialog() {
         createVenueDialog.setVisible(true);

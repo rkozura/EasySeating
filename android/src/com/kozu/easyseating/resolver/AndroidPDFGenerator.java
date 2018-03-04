@@ -73,7 +73,7 @@ public class AndroidPDFGenerator implements PDFGenerator {
                     paint.setColor(Color.CYAN);
                     canvas.drawCircle(person.getX(), (int)conference.conferenceHeight-person.getY(), person.bounds.radius, paint);
                     paint.setColor(Color.BLACK);
-                    drawTextCentred(canvas, paint, person.getName(), person.getX(), (int)conference.conferenceHeight-person.getY());
+                    drawTextCentred(canvas, paint, person.getTruncatedName(), person.getX(), (int)conference.conferenceHeight-person.getY());
                 }
             }
 
@@ -141,7 +141,7 @@ public class AndroidPDFGenerator implements PDFGenerator {
                 canvas.drawLine(left, y, right, y, paint);
                 if(jj.hasNext()) {
                     Person person = jj.next();
-                    canvas.drawText(personCount+". "+person.getName(), left, y, paint);
+                    canvas.drawText(personCount+". "+person.getLastName()+" "+person.getFirstName(), left, y, paint);
                     personCount++;
                 }
                 y += gutterHeight;
