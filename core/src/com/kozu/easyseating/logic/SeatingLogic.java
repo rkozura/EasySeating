@@ -51,6 +51,7 @@ public class SeatingLogic {
     private void init() {
         //Load the conference object into the state
         State.load(conference);
+        State.save();
 
         //Generate the snap grid if empty
         if(conference.snapGrid.isEmpty()) {

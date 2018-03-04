@@ -34,6 +34,8 @@ import com.kozu.easyseating.ui.PhotoCarousel;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
@@ -86,6 +88,13 @@ public class MainScreen extends AbstractLmlView {
     @LmlAction("checkForInvalidVenueName")
     public boolean checkForInvalidVenueName(final DialogSize dialog) {
         String venueName = ((VisTextField) LmlUtilities.getActorWithId(dialog, "venueName")).getText();
+
+        ArrayList<String> venues = State.getListOfVenues();
+        ArrayList<String> venuesFormatted = new ArrayList<String>();
+        for(String venue: venues) {
+            venuesFormatted.add(venue.toLowerCase());
+        }
+
         if(StringUtils.isBlank(venueName)) {
             final ToastManager manager = getToastManager(dialog.getStage());
             manager.clear();
@@ -95,6 +104,14 @@ public class MainScreen extends AbstractLmlView {
 
             return ReflectedLmlDialog.CANCEL_HIDING;
 
+        } else if(venuesFormatted.contains(venueName.toLowerCase())) {
+            final ToastManager manager = getToastManager(dialog.getStage());
+            manager.clear();
+            manager.setAlignment(Align.topLeft);
+            manager.show("Venue name already exists", 1.5f);
+            manager.toFront();
+
+            return ReflectedLmlDialog.CANCEL_HIDING;
         } else {
             EasySeatingGame core = (EasySeatingGame) Gdx.app.getApplicationListener();
             SeatingScreen seatingScreen = new SeatingScreen(venueName, assets);
@@ -221,6 +238,9 @@ public class MainScreen extends AbstractLmlView {
         if(State.hasContinue()) {
             continueButton.setDisabled(false);
             continueButton.setTouchable(Touchable.enabled);
+        }
+
+        if(!State.getListOfVenues().isEmpty()) {
             loadButton.setDisabled(false);
             loadButton.setTouchable(Touchable.enabled);
         }

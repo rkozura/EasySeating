@@ -34,6 +34,7 @@ import com.kozu.easyseating.Assets;
 import com.kozu.easyseating.EasySeatingGame;
 import com.kozu.easyseating.controller.SeatingController;
 import com.kozu.easyseating.logic.SeatingLogic;
+import com.kozu.easyseating.logic.State;
 import com.kozu.easyseating.object.Conference;
 import com.kozu.easyseating.object.Person;
 import com.kozu.easyseating.object.Table;
@@ -403,6 +404,7 @@ public class SeatingScreen extends AbstractLmlView {
         venuePersonTableAdapter.itemsChanged();
         editPersonDialog.hide();
         confirmDeletePersonDialog.hide();
+        State.save();
     }
 
     @LmlAction("confirmEditPerson")
