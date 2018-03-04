@@ -21,6 +21,7 @@ import com.kozu.easyseating.screen.SeatingScreen;
 
 public class SeatingRenderer implements Disposable{
     private Color tableTrimColor = new Color(.047f, .561f, .8f, 1f);
+    private Color personColor = new Color(.447f, .898f, 1f, .6f);
 
     private TiledDrawable tableTile;
     private TiledDrawable floorTile;
@@ -55,6 +56,11 @@ public class SeatingRenderer implements Disposable{
     }
 
     public void renderTables() {
+        for (int i = 0; i < seatingLogic.conference.getTables().size(); i++) {
+            Table table = seatingLogic.conference.getTables().get(i);
+            renderAssignedSeats(table);
+        }
+
         Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
 
         if(seatingLogic.conference.getTables().size() > 0) {
@@ -105,30 +111,14 @@ public class SeatingRenderer implements Disposable{
                 //Now draw the table identifier
                 assets.manager.get(Assets.buttontext).draw(EasySeatingGame.batch, glyphLayout,
                         table.bounds.x - glyphLayout.width/2, table.bounds.y + glyphLayout.height/2);
+
+                renderAssignedSeatsText(table);
             }
             EasySeatingGame.batch.end();
-
-            for (int i = 0; i < seatingLogic.conference.getTables().size(); i++) {
-                Table table = seatingLogic.conference.getTables().get(i);
-                renderAssignedSeats(table);
-            }
         }
     }
 
-    public void renderAssignedSeats(Table table) {
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        for(int i = 0; i < table.assignedSeats.size(); i++) {
-            Person person = table.assignedSeats.get(i);
-            if (!person.isFlaggedForRemoval()) {
-                shapeRenderer.setColor(Color.CYAN);
-            } else {
-                shapeRenderer.setColor(Color.RED);
-            }
-            //If projection matrices are not set, objects will not be drawn relative to the tables
-            shapeRenderer.circle(person.bounds.x, person.bounds.y, person.bounds.radius);
-        }
-        shapeRenderer.end();
-        EasySeatingGame.batch.begin();
+    public void renderAssignedSeatsText(Table table) {
         for(int i = 0; i < table.assignedSeats.size(); i++) {
             Person person = table.assignedSeats.get(i);
             //Draw the person text
@@ -141,7 +131,27 @@ public class SeatingRenderer implements Disposable{
             assets.manager.get(Assets.persontext).draw(EasySeatingGame.batch, glyphLayout,
                     person.bounds.x - glyphLayout.width/2, person.bounds.y + glyphLayout.height/2);
         }
-        EasySeatingGame.batch.end();
+    }
+
+    public void renderAssignedSeats(Table table) {
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        for(int i = 0; i < table.assignedSeats.size(); i++) {
+            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_BLEND_DST_ALPHA);
+            Person person = table.assignedSeats.get(i);
+            if (!person.isFlaggedForRemoval()) {
+                shapeRenderer.setColor(personColor);
+            } else {
+                shapeRenderer.setColor(Color.RED);
+            }
+            //If projection matrices are not set, objects will not be drawn relative to the tables
+            shapeRenderer.circle(person.bounds.x, person.bounds.y, person.bounds.radius);
+
+            //Draw a line from the person to the middle of the table
+            shapeRenderer.rectLine(person.bounds.x, person.bounds.y, table.getX(), table.getY(), 10);
+        }
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
 
         if(seatingLogic.isOverTable()) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
