@@ -227,7 +227,7 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlAction("openVenue")
     public void openVenue() {
-        venuePeopleListAdapter.itemsChanged();
+        venuePeopleListAdapter.defaultComparator();
         venueDialog.getTitleLabel().setText(seatingLogic.conference.conferenceName);
         venueDialog.setVisible(true);
         venueDialog.show(getStage());
@@ -235,6 +235,8 @@ public class SeatingScreen extends AbstractLmlView {
 
     private static Table selectedTable;
     public void openTable(Table table) {
+        venuePeopleListAdapter.defaultComparator();
+
         selectedTable = table;
 
         tableList.clear();
