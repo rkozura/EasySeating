@@ -238,6 +238,7 @@ public class SeatingScreen extends AbstractLmlView {
     @LmlAction("openVenue")
     public void openVenue() {
         venuePeopleListAdapter.defaultComparator();
+        venueDialog.getTitleLabel().setWrap(true);
         venueDialog.getTitleLabel().setText(seatingLogic.conference.conferenceName);
         venueDialog.setVisible(true);
         venueDialog.show(getStage());
