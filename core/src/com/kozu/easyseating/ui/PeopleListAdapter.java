@@ -22,6 +22,9 @@ import java.util.Comparator;
  */
 
 public class PeopleListAdapter<ItemT> extends ArrayListAdapter<ItemT, VisTable> {
+    private ArrayList<Comparator<ItemT>> comparators = new ArrayList<Comparator<ItemT>>();
+    private int comparatorIndex = 0;
+
     private SimpleListAdapter.SimpleListAdapterStyle style;
 
     private float nameLabelSize;
@@ -38,19 +41,45 @@ public class PeopleListAdapter<ItemT> extends ArrayListAdapter<ItemT, VisTable> 
         super(array);
         this.style = style;
 
-        setItemsSorter(new Comparator<ItemT>() {
-            @Override
-            public int compare(ItemT itemT, ItemT t1) {
-                Person personOne = (Person)itemT;
-                Person personTwo = (Person)t1;
+        comparators.add(new FirstNameComparator<ItemT>());
+        comparators.add(new LastNameComparator<ItemT>());
+        comparators.add(new TableComparator<ItemT>());
 
-                int returnValue = (personOne.getLastName()+personOne.getFirstName()).compareTo(personTwo.getLastName()+personTwo.getFirstName());
-
-                return returnValue;
-            }
-        });
+        setItemsSorter(comparators.get(comparatorIndex));
 
         this.nameLabelSize = nameLabelSize;
+    }
+
+    public void changeComparator() {
+        comparatorIndex++;
+
+        if(comparatorIndex >= comparators.size()) {
+            comparatorIndex = 0;
+        }
+
+        setItemsSorter(comparators.get(comparatorIndex));
+
+        itemsChanged();
+    }
+
+    public void defaultComparator() {
+        comparatorIndex = 0;
+
+        setItemsSorter(comparators.get(comparatorIndex));
+
+        itemsChanged();
+    }
+
+    public String getCurrentComparatorName() {
+        if(comparators.get(comparatorIndex) instanceof LastNameComparator) {
+            return "Last Name";
+        }
+
+        if(comparators.get(comparatorIndex) instanceof FirstNameComparator) {
+            return "First Name";
+        }
+
+        return "Table";
     }
 
     @Override
@@ -81,6 +110,42 @@ public class PeopleListAdapter<ItemT> extends ArrayListAdapter<ItemT, VisTable> 
         table.add(personScroll).growX().height(.25f* Gdx.graphics.getPpiX()).padLeft(10f);
 
         return table;
+    }
+
+    class LastNameComparator<ItemT> implements Comparator<ItemT> {
+        @Override
+        public int compare(ItemT itemT, ItemT t1) {
+            Person personOne = (Person)itemT;
+            Person personTwo = (Person)t1;
+
+            int returnValue = (personOne.getLastName()+personOne.getFirstName()).compareTo(personTwo.getLastName()+personTwo.getFirstName());
+
+            return returnValue;
+        }
+    }
+
+    class FirstNameComparator<ItemT> implements Comparator<ItemT> {
+        @Override
+        public int compare(ItemT itemT, ItemT t1) {
+            Person personOne = (Person)itemT;
+            Person personTwo = (Person)t1;
+
+            int returnValue = (personOne.getFirstName()+personOne.getLastName()).compareTo(personTwo.getFirstName()+personTwo.getLastName());
+
+            return returnValue;
+        }
+    }
+
+    class TableComparator<ItemT> implements Comparator<ItemT> {
+        @Override
+        public int compare(ItemT itemT, ItemT t1) {
+            Person personOne = (Person)itemT;
+            Person personTwo = (Person)t1;
+
+            int returnValue = (personOne.assignedTable+personOne.getFirstName()+personOne.getLastName()).compareTo(personTwo.assignedTable+personTwo.getFirstName()+personTwo.getLastName());
+
+            return returnValue;
+        }
     }
 
 }

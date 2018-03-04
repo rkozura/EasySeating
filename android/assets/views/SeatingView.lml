@@ -31,7 +31,7 @@
     <listview scrollingdisabledx="true" id="venueListView" flickscroll="true" colspan="2" row="true" width="{dialogWidth}" height="$dialogHeight"
         adapter="venuePersonAdapter" itemlistener="venuePersonListener"/>
     <textbutton style="blue" onclick="openCreatePersonDialog" growx="true" height="{dialogButtonHeight}">Add</textbutton>
-    <!--textbutton growx="true" height="{dialogButtonHeight}">Sort</textbutton-->
+    <textbutton style="blue" onclick="sortPersonList" growx="true" height="{dialogButtonHeight}">Sort</textbutton>
 </dialogsize>
 
 <dialogsize id="tableDialog" titlealign="center" style="dialog" movable="false" visible="false">

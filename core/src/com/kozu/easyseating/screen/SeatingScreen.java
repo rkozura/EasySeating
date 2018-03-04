@@ -625,6 +625,17 @@ public class SeatingScreen extends AbstractLmlView {
         });
     }
 
+    @LmlAction("sortPersonList")
+    public void sortPersonList() {
+        venuePeopleListAdapter.changeComparator();
+
+        final ToastManager manager = getToastManager(getStage());
+        manager.clear();
+        manager.setAlignment(Align.topLeft);
+        manager.show("Sorting by: "+venuePeopleListAdapter.getCurrentComparatorName(), 1.5f);
+        manager.toFront();
+    }
+
     @LmlAction("openImportContactsDialog")
     public void openImportContactsDialog() {
         ArrayList<Person> contactList = EasySeatingGame.importer.getPersonList();

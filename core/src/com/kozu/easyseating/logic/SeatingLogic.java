@@ -25,8 +25,8 @@ import aurelienribon.tweenengine.TweenCallback;
  */
 public class SeatingLogic {
     //1.5 is approx. the ratio of a piece of paper
-    private final double CONFERENCE_WIDTH = 1000f;
-    private final long GRID_COUNT_WIDTH = 15;
+    private final double CONFERENCE_WIDTH = 1600f;
+    private final long GRID_COUNT_WIDTH = 20;
     private final long GRID_COUNT_HEIGHT = Math.round(GRID_COUNT_WIDTH*1.5);
     private final double GRID_GUTTER_LENGTH = CONFERENCE_WIDTH/GRID_COUNT_WIDTH;
     private final double CONFERENCE_HEIGHT = GRID_GUTTER_LENGTH*GRID_COUNT_HEIGHT;;
