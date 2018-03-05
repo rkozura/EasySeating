@@ -86,17 +86,17 @@ public class SeatingLogic {
         return returnTable;
     }
 
-    public Person getPersonAtPosition(Vector3 pos, Table table) {
-        Person returnPerson = null;
+    public Person getPersonAtPosition(Vector3 pos) {
 
-        for(Person person : table.assignedSeats) {
-            if(person.bounds.contains(pos.x, pos.y)) {
-                returnPerson = person;
-                break;
+        for(Table table : conference.getTables()) {
+            for(Person person : table.assignedSeats) {
+                if(person.bounds.contains(pos.x, pos.y)) {
+                    return person;
+                }
             }
         }
 
-        return returnPerson;
+        return null;
     }
 
     public Person createPerson(String firstName, String lastName) {
@@ -140,6 +140,20 @@ public class SeatingLogic {
             if(table.assignedSeats.size() != 0) {
                 startTweenAndSaveState(getPersonPositionTweens(table, new Vector3(table.bounds.x, table.bounds.y, 0)));
             }
+        }
+    }
+
+    public void removePeopleFromTable(Table table, List<Person> people) {
+        for(Person person : people) {
+            person.setFlaggedForRemoval(false);
+            person.assignedTable = "";
+
+            table.removePerson(person);
+        }
+
+        if(table.assignedSeats.size() != 0) {
+            //If not empty, set the person positions
+            startTweenAndSaveState(getPersonPositionTweens(table, new Vector3(table.bounds.x, table.bounds.y, 0)));
         }
     }
 

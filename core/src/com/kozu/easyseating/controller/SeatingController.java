@@ -77,6 +77,13 @@ public class SeatingController extends GestureDetector {
         }
     }
 
+    @Override
+    public boolean touchUp(float x, float y, int pointer, int button) {
+        //SeatingControllerListener.draggedPerson = null;
+        //SeatingControllerListener.draggedTable = null;
+        return super.touchUp(x, y, pointer, button);
+    }
+
     public void cancelDragPerson() {
         SeatingControllerListener.draggedPerson = null;
     }
@@ -136,6 +143,7 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
     public boolean tap(float x, float y, int count, int button) {
         Vector3 pos = convertScreenCoordsToWorldCoords(x, y);
 
+        draggedPerson = null;
         draggedTable = null;
         if(seatingScreen.addRemoveTable) {
             if(seatingScreen.removeTable) {
@@ -164,8 +172,7 @@ class SeatingControllerListener implements GestureDetector.GestureListener {
                 seatingScreen.editTable(tappedTable);
                 return true;
             } else {
-                Table table = seatingScreen.getEditTable();
-                Person person = seatingLogic.getPersonAtPosition(pos, table);
+                Person person = seatingLogic.getPersonAtPosition(pos);
                 if(person != null) {
                     person.setFlaggedForRemoval(!person.isFlaggedForRemoval());
                     return true;

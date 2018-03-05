@@ -48,7 +48,9 @@ import com.kozu.easyseating.ui.PeopleListAdapter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import aurelienribon.tweenengine.Tween;
 
@@ -159,17 +161,23 @@ public class SeatingScreen extends AbstractLmlView {
     public void doneEditingTable() {
         TweenUtil.getTweenManager().killTarget(camera);
 
-        Table table = getEditTable();
-        //Find all the people at the table that where marked to be removed and remove them
+        //Find all the people at all tables that where marked to be removed and remove them
         //Have to use two collections or else concurrent modification error will happen
-        List<Person> people = new ArrayList<Person>();
-        for(Person person : table.assignedSeats) {
-            if(person.isFlaggedForRemoval()) {
-                people.add(person);
+        //List<Person> people = new ArrayList<Person>();
+        Map<Table, List<Person>> people = new HashMap<Table, List<Person>>();
+        for(Table table : seatingLogic.conference.getTables()) {
+            for (Person person : table.assignedSeats) {
+                if (person.isFlaggedForRemoval()) {
+                    if(!people.containsKey(table)) {
+                        people.put(table, new ArrayList<Person>());
+                    }
+                    people.get(table).add(person);
+                }
             }
         }
-        for(Person person : people) {
-            seatingLogic.removePersonFromTable(table, person);
+
+        for(Map.Entry<Table, List<Person>> person : people.entrySet()) {
+            seatingLogic.removePeopleFromTable(person.getKey(), person.getValue());
         }
 
         seatingLogic.resetTable(selectedTable);
