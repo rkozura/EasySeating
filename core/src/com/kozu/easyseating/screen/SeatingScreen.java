@@ -734,6 +734,8 @@ public class SeatingScreen extends AbstractLmlView {
         openOptionsButton.setVisible(true);
         addTableButton.setVisible(true);
         personcounter.setVisible(true);
+
+        updateCounter();
     }
 
     @LmlAction("createRoundTable")
