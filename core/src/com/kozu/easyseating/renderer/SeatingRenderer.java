@@ -222,15 +222,5 @@ public class SeatingRenderer implements Disposable{
 
         shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
-
-        if(seatingLogic.conference.getTables().isEmpty() && !SeatingScreen.addRemoveTable) {
-            EasySeatingGame.batch.begin();
-            glyphLayout.setText(assets.manager.get(Assets.buttontext), "Tap and hold to add tables");
-            assets.manager.get(Assets.buttontext).setColor(Color.BLACK);
-            assets.manager.get(Assets.buttontext).draw(EasySeatingGame.batch, glyphLayout,
-                    (float)((seatingLogic.conference.conferenceWidth/2f) - glyphLayout.width / 2f),
-                    (float)((seatingLogic.conference.conferenceHeight/2f) + glyphLayout.height / 2f));
-            EasySeatingGame.batch.end();
-        }
     }
 }
