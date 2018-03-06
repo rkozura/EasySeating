@@ -146,4 +146,7 @@ idea {
     }
 }
 dependencies {
+    compile 'com.android.support:multidex:1.0.3'
+    androidTestCompile 'com.android.support:multidex:1.0.3'
+    androidTestCompile 'com.android.support:multidex-instrumentation:1.0.3'
 }

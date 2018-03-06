@@ -81,7 +81,9 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64"
         compile 'com.android.support:appcompat-v7:23.1.1'
-        compile 'com.android.support:multidex:1.0.1'
+        compile 'com.android.support:multidex:1.0.3'
+        androidTestCompile 'com.android.support:multidex:1.0.3'
+        androidTestCompile 'com.android.support:multidex-instrumentation:1.0.3'
         compile fileTree(dir: '../libs', include: '*.jar')
     }
 }
