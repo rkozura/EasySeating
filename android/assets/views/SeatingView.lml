@@ -52,7 +52,7 @@
         <listview scrollingdisabledx="true" flickscroll="true" width="{dialogWidth}"
             adapter="venuePersonTableAdapter" itemlistener="tableVenuePersonListener"/>
     </splitpane>
-    <textbutton style="blue" growx="true" height="{dialogButtonHeight}" onclick="confirmEditTable">Confirm</textbutton>
+    <textbutton id="confirmEditTableButton" disabled="true" style="blue" growx="true" height="{dialogButtonHeight}" onclick="confirmEditTable">Confirm</textbutton>
 </dialogsize>
 
 <dialogsize id="createPersonDialog" title="Create Person" titlealign="center" style="dialog" movable="false"

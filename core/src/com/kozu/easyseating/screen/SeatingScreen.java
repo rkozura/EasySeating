@@ -87,6 +87,7 @@ public class SeatingScreen extends AbstractLmlView {
 
     @LmlActor("deleteTableButton") private TextButton deleteTableButton;
     @LmlActor("doneMovingTableButton") private TextButton doneMovingTableButton;
+    @LmlActor("confirmEditTableButton") private TextButton confirmEditTableButton;
 
     @LmlActor("openVenueButton") private TextButton openVenueButton;
     @LmlActor("openOptionsButton") private TextButton openOptionsButton;
@@ -384,12 +385,16 @@ public class SeatingScreen extends AbstractLmlView {
 
         tablePeopleListAdapter.itemsDataChanged();
         venuePersonTableAdapter.itemsChanged();
+
+        confirmEditTableButton.setDisabled(false);
     }
 
     Array<Person> editTableRemovePeopleList = new Array<Person>();
     Array<Person> editTableAddPeopleList = new Array<Person>();
     @LmlAction("confirmEditTable")
     public void confirmEditTable() {
+        confirmEditTableButton.setDisabled(true);
+
         Table table = getEditTable();
         for(Person person : editTableRemovePeopleList) {
             seatingLogic.removePersonFromTable(table, person);
@@ -499,6 +504,12 @@ public class SeatingScreen extends AbstractLmlView {
 
                 view.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pm1))));
             }
+        }
+
+        if(editTableRemovePeopleList.size > 0 || editTableAddPeopleList.size > 0) {
+            confirmEditTableButton.setDisabled(false);
+        } else {
+            confirmEditTableButton.setDisabled(true);
         }
     }
 
