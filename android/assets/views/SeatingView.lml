@@ -33,8 +33,8 @@
 <table id="addRemoveTablesTable" visible="false" fillparent="true" onecolumn="true">
     <vislabel id="toggleAddRemoveLabel" style="instruction" align="TOP" expandy="true">Tap to create table</vislabel>
     <table>
-        <textbutton id="toggleAddRemoveButton" align="BOTTOMRIGHT" width="{buttonWidth}" height="{buttonHeight}" style="blue" expandy="true" onclick="toggleAddRemove">Remove</textbutton>
-        <textbutton align="BOTTOMRIGHT" width="{buttonWidth}" height="{buttonHeight}" style="blue" expandy="true" onclick="doneAddRemoveTablesTable">Done</textbutton>
+        <textbutton pad="20" id="toggleAddRemoveButton" align="BOTTOMRIGHT" width="{buttonWidth}" height="{buttonHeight}" style="blue" expandy="true" onclick="toggleAddRemove">Remove</textbutton>
+        <textbutton pad="20" align="BOTTOMRIGHT" width="{buttonWidth}" height="{buttonHeight}" style="blue" expandy="true" onclick="doneAddRemoveTablesTable">Done</textbutton>
     </table>
 </table>
 
