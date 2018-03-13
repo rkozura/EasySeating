@@ -41,7 +41,14 @@ public class AndroidPDFGenerator implements PDFGenerator {
 
     @Override
     public void generatePDF(Conference conference) {
-        File file = new File(context.getFilesDir(), replaceSpacesWithUnderscores(conference.conferenceName)+"_"+generateUniqueFileIndeitifierString()+".pdf");
+        File pdfPath = new File(context.getFilesDir().toString()+"/pdfs/");
+        if(!pdfPath.mkdirs()) {
+            for(File file: pdfPath.listFiles()) {
+                file.delete();
+            }
+        }
+
+        File file = new File(pdfPath, replaceSpacesWithUnderscores(conference.conferenceName)+"_"+generateUniqueFileIndeitifierString()+".pdf");
         try {
             FileOutputStream fos = new FileOutputStream(file);
 
