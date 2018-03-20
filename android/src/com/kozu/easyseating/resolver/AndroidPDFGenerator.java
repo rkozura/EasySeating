@@ -1,5 +1,7 @@
 package com.kozu.easyseating.resolver;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -9,6 +11,7 @@ import android.graphics.Rect;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.support.v4.content.FileProvider;
+import android.widget.Toast;
 
 import com.kozu.easyseating.object.Conference;
 import com.kozu.easyseating.object.Person;
@@ -31,12 +34,15 @@ import java.util.Iterator;
 
 public class AndroidPDFGenerator implements PDFGenerator {
     Context context;
+    Activity activity;
+
     private static final float TEXT_SIZE = 48f;
     private static final float PERSON_TEXT_SIZE = 35f;
     private static final float TITLE_SIZE = 100f;
 
-    public AndroidPDFGenerator(Context context) {
+    public AndroidPDFGenerator(Context context, Activity activity) {
         this.context = context;
+        this.activity = activity;
     }
 
     @Override
@@ -111,7 +117,16 @@ public class AndroidPDFGenerator implements PDFGenerator {
                             .getPackageName() + ".provider", file);
             install.setDataAndType(apkURI, "application/pdf");
             install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            context.startActivity(install);
+            try {
+                context.startActivity(install);
+            } catch(ActivityNotFoundException anfe) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(context, "PDF Reader Not Installed!", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

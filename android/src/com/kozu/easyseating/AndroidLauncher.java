@@ -19,7 +19,7 @@ public class AndroidLauncher extends AndroidApplication {
 		super.onCreate(savedInstanceState);
 
         importer = new AndroidPersonImporter(this, getContext());
-        pdfGenerator = new AndroidPDFGenerator(getContext());
+        pdfGenerator = new AndroidPDFGenerator(getContext(), this);
 		// Create the layout
 		RelativeLayout layout = new RelativeLayout(this);
 
