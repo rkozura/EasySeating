@@ -9,6 +9,8 @@ import java.io.Serializable;
  */
 
 public class Person implements Model, Serializable {
+    static final long serialVersionUID = 1L;
+
     private final int PERSON_RADIUS = 30;
 
     private String firstName;

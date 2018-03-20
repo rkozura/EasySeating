@@ -15,6 +15,8 @@ import java.util.List;
  * A conference is where tables are setup at
  */
 public class Conference implements Serializable {
+    static final long serialVersionUID = 1L;
+
     public String conferenceName;
     public double conferenceWidth;
     public double conferenceHeight;

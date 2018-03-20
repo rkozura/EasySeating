@@ -6,14 +6,14 @@ import com.badlogic.gdx.math.Vector3;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Rob on 8/1/2017.
  */
 
 public class Table implements Model, Serializable {
+    static final long serialVersionUID = 1L;
+
     private final int DISTANCE_BETWEEN_PEOPLE = 60;
     private final int INIT_TABLE_RADIUS = 75;
 
