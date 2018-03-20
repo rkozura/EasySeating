@@ -120,6 +120,7 @@ public class AndroidPDFGenerator implements PDFGenerator {
             try {
                 context.startActivity(install);
             } catch(ActivityNotFoundException anfe) {
+                anfe.printStackTrace();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
