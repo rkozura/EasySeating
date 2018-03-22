@@ -26,8 +26,8 @@
 </table>
 
 <table fillparent="true">
-    <textbutton id="addPersonToTableButton" visible="false" align="BOTTOMRIGHT" width="{buttonWidth}" height="{buttonHeight}" style="blue" expandy="true" onclick="openAddPersonToTableDialog">Add</textbutton>
-    <textbutton id="doneEditingTableButton" visible="false" align="BOTTOMRIGHT" width="{buttonWidth}" height="{buttonHeight}" style="blue" expandy="true" onclick="doneEditingTable">Done</textbutton>
+    <textbutton pad="20" id="addPersonToTableButton" visible="false" align="BOTTOMRIGHT" width="{buttonWidth}" height="{buttonHeight}" style="blue" expandy="true" onclick="openAddPersonToTableDialog">Add</textbutton>
+    <textbutton pad="20" id="doneEditingTableButton" visible="false" align="BOTTOMRIGHT" width="{buttonWidth}" height="{buttonHeight}" style="blue" expandy="true" onclick="doneEditingTable">Done</textbutton>
 </table>
 
 <table id="addRemoveTablesTable" visible="false" fillparent="true" onecolumn="true">
