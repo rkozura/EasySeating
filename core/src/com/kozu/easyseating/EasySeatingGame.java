@@ -134,11 +134,24 @@ public class EasySeatingGame extends LmlApplicationListener {
 
     @Override
     public void dispose() {
-        stage.dispose();
-        font.dispose();
-        batch.dispose();
-        visSkin.dispose();
-        assets.manager.dispose();
+        if (stage != null) {
+            stage.dispose();
+        }
+        if (font != null) {
+            font.dispose();
+        }
+
+        if (batch != null) {
+            batch.dispose();
+        }
+
+        if (visSkin != null) {
+            visSkin.dispose();
+        }
+
+        if (assets != null && assets.manager != null) {
+            assets.manager.dispose();
+        }
 
         super.dispose();
     }
