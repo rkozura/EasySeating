@@ -16,7 +16,7 @@ The following features are supported:
 
 Project was created using Libgdx start guide: [Start Guide](https://libgdx.badlogicgames.com/documentation/gettingstarted/Creating%20Projects.html)
 
-Application code is found in the core directory where the following can be found:
+Application code is found in the core directory with the following:
 - **EasySeatingGame.java** The entry point to the application
 - **Assets.java** Asset manager
 - **controller** Handles user input (taps)
